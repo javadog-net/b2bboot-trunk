@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxFriendMessageMapper">
+
+    <sql id="wxFriendMessageColumns">
+		a.id AS "id",
+		a.from_user_id AS "fromUserId",
+		a.to_user_id AS "toUserId",
+		a.content AS "content",
+		a.share_url,
+		a.share_summary,
+		a.send_time AS "sendTime",
+		a.is_read AS "isRead",
+		a.is_del AS "isDel",
+		a.is_back AS "isBack",
+		a.img AS "img",
+		a.type AS "type",
+		a.file_name AS "fileName"
+		
+	</sql>
+
+    <sql id="wxFriendMessageJoins">
+
+    </sql>
+
+
+    <select id="get" resultType="WxFriendMessage">
+        SELECT
+        <include refid="wxFriendMessageColumns"/>
+        FROM wx_friend_message a
+        <include refid="wxFriendMessageJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="WxFriendMessage">
+        SELECT
+        <include refid="wxFriendMessageColumns"/>
+        FROM wx_friend_message a
+        <include refid="wxFriendMessageJoins"/>
+        <where>
+
+            ${dataScope}
+            (
+            <if test="fromUserId != null and fromUserId != ''">
+                a.from_user_id = #{fromUserId}
+            </if>
+            <if test="toUserId != null and toUserId != ''">
+                AND a.to_user_id = #{toUserId}
+            </if>) or
+            (
+            <if test="fromUserId != null and fromUserId != ''">
+                a.from_user_id = #{toUserId}
+            </if>
+            <if test="toUserId != null and toUserId != ''">
+                AND a.to_user_id = #{fromUserId}
+            </if>)
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="WxFriendMessage">
+        SELECT
+        <include refid="wxFriendMessageColumns"/>
+        FROM wx_friend_message a
+        <include refid="wxFriendMessageJoins"/>
+        <where>
+
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO wx_friend_message(
+			id,
+			from_user_id,
+			to_user_id,
+			content,
+			send_time,
+			is_read,
+			is_del,
+			is_back,
+			img,
+			type,
+			file_name,
+			share_url,
+			share_summary
+		) VALUES (
+			#{id},
+			#{fromUserId},
+			#{toUserId},
+			#{content},
+			#{sendTime},
+			#{isRead},
+			#{isDel},
+			#{isBack},
+			#{img},
+			#{type},
+			#{fileName},
+			#{shareUrl},
+			#{shareSummary}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE wx_friend_message SET 	
+			from_user_id = #{fromUserId},
+			to_user_id = #{toUserId},
+			content = #{content},
+			send_time = #{sendTime},
+			is_read = #{isRead},
+			is_del = #{isDel},
+			is_back = #{isBack},
+			img = #{img},
+			type = #{type},
+			file_name = #{fileName}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+		DELETE FROM wx_friend_message
+		WHERE id = #{id}
+	</update>
+
+
+	<delete id="deletebyfromuserid">
+	DELETE FROM wx_friend_message
+			WHERE from_user_id = #{id}
+	</delete>
+	
+	<delete id="deletebytouserid">
+	DELETE FROM wx_friend_message
+			WHERE to_user_id = #{id}
+	</delete>
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+		UPDATE wx_friend_message SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+ <update id="updateIsRead">
+		UPDATE wx_friend_message SET 
+			is_read = "1"
+		WHERE from_user_id = #{friendId}  and to_user_id=#{userId}
+	</update>
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="WxFriendMessage" statementType="STATEMENT">
+		select * FROM wx_friend_message  where ${propertyName} = '${value}'
+	</select>
+
+    <select id="findFriendMsgInfoList" resultType="WxFriendMessage" parameterType="String">
+	SELECT DISTINCT
+	friend_id,
+	y.nick_name,
+	y.send_time,
+	y.content,
+	y.share_url,
+	y.share_summary,
+	y.type,
+  z.avatar AS "avatarUrl",
+	y.file_name,
+	y.is_read 
+FROM
+	(
+SELECT
+	friend_id,
+	nick_name,
+	send_time,
+	content,
+	share_url,
+	share_summary,
+	type,
+	file_name,
+	is_read 
+FROM
+	( SELECT * FROM wx_friend WHERE user_id =  #{userId} ) x
+	INNER JOIN (
+SELECT
+	a.send_time,
+	a.to_user_id,
+	b.from_user_id,
+	b.content,
+	b.img,
+	b.share_url,
+	b.share_summary,
+	b.type,
+	b.file_name,
+	b.is_read 
+FROM
+	(
+SELECT
+	MAX( send_time ) AS send_time,
+	t.to_user_id 
+FROM
+	(
+SELECT
+	* 
+FROM
+	wx_friend_message 
+WHERE
+	from_user_id = #{userId} UNION ALL
+SELECT
+	id,
+	to_user_id AS from_user_id,
+	from_user_id AS to_user_id,
+	content,
+	send_time,
+	is_read,
+	is_del,
+	is_back,
+	img,
+	type,
+	share_url,
+	share_summary,
+	file_name 
+FROM
+	wx_friend_message 
+WHERE
+	to_user_id =  #{userId}
+	) t 
+GROUP BY
+	t.to_user_id 
+	) a
+	INNER JOIN (
+SELECT
+	* 
+FROM
+	wx_friend_message 
+WHERE
+	from_user_id = #{userId}  UNION ALL
+SELECT
+	id,
+	to_user_id AS from_user_id,
+	from_user_id AS to_user_id,
+	content,
+	send_time,
+	is_read,
+	is_del,
+	is_back,
+	img,
+	type,
+	share_url,
+	share_summary,
+	file_name 
+FROM
+	wx_friend_message 
+WHERE
+	to_user_id = #{userId}
+	) b ON a.to_user_id = b.to_user_id 
+	AND a.send_time = b.send_time 
+	) c ON x.friend_id = c.to_user_id 
+	
+	) y inner JOIN purchaser_account z on y.friend_id = z.id
+	</select>
+
+	<select id="messageNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select 
+			count(id) 
+		from 
+			wx_friend_message 
+		where 
+			(from_user_id=#{friendId} and to_user_id=#{userId}) or (from_user_id=#{userId} and to_user_id=#{friendId})
+	</select>
+
+	<select id="getlastmessage" resultType="WxFriendMessage">
+	  
+	     select  * from wx_friend_message where 
+	     (to_user_id=#{friendId} and
+	   from_user_id=#{userId} )or
+	    (to_user_id=#{userId} and
+	   from_user_id=#{friendId})
+	     order by send_time desc limit 0,1
+	 
+	</select>
+
+<select id="findToUserIdIsMe" resultType="WxFriendMessage">
+select * from wx_friend_message where to_user_id=#{id} 
+
+
+</select>
+
+</mapper>

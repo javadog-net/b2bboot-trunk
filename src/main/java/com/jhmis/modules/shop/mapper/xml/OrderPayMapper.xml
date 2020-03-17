@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.OrderPayMapper">
+    
+	<sql id="orderPayColumns">
+		a.id AS "id",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.pay_sn AS "paySn",
+		a.is_pay_state AS "isPayState",
+		a.api_pay_state AS "apiPayState"
+	</sql>
+	
+	<sql id="orderPayJoins">
+		
+	</sql>
+
+	<resultMap id="ordersPayMaps" type="com.jhmis.modules.shop.entity.OrderPay">
+		<result column="id" property="id"></result>
+		<result column="ppaySn" property="paySn"></result>
+		<result column="pis_pay_state" property="apiPayState"></result>
+		<collection property="ordersList" javaType="ArrayList" ofType="com.jhmis.modules.shop.entity.Orders">
+			<result column="oid" property="id"></result>
+			<result column="order_sn" property="orderSn"></result>
+			<result column="store_id" property="storeId"></result>
+			<result column="store_name" property="storeName"></result>
+			<result column="pay_sn" property="paySn"></result>
+			<result column="dealer_id" property="dealerId"></result>
+			<result column="kjt_account" property="kjtAccount"></result>
+			<result column="purchaser_id" property="purchaserId"></result>
+			<result column="purchaser_account_id" property="purchaserAccountId"></result>
+			<result column="purchaser_phone" property="purchaserPhone"></result>
+			<result column="create_date" property="createDate"></result>
+			<result column="payment_date" property="paymentDate"></result>
+			<result column="goods_amount" property="goodsAmount"></result>
+			<result column="order_amount" property="orderAmount"></result>
+			<result column="evaluation_state" property="evaluationState"></result>
+			<result column="evaluation_again_state" property="evaluationAgainState"></result>
+			<result column="order_state" property="orderState"></result>
+			<result column="cancel_time" property="cancelTime"></result>
+			<result column="canceler" property="canceler"></result>
+			<result column="del_flag" property="delFlag"></result>
+			<result column="oapi_pay_state" property="apiPayState"></result>
+			<result column="trade_no" property="tradeNo"></result>
+			<result column="address_info" property="addressInfo"></result>
+			<result column="shipping_info" property="shippingInfo"></result>
+			<result column="send_out_time" property="sendOutTime"></result>
+			<result column="send_outer" property="sendOuter"></result>
+			<result column="shipping_info" property="shippingInfo"></result>
+			<result column="expresse_name" property="expresseName"></result>
+			<result column="invoice_info" property="shippingInfo"></result>
+			<result column="shipping_info" property="isApplyInvoice"></result>
+			<result column="is_invoice_finished" property="isInvoiceFinished"></result>
+			<result column="order_lock" property="orderLock"></result>
+			<result column="delivery_time" property="deliveryTime"></result>
+			<result column="dealer_name" property="dealerName"></result>
+			<result column="purchaser_name" property="purchaserName"></result>
+			<result column="purchaser_login_name" property="purchaserLoginName"></result>
+			<result column="kjt_fee" property="kjtFee"></result>
+			<result column="invoice_amount" property="invoiceAmount"></result>
+			<collection property="ordersGoodsList" javaType="ArrayList" ofType="com.jhmis.modules.shop.entity.OrderGoods">
+				<result column="gid" property="id"></result>
+				<result column="order_id" property="orderId"></result>
+				<result column="goods_code" property="goodsCode"></result>
+				<result column="goods_name" property="goodsName"></result>
+				<result column="goods_type" property="goodsType"></result>
+				<result column="price" property="price"></result>
+				<result column="num" property="num"></result>
+				<result column="main_pic_url" property="mainPicUrl"></result>
+				<result column="pay_price" property="payPrice"></result>
+				<result column="supply_price" property="supplyPrice"></result>
+				<result column="purchaser_id" property="purchaserId"></result>
+				<result column="category_id" property="categoryId"></result>
+				<result column="is_exchange" property="isExchange"></result>
+				<result column="create_date" property="createDate"></result>
+				<result column="store_goods_id" property="storeGoodsId"></result>
+				<result column="evaluate_status" property="evaluateStatus"></result>
+				<result column="del_flag" property="delFlag"></result>
+			</collection>
+		</collection>
+	</resultMap>
+
+	<select id="findOrdersPayList" parameterType="com.jhmis.modules.shop.entity.OrderPay" resultMap="ordersPayMaps">
+		SELECT
+		a.id AS "id",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.pay_sn AS "ppaySn",
+		a.is_pay_state AS "pisPayState",
+		o.id AS "oid",
+		o.order_sn,
+		o.store_id ,
+		o.store_name ,
+		o.dealer_id ,
+		o.kjt_account ,
+		o.purchaser_id ,
+		o.purchaser_account_id ,
+		o.purchaser_phone,
+		o.create_date ,
+		o.payment_code,
+		o.payment_date,
+		o.goods_amount ,
+		o.order_amount,
+		o.evaluation_state ,
+		o.evaluation_again_state ,
+		o.order_state ,
+		o.cancel_time ,
+		o.canceler ,
+		o.refund_state ,
+		o.refund_amount ,
+		o.del_flag ,
+		o.order_from ,
+		o.api_pay_date ,
+		o.api_pay_state AS "oapi_pay_state" ,
+		o.royalty_date ,
+		o.royalty_state ,
+		o.trade_no,
+		o.address_info,
+		o.shipping_info ,
+		o.send_out_time ,
+		o.send_outer,
+		o.expresse_name ,
+		o.invoice_info ,
+		o.is_apply_invoice ,
+		o.is_invoice_finished ,
+		o.order_lock ,
+		o.delivery_time,
+		o.dealer_name ,
+		o.purchaser_name ,
+		o.purchaser_login_name ,
+		o.kjt_fee,
+		o.invoice_amount,
+		g.id as gid ,
+		g.order_id,
+		g.goods_code,
+		g.goods_name ,
+		g.goods_type ,
+		g.price ,
+		g.num ,
+		g.main_pic_url ,
+		g.pay_price,
+		g.supply_price ,
+		g.category_id,
+		g.is_exchange,
+		g.store_goods_id ,
+		g.evaluate_status
+
+		FROM  order_pay a ,orders o,order_goods g where  g.order_id=o.id and a.pay_sn = o.pay_sn
+		and o.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="orderState != null">
+			AND o.order_state = #{orderState}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND o.order_sn = #{orderSn}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND o.store_id = #{storeId}
+		</if>
+		<if test="dealerId != null and dealerId != ''">
+			AND o.dealer_id = #{dealerId}
+		</if>
+		<if test="paySn != null and paySn != ''">
+			AND o.pay_sn = #{paySn}
+		</if>
+		<if test="purchaserId != null and purchaserId != ''">
+			AND o.purchaser_id = #{purchaserId}
+		</if>
+		<if test="purchaserAccountId != null and purchaserAccountId != ''">
+			AND o.purchaser_account_id = #{purchaserAccountId}
+		</if>
+		<if test="evaluationState != null and evaluationState != ''">
+			AND o.evaluation_state = #{evaluationState}
+		</if>
+		<if test="evaluationAgainState != null and evaluationAgainState != ''">
+			AND o.evaluation_again_state = #{evaluationAgainState}
+		</if>
+		<!--<if test="shippingInfo != null and shippingInfo != ''">-->
+		<!--AND a.shipping_info LIKE-->
+		<!--<if test="dbName == 'oracle'">'%'||#{shippingInfo}||'%'</if>-->
+		<!--<if test="dbName == 'mssql'">'%'+#{shippingInfo}+'%'</if>-->
+		<!--<if test="dbName == 'mysql'">concat('%',#{shippingInfo},'%')</if>-->
+		<!--</if>-->
+		<!--<if test="invoiceInfo != null and invoiceInfo != ''">-->
+		<!--AND a.invoice_info = #{invoiceInfo}-->
+		<!--</if>-->
+		<if test="isInvoiceFinished != null and isInvoiceFinished != ''">
+			AND o.is_invoice_finished = #{isInvoiceFinished}
+		</if>
+		<!--<if test="orderLock != null and orderLock != ''">
+			AND o.order_lock = #{orderLock}
+		</if>-->
+		<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+			and o.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="getOrderPayCount" parameterType="com.jhmis.modules.shop.entity.OrderPay" resultType="int">
+		SELECT  COUNT(DISTINCT o.pay_sn) FROM orders o where
+		o.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="orderState != null">
+			AND o.order_state = #{orderState}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND o.order_sn = #{orderSn}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND o.store_id = #{storeId}
+		</if>
+		<if test="dealerId != null and dealerId != ''">
+			AND o.dealer_id = #{dealerId}
+		</if>
+		<if test="paySn != null and paySn != ''">
+			AND o.pay_sn = #{paySn}
+		</if>
+		<if test="purchaserId != null and purchaserId != ''">
+			AND o.purchaser_id = #{purchaserId}
+		</if>
+		<if test="purchaserAccountId != null and purchaserAccountId != ''">
+			AND o.purchaser_account_id = #{purchaserAccountId}
+		</if>
+		<if test="evaluationState != null and evaluationState != ''">
+			AND o.evaluation_state = #{evaluationState}
+		</if>
+		<if test="evaluationAgainState != null and evaluationAgainState != ''">
+			AND o.evaluation_again_state = #{evaluationAgainState}
+		</if>
+		<if test="isInvoiceFinished != null and isInvoiceFinished != ''">
+			AND o.is_invoice_finished = #{isInvoiceFinished}
+		</if>
+		<if test="orderLock != null and orderLock != ''">
+			AND o.order_lock = #{orderLock}
+		</if>
+		<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+			and o.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+		</if>
+	</select>
+    <select id="getOrders" parameterType="string" resultType="com.jhmis.modules.shop.entity.Orders">
+		SELECT
+			store_id AS "storeId",
+			store_name AS "storeName",
+			pay_sn AS "paySn"
+		FROM  orders WHERE pay_sn=#{paySn}
+
+	</select>
+	<select id="get" resultType="OrderPay" >
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM order_pay a
+		<include refid="orderPayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderPay" >
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM order_pay a
+		<include refid="orderPayJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="paySn != null and paySn != ''">
+				AND a.pay_sn = #{paySn}
+			</if>
+			<if test="apiPayState != null and apiPayState != ''">
+				AND a.api_pay_state = #{apiPayState}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderPay" >
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM order_pay a
+		<include refid="orderPayJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_pay(
+			id,
+			purchaser_account_id,
+			pay_sn,
+			api_pay_state,
+			is_pay_state
+		) VALUES (
+			#{id},
+			#{purchaserAccountId},
+			#{paySn},
+			#{apiPayState},
+			#{isPayState}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_pay SET 	
+			purchaser_account_id = #{purchaserAccountId},
+			pay_sn = #{paySn},
+			is_pay_state=#{isPayState},
+			api_pay_state = #{apiPayState}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM order_pay
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE order_pay SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OrderPay" statementType="STATEMENT">
+		select * FROM order_pay  where ${propertyName} = '${value}'
+	</select>
+</mapper>

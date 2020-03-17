@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserStoreFavoritesMapper">
+    
+	<sql id="purchaserStoreFavoritesColumns">
+		a.id AS "id",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.fav_date AS "favDate",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.store_logo AS "storeLogo",
+		a.log_msg AS "logMsg",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="purchaserStoreFavoritesJoins">
+
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserStoreFavorites" >
+		SELECT 
+			<include refid="purchaserStoreFavoritesColumns"/>
+		FROM purchaser_store_favorites a
+		<include refid="purchaserStoreFavoritesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserStoreFavorites" >
+		SELECT 
+			<include refid="purchaserStoreFavoritesColumns"/>
+		FROM purchaser_store_favorites a
+		<include refid="purchaserStoreFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="favDate != null and favDate != ''">
+				AND a.fav_date = #{favDate}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="logMsg != null and logMsg != ''">
+				AND a.log_msg = #{logMsg}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserStoreFavorites" >
+		SELECT 
+			<include refid="purchaserStoreFavoritesColumns"/>
+		FROM purchaser_store_favorites a
+		<include refid="purchaserStoreFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_store_favorites(
+			id,
+			purchaser_account_id,
+			fav_date,
+			store_id,
+			store_name,
+			store_logo,
+			log_msg,
+			remarks
+		) VALUES (
+			#{id},
+			#{purchaserAccountId},
+			#{favDate},
+			#{storeId},
+			#{storeName},
+			#{storeLogo},
+			#{logMsg},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_store_favorites SET 	
+			purchaser_account_id = #{purchaserAccountId},
+			fav_date = #{favDate},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			store_logo = #{storeLogo},
+			log_msg = #{logMsg},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_store_favorites
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_store_favorites SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserStoreFavorites" statementType="STATEMENT">
+		select * FROM purchaser_store_favorites  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!-- 查重 -->
+	<select id="checkAgain" resultType="PurchaserStoreFavorites" parameterType="String">
+		select
+		<include refid="purchaserStoreFavoritesColumns"/>
+		 FROM purchaser_store_favorites a  where a.store_id = #{arg0} and a.purchaser_account_id = #{arg1}
+	</select>
+	<!-- 取消收藏 -->
+	<delete id="cancel" parameterType="String">
+		delete from purchaser_store_favorites where store_id = #{arg0} and purchaser_account_id = #{arg1}
+	</delete>
+	<!-- 删除 -->
+	<delete id="deleteById" parameterType="String">
+		delete from  purchaser_store_favorites where id = #{arg0}
+	</delete>
+
+
+</mapper>

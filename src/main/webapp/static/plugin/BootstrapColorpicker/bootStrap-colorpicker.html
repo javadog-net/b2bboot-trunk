@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>bootStrap-colorpicker 插件测试</title>
+    <link href="./css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="./css/bootstrap-colorpicker.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="./js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-colorpicker.js"></script>
+    <style>
+        input {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            background-color:#fff;
+            text-indent: 20px;;
+        }
+    </style>
+</head>
+<body>
+<div class="jumbotron">
+    <h1>Bootstrap Colorpicker Demo</h1>
+    <p>选择的颜色：<span id="color"></span></p>
+    <p>点击选择颜色：<input id="demo" type="text" value="" readonly/></p>
+
+</div>
+<script>
+    $(function () {
+        // 基本实例化:
+        $('#demo').colorpicker();
+
+        // Example using an event, to change the color of the .jumbotron background:
+        $('#demo').on('change', function (event) {
+            $('#demo').css('background-color', event.color.toString()).val('');
+            $("#color").text(event.color.toString());
+        });
+    });
+</script>
+</body>
+</html>

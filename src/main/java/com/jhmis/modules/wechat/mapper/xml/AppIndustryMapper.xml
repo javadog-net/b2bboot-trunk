@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.AppIndustryMapper">
+    
+	<sql id="appIndustryColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.onelevel AS "onelevel",
+		a.onelevelid AS "onelevelid"
+	</sql>
+	
+	<sql id="appIndustryJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="AppIndustry" >
+		SELECT 
+			<include refid="appIndustryColumns"/>
+		FROM app_industry a
+		<include refid="appIndustryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppIndustry" >
+		SELECT 
+			<include refid="appIndustryColumns"/>
+		FROM app_industry a
+		<include refid="appIndustryJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppIndustry" >
+		SELECT 
+			<include refid="appIndustryColumns"/>
+		FROM app_industry a
+		<include refid="appIndustryJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_industry(
+			industry,
+			onelevel,
+			onelevelid
+		) VALUES (
+			#{industry},
+			#{onelevel},
+			#{onelevelid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_industry SET 	
+			industry = #{industry},
+			onelevel = #{onelevel},
+			onelevelid = #{onelevelid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM app_industry
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE app_industry SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="AppIndustry" statementType="STATEMENT">
+		select * FROM app_industry  where ${propertyName} = '${value}'
+	</select>
+	
+	<!-- 根据行业名称获取所属一级分类的id -->
+	<select id="findOnelevelidByIndustry" resultType="java.lang.String" parameterType="java.lang.String">
+		select onelevelid FROM app_industry  where industry=#{industry}
+	</select>
+	
+</mapper>

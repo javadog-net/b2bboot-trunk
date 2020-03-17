@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxFeedbackMapper">
+
+	<sql id="wxFeedbackColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.content AS "content",
+		a.create_time AS "createTime",
+		a.reply_person AS "replyPerson",
+		a.reply_time AS "replyTime",
+		a.reply_content AS "replyContent"
+	</sql>
+	
+	<sql id="wxFeedbackJoins">
+		
+		LEFT JOIN sys_user userId ON userId.id = a.user_id
+	</sql>
+	
+    
+	<select id="get" resultType="WxFeedback" >
+		SELECT 
+			<include refid="wxFeedbackColumns"/>
+		FROM wx_feedback a
+		<include refid="wxFeedbackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxFeedback" >
+		SELECT 
+			<include refid="wxFeedbackColumns"/>
+		FROM wx_feedback a
+		<include refid="wxFeedbackJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxFeedback" >
+		SELECT 
+			<include refid="wxFeedbackColumns"/>
+		FROM wx_feedback a
+		<include refid="wxFeedbackJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wx_feedback(
+			id,
+			user_id,
+			user_name,
+			content,
+			create_time,
+			reply_person,
+			reply_time,
+			reply_content
+		) VALUES (
+			#{id},
+			#{userId},
+			#{userName},
+			#{content},
+			#{createTime}
+			#{replyPerson},
+			#{replyTime},
+			#{replyContent}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_feedback SET 	
+			user_id = #{userId},
+			user_name=#{userName},
+			content = #{content},
+			create_time = #{createTime},
+			reply_person = #{replyPerson},
+			reply_time = #{replyTime},
+			reply_content = #{replyContent}
+		WHERE id = #{id}
+	</update>
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_feedback
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_feedback SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxFeedback" statementType="STATEMENT">
+		select * FROM wx_feedback  where ${propertyName} = '${value}'
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wx_feedback(
+			id,
+			user_id,
+			user_name,
+			content,
+			create_time,
+			reply_person,
+			reply_time,
+			reply_content
+		) VALUES (
+			#{id},
+			#{userId},
+			#{userName},
+			#{content},
+			#{createTime},
+			#{replyPerson},
+			#{replyTime},
+			#{replyContent}
+		)
+	</insert>
+
+</mapper>

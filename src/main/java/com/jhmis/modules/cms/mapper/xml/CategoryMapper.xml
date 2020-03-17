@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CategoryMapper">
+
+	<sql id="categoryColumns">
+		a.id AS "id",
+		a.model_id AS "modelId",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.child AS "child",
+		a.arr_childid AS "arrChildid",
+		a.name AS "name",
+		a.dir_name AS "dirName",
+		a.category_mark AS "categoryMark",
+		a.parent_dir AS "parentDir",
+		a.is_show AS "isShow",
+		a.sort AS "sort",
+		a.thumb AS "thumb",
+		a.is_target_blank AS "isTargetBlank",
+		a.tdk_keywords AS "tdkKeywords",
+		a.tdk_title AS "tdkTitle",
+		a.tdk_descp AS "tdkDescp",
+		a.out_url AS "outUrl",
+		a.category_template AS "categoryTemplate",
+		a.list_template AS "listTemplate",
+		a.content_template AS "contentTemplate",
+		a.mcategory_template AS "mcategoryTemplate",
+		a.mlist_template AS "mlistTemplate",
+		a.mcontent_template AS "mcontentTemplate",
+		a.remarks AS "remarks",
+		a.is_extend AS "isExtend",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.is_anonymous AS "isAnonymous",
+		a.allow_comment AS "allowComment",
+		a.icon AS "icon",
+		a.model_name AS "modelName",
+		c.name AS "parent.name"
+	</sql>
+
+	<sql id="categoryJoins">
+		LEFT JOIN cms_category c on c.id=a.parent_id
+	</sql>
+
+
+	<select id="get" resultType="Category" >
+		SELECT
+		<include refid="categoryColumns"/>
+		FROM cms_category a
+		<include refid="categoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Category" >
+		SELECT
+		<include refid="categoryColumns"/>
+		FROM cms_category a
+		<include refid="categoryJoins"/>
+		<where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+            <if test="categoryMark != null and categoryMark != ''">
+                AND a.category_mark=#{categoryMark}
+            </if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id  = #{parent.id}
+			</if>
+			<if test="categoryIds != null and categoryIds != ''">
+				AND a.id in
+				<foreach collection="categoryIds" item="categoryId" index="index"
+						 open="(" close=")" separator=",">
+					#{categoryId}
+				</foreach>
+			</if>
+			<if test="parentIds != null and parentIds !=''">
+				AND a.parent_ids like
+				<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Category" >
+		SELECT
+		<include refid="categoryColumns"/>
+		FROM cms_category a
+		<include refid="categoryJoins"/>
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="categorySort" resultType="Category">
+		SELECT
+		<include refid="categoryColumns"/>
+		FROM cms_category a
+		<include refid="categoryJoins"/>
+		<where>
+			${dataScope}
+			<if test="id != null and id !=''">
+				AND a.id !=#{id}
+			</if>
+			<if test="parent.id != null and parent.id !=''">
+				AND a.parent_id =#{parent.id}
+			</if>
+			<choose>
+				<when test="sortType=='up' and sort != null">
+					AND a.sort<![CDATA[ <= ]]> ${sort}
+				</when>
+				<when test="sortType=='down' and sort != null ">
+					AND a.sort<![CDATA[ >= ]]> ${sort}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+		</where>
+		<choose>
+			<when test="sortType=='up'">
+				order by a.sort desc
+			</when>
+			<otherwise>
+				order by a.sort
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO cms_category(
+			id,
+			model_id,
+			parent_id,
+			parent_ids,
+			child,
+			arr_childid,
+			name,
+			dir_name,
+			category_mark,
+			parent_dir,
+			is_show,
+			sort,
+			thumb,
+			is_target_blank,
+			tdk_keywords,
+			tdk_title,
+			tdk_descp,
+			out_url,
+			category_template,
+			list_template,
+			content_template,
+			mcategory_template,
+			mlist_template,
+			mcontent_template,
+			remarks,
+			is_extend,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			is_anonymous,
+			allow_comment,
+			icon,
+			model_name
+		) VALUES (
+			#{id},
+			#{modelId},
+			#{parent.id},
+			#{parentIds},
+			#{child},
+			#{arrChildid},
+			#{name},
+			#{dirName},
+			#{categoryMark},
+			#{parentDir},
+			#{isShow},
+			#{sort},
+			#{thumb},
+			#{isTargetBlank},
+			#{tdkKeywords},
+			#{tdkTitle},
+			#{tdkDescp},
+			#{outUrl},
+			#{categoryTemplate},
+			#{listTemplate},
+			#{contentTemplate},
+			#{mcategoryTemplate},
+			#{mlistTemplate},
+			#{mcontentTemplate},
+			#{remarks},
+			#{isExtend},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{isAnonymous},
+			#{allowComment},
+			#{icon},
+			#{modelName}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE cms_category SET
+			model_id = #{modelId},
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			child = #{child},
+			arr_childid = #{arrChildid},
+			name = #{name},
+			dir_name = #{dirName},
+			category_mark = #{categoryMark},
+			parent_dir = #{parentDir},
+			is_show = #{isShow},
+			sort = #{sort},
+			thumb = #{thumb},
+			is_target_blank = #{isTargetBlank},
+			tdk_keywords = #{tdkKeywords},
+			tdk_title = #{tdkTitle},
+			tdk_descp = #{tdkDescp},
+			out_url = #{outUrl},
+			is_extend = #{isExtend},
+			category_template = #{categoryTemplate},
+			list_template = #{listTemplate},
+			content_template = #{contentTemplate},
+			mcategory_template = #{mcategoryTemplate},
+			mlist_template = #{mlistTemplate},
+			mcontent_template = #{mcontentTemplate},
+			remarks = #{remarks},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			is_anonymous = #{isAnonymous},
+			allow_comment = #{allowComment},
+			icon = #{icon},
+			model_name = #{modelName}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_category
+		WHERE id = #{id}
+		OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_category SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+		OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Category" statementType="STATEMENT">
+		select * FROM cms_category  where ${propertyName} = '${value}'
+	</select>
+	<select id="findByParentId" resultType="Category" >
+		SELECT
+		<include refid="categoryColumns"/>
+		FROM cms_category a
+		<include refid="categoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="parent.id != null and parent.id != ''">
+				AND a.parent_id  = #{parent.id}
+			</if>
+			<if test="isShow != null and isShow!=''">
+				AND a.is_show = #{isShow}
+			</if>
+		</where>
+		order by a.sort
+	</select>
+	<select id="findByParentIdsLike" resultType="Category">
+		SELECT
+		<include refid="categoryColumns"></include>
+		FROM cms_category a
+		<include refid="categoryJoins"></include>
+		<where>
+		    a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.parent_ids LIKE
+			<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{id}, '%')</if>
+		</where>
+		order by a.sort
+	</select>
+	<update id="updateParentIds">
+		UPDATE cms_category SET
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds
+		WHERE id = #{id}
+	</update>
+	<update id="updateSort">
+		UPDATE cms_category SET
+		sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	<select id="findMaxSort" parameterType="Category" resultType="java.lang.Integer">
+		SELECT MAX(sort) from cms_category where del_flag=#{DEL_FLAG_NORMAL}
+	</select>
+	<!--临时的迁移数据的方法-->
+	<update id = "updateParentIdsTemp" parameterType="Category">
+		update cms_category set parent_ids = #{parentIds} where id=#{id}
+	</update>
+</mapper>

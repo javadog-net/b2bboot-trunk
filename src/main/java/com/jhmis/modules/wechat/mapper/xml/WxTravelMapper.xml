@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxTravelMapper">
+
+	<sql id="wxTravelColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.meeting_signup_id AS
+		"meetingSignupId",
+		a.concat AS "concat",
+		a.mobile AS "mobile",
+		a.certificate_type AS "certificateType",
+		a.certificate_no AS
+		"certificateNo",
+		a.start_vehicle AS "startVehicle",
+		a.start_time AS
+		"startTime",
+		a.start_stand AS "startStand",
+		a.start_stand_end AS
+		"startStandEnd",
+		a.start_vehicle_no AS "startVehicleNo",
+		a.start_receive AS "startReceive",
+		a.start_ticket AS "startTicket",
+		a.return_vehicle AS "returnVehicle",
+		a.return_time AS "returnTime",
+		a.return_stand AS "returnStand",
+		a.return_stand_end AS
+		"returnStandEnd",
+		a.return_vehicle_no AS "returnVehicleNo",
+		a.return_ticket AS "returnTicket",
+		a.add_time AS "addTime",
+		a.is_del AS
+		"isDel",
+		a.del_time AS "delTime"
+	</sql>
+
+	<sql id="wxTravelJoins">
+
+	</sql>
+
+
+	<select id="get" resultType="WxTravel">
+		SELECT
+		<include refid="wxTravelColumns" />
+		FROM wx_travel a
+		<include refid="wxTravelJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WxTravel">
+		SELECT
+		<include refid="wxTravelColumns" />
+		FROM wx_travel a
+		<include refid="wxTravelJoins" />
+		<where>
+
+			${dataScope}
+			<if test="concat != null and concat != ''">
+				AND a.concat like
+				<if test="dbName == 'oracle'">'%'||#{concat}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{concat}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{concat},'%')</if>
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+			<if test="meetingSignupId != null and meetingSignupId != ''">
+				AND a.meeting_signup_id = #{meetingSignupId}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile like
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="isDel != null and isDel != ''">
+				AND a.is_del = #{isDel}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WxTravel">
+		SELECT
+		<include refid="wxTravelColumns" />
+		FROM wx_travel a
+		<include refid="wxTravelJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wx_travel(
+		id,
+		meeting_id,
+		purchaser_account_id,
+		meeting_signup_id,
+		concat,
+		mobile,
+		certificate_type,
+		certificate_no,
+		start_vehicle,
+		start_time,
+		start_stand,
+		start_stand_end,
+		start_vehicle_no,
+		start_receive,
+		start_ticket,
+		return_vehicle,
+		return_time,
+		return_stand,
+		return_stand_end,
+		return_vehicle_no,
+		return_ticket,
+		add_time,
+		is_del,
+		del_time
+		) VALUES (
+		#{id},
+		#{meetingId},
+		#{purchaserAccountId},
+		#{meetingSignupId},
+		#{concat},
+		#{mobile},
+		#{certificateType},
+		#{certificateNo},
+		#{startVehicle},
+		#{startTime},
+		#{startStand},
+		#{startStandEnd},
+		#{startVehicleNo},
+		#{startReceive},
+		#{startTicket},
+		#{returnVehicle},
+		#{returnTime},
+		#{returnStand},
+		#{returnStandEnd},
+		#{returnVehicleNo},
+		#{returnTicket},
+		#{addTime},
+		#{isDel},
+		#{delTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wx_travel SET
+		meeting_id = #{meetingId},
+		purchaser_account_id = #{purchaserAccountId},
+		meeting_signup_id = #{meetingSignupId},
+		concat = #{concat},
+		mobile = #{mobile},
+		certificate_type = #{certificateType},
+		certificate_no = #{certificateNo},
+		start_vehicle = #{startVehicle},
+		start_time = #{startTime},
+		start_stand = #{startStand},
+		start_stand_end = #{startStandEnd},
+		start_vehicle_no = #{startVehicleNo},
+		start_receive = #{startReceive},
+		start_ticket = #{startTicket},
+		return_vehicle = #{returnVehicle},
+		return_time = #{returnTime},
+		return_stand = #{returnStand},
+		return_stand_end = #{returnStandEnd},
+		return_vehicle_no = #{returnVehicleNo},
+		return_ticket = #{returnTicket},
+		add_time = #{addTime},
+		is_del = #{isDel},
+		del_time = #{delTime}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM wx_travel
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE wx_travel SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deletebyuserid">
+		DELETE FROM wx_travel
+		WHERE purchaser_account_id = #{id}
+	</delete>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxTravel"
+		statementType="STATEMENT">
+		select * FROM wx_travel where ${propertyName} =
+		'${value}'
+	</select>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMeetingFileMapper">
+    
+	<sql id="wxMeetingFileColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.text_url AS "textUrl",
+		a.add_time AS "addTime",
+		a.add_user AS "addUser",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="wxMeetingFileJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMeetingFile" >
+		SELECT 
+			<include refid="wxMeetingFileColumns"/>
+		FROM wx_meeting_file a
+		<include refid="wxMeetingFileJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMeetingFile" >
+		SELECT 
+			<include refid="wxMeetingFileColumns"/>
+		FROM wx_meeting_file a
+		<include refid="wxMeetingFileJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMeetingFile" >
+		SELECT 
+			<include refid="wxMeetingFileColumns"/>
+		FROM wx_meeting_file a
+		<include refid="wxMeetingFileJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_meeting_file(
+			id,
+			meeting_id,
+			text_url,
+			add_time,
+			add_user,
+			remark
+		) VALUES (
+			#{id},
+			#{meetingId},
+			#{textUrl},
+			#{addTime},
+			#{addUser},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_meeting_file SET 	
+			meeting_id = #{meetingId},
+			text_url = #{textUrl},
+			add_time = #{addTime},
+			add_user = #{addUser},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_meeting_file
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_meeting_file SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMeetingFile" statementType="STATEMENT">
+		select * FROM wx_meeting_file  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxIndustryMapper">
+
+	<sql id="WxIndustryColumns">
+		a.wx_industry_id AS "id",
+		a.wx_industry_name AS "name"
+	</sql>
+	<select id="find" resultType="WxIndustry">
+		select
+		<include refid="WxIndustryColumns" />
+		FROM Wx_Industry a where
+		wx_industry_id = #{id}
+	</select>
+
+	<select id="findLists" resultType="WxIndustry">
+		select
+		<include refid="WxIndustryColumns" />
+		FROM Wx_Industry a
+		<where>
+		1=1
+			<if test="name != null and name != ''">
+				AND a.wx_industry_name like '%${name}%'
+			</if>
+		</where>
+	</select>
+
+
+
+</mapper>

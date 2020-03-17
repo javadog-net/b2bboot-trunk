@@ -1,0 +1,61 @@
+.content_t{
+	height: 981px;
+}
+.layui-colla-content{
+	padding-left: 60px;
+	color: #787878;
+	border: none;
+}
+.fold_panel{
+	width: 304px;
+	height: 100%;
+	text-align: left;
+}
+.con_left{
+	background-color: #F4F4F4;
+}
+.con_right{
+	width: calc(100% - 344px);
+	height: calc(100% - 40px);
+	padding: 20px;
+}
+.con_right ul{
+	
+}
+.con_right ul li{
+	padding: 10px;
+}
+.con_right ul li>img{
+	width: 150px;
+	height: 150px;
+}
+.con_right ul li .fl-text{
+	width: calc(100% - 190px);
+	padding: 20px 0px 20px 40px;
+	height: 110px;
+}
+.con_right ul li .fl-text .inner_title{
+	font-size: 14px;
+	color: #000000;
+	line-height: 26px;
+}
+.con_right ul li .fl-text .inner_content{
+	font-size: 12px;
+	color: #787878;
+	line-height: 24px;
+}
+.con_right ul li .fl-text .inner_date{
+	margin-top: 10px;
+	font-size: 12px;
+}
+#page1{
+	margin-top: 20px;
+	float: right;
+}
+
+.cut-off-rule{
+	height: 1px;
+	width: 98%;
+	background: #e5e5e5;
+	display: block;
+}

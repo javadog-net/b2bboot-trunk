@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.bid.mapper.BidInfoDetailMapper">
+    
+	<sql id="bidInfoDetailColumns">
+		a.id AS "id",
+		a.project_name AS "projectName",
+		a.company_name AS "companyName",
+		a.company_type AS "companyType",
+		a.project_industry AS "projectIndustry",
+		a.project_status AS "projectStatus",
+		a.project_content AS "projectContent",
+		a.project_budget AS "projectBudget",
+		a.project_properties AS "projectProperties",
+		a.start_time AS "startTime",
+		a.stop_time AS "stopTime",
+		a.build_area AS "buildArea",
+		a.redecorate_condition AS "redecorateCondition",
+		a.redecorate_stand AS "redecorateStand",
+		a.belong_area AS "belongArea",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.project_need_product AS "projectNeedProduct",
+		a.project_address AS "projectAddress",
+		a.add_user AS "addUser",
+		a.add_time AS "addTime",
+		a.bid_concat1 AS "bidConcat1",
+		a.bid_concat1_position AS "bidConcat1Position",
+		a.bid_concat1_tel AS "bidConcat1Tel",
+		a.bid_concat1_phone AS "bidConcat1Phone",
+		a.bid_concat2 AS "bidConcat2",
+		a.bid_concat2_position AS "bidConcat2Position",
+		a.bid_concat2_tel AS "bidConcat2Tel",
+		a.bid_concat2_phone AS "bidConcat2Phone",
+		a.bid_concat3 AS "bidConcat3",
+		a.bid_concat3_position AS "bidConcat3Position",
+		a.bid_concat3_tel AS "bidConcat3Tel",
+		a.bid_concat3_phone AS "bidConcat3Phone",
+		a.bid_design_concat1 AS "bidDesignConcat1",
+		a.bid_design_concat_positon AS "bidDesignConcatPositon",
+		a.bid_design_concat1_tel AS "bidDesignConcat1Tel",
+		a.bid_design_concat1_phone AS "bidDesignConcat1Phone",
+		a.bid_design_concat2 AS "bidDesignConcat2",
+		a.bid_design_concat2_position AS "bidDesignConcat2Position",
+		a.bid_design_concat2_tel AS "bidDesignConcat2Tel",
+		a.bid_design_concat2_phone AS "bidDesignConcat2Phone",
+		a.bid_build_concat1 AS "bidBuildConcat1",
+		a.bid_build_concat1_positon AS "bidBuildConcat1Positon",
+		a.bid_build_concat1_tel AS "bidBuildConcat1Tel",
+		a.bid_build_concat1_phone AS "bidBuildConcat1Phone",
+		a.status AS "status",
+		a.project_visit_num AS "projectVisitNum"
+	</sql>
+	
+	<sql id="bidInfoDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="BidInfoDetail" >
+		SELECT 
+			<include refid="bidInfoDetailColumns"/>
+		FROM bid_info_detail a
+		<include refid="bidInfoDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BidInfoDetail" >
+		SELECT 
+			<include refid="bidInfoDetailColumns"/>
+		FROM bid_info_detail a
+		<include refid="bidInfoDetailJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name = #{projectName}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="companyType != null and companyType != ''">
+				AND a.company_type = #{companyType}
+			</if>
+			<if test="projectIndustry != null and projectIndustry != ''">
+			    AND	a.project_industry like CONCAT('%',#{projectIndustry},'%')
+			</if>
+			<if test="projectStatus != null and projectStatus != ''">
+				AND a.project_status = #{projectStatus}
+			</if>
+			<if test="projectContent != null and projectContent != ''">
+				AND a.project_content = #{projectContent}
+			</if>
+			<if test="projectBudget != null and projectBudget != ''">
+				AND a.project_budget = #{projectBudget}
+			</if>
+			<if test="projectProperties != null and projectProperties != ''">
+				AND a.project_properties = #{projectProperties}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND a.start_time = #{startTime}
+			</if>
+			<if test="stopTime != null and stopTime != ''">
+				AND a.stop_time = #{stopTime}
+			</if>
+			<if test="buildArea != null and buildArea != ''">
+				AND a.build_area = #{buildArea}
+			</if>
+			<if test="redecorateCondition != null and redecorateCondition != ''">
+				AND a.redecorate_condition = #{redecorateCondition}
+			</if>
+			<if test="redecorateStand != null and redecorateStand != ''">
+				AND a.redecorate_stand = #{redecorateStand}
+			</if>
+			<if test="belongArea != null and belongArea != ''">
+			    AND	a.belong_area like CONCAT('%',#{belongArea},'%')
+			</if>
+			<if test="projectNeedProduct != null and projectNeedProduct != ''">
+				AND a.project_need_product = #{projectNeedProduct}
+			</if>
+			<if test="projectAddress != null and projectAddress != ''">
+				AND a.project_address = #{projectAddress}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="bidConcat1 != null and bidConcat1 != ''">
+				AND a.bid_concat1 = #{bidConcat1}
+			</if>
+			<if test="bidConcat1Phone != null and bidConcat1Phone != ''">
+				AND a.bid_concat1_phone = #{bidConcat1Phone}
+			</if>
+			<if test="addUser != null and addUser != ''">
+				AND a.add_user = #{addUser}
+			</if>
+				<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			
+			<if test="threeDay != null and threeDay !=''">
+				AND DATE_SUB(CURDATE(),INTERVAL 3 DAY) &lt;= DATE(a.add_time)
+			</if>
+			<if test="sevenDay != null and sevenDay !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+			</if>
+			<if test="month != null  and month !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+			</if>
+			<if test="threeMonth != null and threeMonth !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+			</if>
+			<if test="sixMonth != null  and sixMonth !=''">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+			</if>
+			<if test="year != null  and year !=''">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BidInfoDetail" >
+		SELECT 
+			<include refid="bidInfoDetailColumns"/>
+		FROM bid_info_detail a
+		<include refid="bidInfoDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bid_info_detail(
+			id,
+			project_name,
+			company_name,
+			company_type,
+			project_industry,
+			project_status,
+			project_content,
+			project_budget,
+			project_properties,
+			start_time,
+			stop_time,
+			build_area,
+			redecorate_condition,
+			redecorate_stand,
+			belong_area,
+			province_id,
+			city_id,
+			project_need_product,
+			project_address,
+			add_user,
+			add_time,
+			bid_concat1,
+			bid_concat1_position,
+			bid_concat1_tel,
+			bid_concat1_phone,
+			bid_concat2,
+			bid_concat2_position,
+			bid_concat2_tel,
+			bid_concat2_phone,
+			bid_concat3,
+			bid_concat3_position,
+			bid_concat3_tel,
+			bid_concat3_phone,
+			bid_design_concat1,
+			bid_design_concat_positon,
+			bid_design_concat1_tel,
+			bid_design_concat1_phone,
+			bid_design_concat2,
+			bid_design_concat2_position,
+			bid_design_concat2_tel,
+			bid_design_concat2_phone,
+			bid_build_concat1,
+			bid_build_concat1_positon,
+			bid_build_concat1_tel,
+			bid_build_concat1_phone,
+			status,
+			project_visit_num
+		) VALUES (
+			#{id},
+			#{projectName},
+			#{companyName},
+			#{companyType},
+			#{projectIndustry},
+			#{projectStatus},
+			#{projectContent},
+			#{projectBudget},
+			#{projectProperties},
+			#{startTime},
+			#{stopTime},
+			#{buildArea},
+			#{redecorateCondition},
+			#{redecorateStand},
+			#{belongArea},
+			#{provinceId},
+			#{cityId},
+			#{projectNeedProduct},
+			#{projectAddress},
+			#{addUser},
+			#{addTime},
+			#{bidConcat1},
+			#{bidConcat1Position},
+			#{bidConcat1Tel},
+			#{bidConcat1Phone},
+			#{bidConcat2},
+			#{bidConcat2Position},
+			#{bidConcat2Tel},
+			#{bidConcat2Phone},
+			#{bidConcat3},
+			#{bidConcat3Position},
+			#{bidConcat3Tel},
+			#{bidConcat3Phone},
+			#{bidDesignConcat1},
+			#{bidDesignConcatPositon},
+			#{bidDesignConcat1Tel},
+			#{bidDesignConcat1Phone},
+			#{bidDesignConcat2},
+			#{bidDesignConcat2Position},
+			#{bidDesignConcat2Tel},
+			#{bidDesignConcat2Phone},
+			#{bidBuildConcat1},
+			#{bidBuildConcat1Positon},
+			#{bidBuildConcat1Tel},
+			#{bidBuildConcat1Phone},
+			#{status},
+			#{projectVisitNum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bid_info_detail SET 	
+			project_name = #{projectName},
+			company_name = #{companyName},
+			company_type = #{companyType},
+			project_industry = #{projectIndustry},
+			project_status = #{projectStatus},
+			project_content = #{projectContent},
+			project_budget = #{projectBudget},
+			project_properties = #{projectProperties},
+			start_time = #{startTime},
+			stop_time = #{stopTime},
+			build_area = #{buildArea},
+			redecorate_condition = #{redecorateCondition},
+			redecorate_stand = #{redecorateStand},
+			belong_area = #{belongArea},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			project_need_product = #{projectNeedProduct},
+			project_address = #{projectAddress},
+			add_time = #{addTime},
+			bid_concat1 = #{bidConcat1},
+			bid_concat1_position = #{bidConcat1Position},
+			bid_concat1_tel = #{bidConcat1Tel},
+			bid_concat1_phone = #{bidConcat1Phone},
+			bid_concat2 = #{bidConcat2},
+			bid_concat2_position = #{bidConcat2Position},
+			bid_concat2_tel = #{bidConcat2Tel},
+			bid_concat2_phone = #{bidConcat2Phone},
+			bid_concat3 = #{bidConcat3},
+			bid_concat3_position = #{bidConcat3Position},
+			bid_concat3_tel = #{bidConcat3Tel},
+			bid_concat3_phone = #{bidConcat3Phone},
+			bid_design_concat1 = #{bidDesignConcat1},
+			bid_design_concat_positon = #{bidDesignConcatPositon},
+			bid_design_concat1_tel = #{bidDesignConcat1Tel},
+			bid_design_concat1_phone = #{bidDesignConcat1Phone},
+			bid_design_concat2 = #{bidDesignConcat2},
+			bid_design_concat2_position = #{bidDesignConcat2Position},
+			bid_design_concat2_tel = #{bidDesignConcat2Tel},
+			bid_design_concat2_phone = #{bidDesignConcat2Phone},
+			bid_build_concat1 = #{bidBuildConcat1},
+			bid_build_concat1_positon = #{bidBuildConcat1Positon},
+			bid_build_concat1_tel = #{bidBuildConcat1Tel},
+			bid_build_concat1_phone = #{bidBuildConcat1Phone},
+			status = #{status},
+			project_visit_num=#{projectVisitNum}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bid_info_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bid_info_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="updateValid">
+		UPDATE bid_info_detail SET
+		status = #{valid}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BidInfoDetail" statementType="STATEMENT">
+		select * FROM bid_info_detail  where ${propertyName} = '${value}'
+	</select>
+	
+	
+	<select id="getTimeProjectList" resultType="BidInfoDetail">
+		SELECT
+		<include refid="bidInfoDetailColumns" />
+		FROM bid_info_detail a where status = 1
+		ORDER BY add_time desc
+		limit  15	
+	</select>
+	<select id="getVisitProjectList" resultType="BidInfoDetail">
+		SELECT
+		<include refid="bidInfoDetailColumns" />
+		FROM bid_info_detail a where status = 1
+		ORDER BY project_visit_num desc
+		limit  15	
+	</select>
+</mapper>

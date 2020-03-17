@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.purchasermainrel.mapper.PurchaserMasterSlaveRelMapper">
+    
+	<sql id="purchaserMasterSlaveRelColumns">
+		a.id AS "id",
+		a.purchaser_master_id AS "purchaserMasterId",
+		a.purchaser_slave_id AS "purchaserSlaveId",
+		a.ope_date AS "opeDate"
+	</sql>
+	
+	<sql id="purchaserMasterSlaveRelJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserMasterSlaveRel" >
+		SELECT 
+			<include refid="purchaserMasterSlaveRelColumns"/>
+		FROM purchaser_master_slave_rel a
+		<include refid="purchaserMasterSlaveRelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getMasterPurchaser" resultType="PurchaserMasterSlaveRel" >
+		SELECT 
+			<include refid="purchaserMasterSlaveRelColumns"/>
+		FROM purchaser_master_slave_rel a
+		WHERE a.purchaser_slave_id = #{slaveId}
+	</select>
+	
+	
+	
+	<select id="findList" resultType="PurchaserMasterSlaveRel" >
+		SELECT 
+			<include refid="purchaserMasterSlaveRelColumns"/>
+		FROM purchaser_master_slave_rel a
+		<include refid="purchaserMasterSlaveRelJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="purchaserMasterId != null and purchaserMasterId != ''">
+				AND a.purchaser_master_id = #{purchaserMasterId}
+			</if>
+			<if test="purchaserSlaveId != null and purchaserSlaveId != ''">
+				AND a.purchaser_slave_id = #{purchaserSlaveId}
+			</if>
+			<if test="opeDate != null and opeDate != ''">
+				AND a.ope_date = #{opeDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserMasterSlaveRel" >
+		SELECT 
+			<include refid="purchaserMasterSlaveRelColumns"/>
+		FROM purchaser_master_slave_rel a
+		<include refid="purchaserMasterSlaveRelJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_master_slave_rel(
+			id,
+			purchaser_master_id,
+			purchaser_slave_id,
+			ope_date
+		) VALUES (
+			#{id},
+			#{purchaserMasterId},
+			#{purchaserSlaveId},
+			#{opeDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_master_slave_rel SET 	
+			purchaser_master_id = #{purchaserMasterId},
+			purchaser_slave_id = #{purchaserSlaveId},
+			ope_date = #{opeDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_master_slave_rel
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除主子账号关联数据 -->
+	<delete id="deletePurchaserRel">
+		DELETE FROM purchaser_master_slave_rel
+		WHERE  purchaser_master_id = #{purchaserMasterId}  and 
+			purchaser_slave_id = #{purchaserSlaveId}
+	</delete>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_master_slave_rel SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserMasterSlaveRel" statementType="STATEMENT">
+		select * FROM purchaser_master_slave_rel  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!--<select id="getSubByAdmin">
+		select purchaser_slave_id FROM purchaser_master_slave_rel  where purchaser_master_id = #{purchaserMasterId}
+	</select>-->
+
+	<select id="getSubByAdmin" resultType="PurchaserMasterSlaveRel" >
+		SELECT
+		<include refid="purchaserMasterSlaveRelColumns"/>
+		FROM purchaser_master_slave_rel a
+		WHERE a.purchaser_master_id = #{purchaserMasterId}
+	</select>
+
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.GoodsBrowseMapper">
+    
+	<sql id="goodsBrowseColumns">
+		a.id AS "id",
+		a.store_id AS "storeId",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.browse_time AS "browseTime",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.store_goods_id AS "storeGoodsId"
+	</sql>
+	
+	<sql id="goodsBrowseJoins">
+		left join store s on a.store_id = s.id  left join store_goods sg on a.store_id =  sg.store_id  and a.goods_code = sg.code left join goods g on a.goods_code = g.code left join brand b on g.brand = b.id
+	</sql>
+	
+    
+	<select id="get" resultType="GoodsBrowse" >
+
+		SELECT 
+			<include refid="goodsBrowseColumns"/>
+		FROM goods_browse a
+		<include refid="goodsBrowseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsBrowse" >
+		SELECT 
+			<include refid="goodsBrowseColumns"/>,b.id as brandId, b.name as brandName, sg.market_price as marketPrice, sg.price as price,g.main_pic_url as mainPicUrl
+		FROM goods_browse a
+		<include refid="goodsBrowseJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="beginBrowseTime != null and endBrowseTime != null and beginBrowseTime != '' and endBrowseTime != ''">
+				AND a.browse_time BETWEEN #{beginBrowseTime} AND #{endBrowseTime}
+			</if>
+			<if test="categoryPid != null and categoryPid != ''">
+				AND a.category_pid = #{categoryPid}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="storeGoodsId != null and storeGoodsId != ''">
+				AND a.store_goods_id = #{storeGoodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsBrowse" >
+		SELECT 
+			<include refid="goodsBrowseColumns"/>
+		FROM goods_browse a
+		<include refid="goodsBrowseJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_browse(
+			id,
+			store_id,
+			goods_code,
+			goods_name,
+			purchaser_account_id,
+			browse_time,
+			category_pid,
+			category_id,
+			store_goods_id
+		) VALUES (
+			#{id},
+			#{storeId},
+			#{goodsCode},
+			#{goodsName},
+			#{purchaserAccountId},
+			#{browseTime},
+			#{categoryPid},
+			#{categoryId},
+			#{storeGoodsId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_browse SET 	
+			store_id = #{storeId},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			purchaser_account_id = #{purchaserAccountId},
+			browse_time = #{browseTime},
+			category_pid = #{categoryPid},
+			category_id = #{categoryId},
+			store_goods_id = #{storeGoodsId}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM goods_browse
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE goods_browse SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GoodsBrowse" statementType="STATEMENT">
+		select * FROM goods_browse  where ${propertyName} = '${value}'
+	</select>
+
+	<delete id="deleteById" parameterType="String">
+		delete from goods_browse where id = #{arg0}
+	</delete>
+
+	
+</mapper>

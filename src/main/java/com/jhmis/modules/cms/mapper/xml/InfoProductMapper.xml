@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.InfoProductMapper">
+    
+	<sql id="infoProductColumns">
+		a.id AS "id",
+		a.info_id AS "infoId",
+		a.product_id AS "productId",
+		a.sort AS "sort",
+		g.name AS "productName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+        s.htmlpath AS "htmlpath",
+        g.main_pic_url AS "mainPicUrl"
+	</sql>
+	
+	<sql id="infoProductJoins">
+		LEFT JOIN store_goods s on a.product_id = s.id
+		LEFT JOIN goods g  on s.code=g.code
+	</sql>
+	
+    
+	<select id="get" resultType="InfoProduct" >
+		SELECT 
+			<include refid="infoProductColumns"/>
+		FROM cms_info_product a
+		<include refid="infoProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="InfoProduct" >
+		SELECT 
+			<include refid="infoProductColumns"/>
+		FROM cms_info_product a
+		<include refid="infoProductJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="infoId != null and infoId != ''">
+				AND a.info_id = #{infoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InfoProduct" >
+		SELECT 
+			<include refid="infoProductColumns"/>
+		FROM cms_info_product a
+		<include refid="infoProductJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_info_product(
+			id,
+			info_id,
+			product_id,
+			sort,
+			create_by,
+			create_date
+		) VALUES (
+			#{id},
+			#{infoId},
+			#{productId},
+			#{sort},
+			#{createBy.id},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_info_product SET 	
+			info_id = #{infoId},
+			product_id = #{productId},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_info_product
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_info_product SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="InfoProduct" statementType="STATEMENT">
+		select * FROM cms_info_product  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

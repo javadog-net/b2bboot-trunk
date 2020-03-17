@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.dealer.DealerRoleMapper">
+    <resultMap id="roleResult" type="DealerRole">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="dealerId" column="dealerId" />
+        <result property="useable" column="useable" />
+        <result property="remarks" column="remarks" />
+        <result property="delFlag" column="delFlag" />
+        <result property="createById" column="createById" />
+        <result property="createDate" column="createDate" />
+        <result property="updateById" column="updateById" />
+        <result property="updateDate" column="updateDate" />
+        <collection property="menuList" ofType="DealerMenu">
+            <id property="id" column="menuList.id" />
+        </collection>
+    </resultMap>
+
+	<sql id="dealerRoleColumns">
+		a.id AS "id",
+		a.dealer_id AS "dealerId",
+		a.name AS "name",
+		a.useable AS "useable",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createById",
+		a.create_date AS "createDate",
+		a.update_by AS "updateById",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="dealerRoleJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultMap="roleResult" >
+		SELECT 
+			<include refid="dealerRoleColumns"/>,
+            rm.menu_id AS "menuList.id"
+		FROM dealer_role a
+		<include refid="dealerRoleJoins"/>
+        LEFT JOIN dealer_role_menu rm ON rm.role_id = a.id
+		WHERE a.id = #{id}
+	</select>
+
+    <select id="getByName" resultType="DealerRole">
+        SELECT
+        <include refid="dealerRoleColumns"/>
+        FROM dealer_role a
+        WHERE a.dealer_id = #{dealerId} AND a.name = #{name}
+    </select>
+
+	<select id="findList" resultMap="roleResult" >
+		SELECT 
+			<include refid="dealerRoleColumns"/>
+		FROM dealer_role a
+		<include refid="dealerRoleJoins"/>
+        LEFT JOIN dealer_account_role ur ON ur.role_id = a.id
+        LEFT JOIN dealer_account u ON u.id = ur.account_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id = #{dealerId}
+			</if>
+            <if test="account != null and account.id != null and account.id != ''">
+                AND u.id = #{account.id}
+            </if>
+            <if test="account != null and account.loginName != null and account.loginName != ''">
+                AND u.login_name = #{account.loginName}
+            </if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="useable != null and useable != ''">
+				AND a.useable = #{useable}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DealerRole" >
+		SELECT 
+			<include refid="dealerRoleColumns"/>
+		FROM dealer_role a
+		<include refid="dealerRoleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="dealerId != null and dealerId != ''">
+                AND a.dealer_id = #{dealerId}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO dealer_role(
+			id,
+			dealer_id,
+			name,
+			useable,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{dealerId},
+			#{name},
+			#{useable},
+			#{delFlag},
+			#{createById},
+			#{createDate},
+			#{updateById},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE dealer_role SET 	
+			dealer_id = #{dealerId},
+			name = #{name},
+			useable = #{useable},
+			update_by = #{updateById},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM dealer_role
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE dealer_role SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DealerRole" statementType="STATEMENT">
+		select * FROM dealer_role  where ${propertyName} = '${value}'
+	</select>
+
+	<delete id="deleteRoleMenu">
+		DELETE FROM dealer_role_menu WHERE role_id = #{id}
+	</delete>
+
+	<insert id="insertRoleMenu">
+		INSERT INTO dealer_role_menu(role_id, menu_id)
+		VALUES
+		<foreach collection="menuList" item="menu" separator=" , ">
+			(#{id}, #{menu.id})
+		</foreach>
+	</insert>
+</mapper>

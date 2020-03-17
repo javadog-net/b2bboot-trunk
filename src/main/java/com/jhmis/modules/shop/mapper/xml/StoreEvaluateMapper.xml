@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.StoreEvaluateMapper">
+    
+	<sql id="storeEvaluateColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.purchaser_id AS "purchaserId",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.score_product_quality AS "scoreProductQuality",
+		a.score_demand_response AS "scoreDemandResponse",
+		a.score_delivery_credit AS "scoreDeliveryCredit",
+		a.score_supply_speed AS "scoreSupplySpeed",
+		a.score_customer_service AS "scoreCustomerService",
+		a.isanonymous AS "isanonymous",
+		a.addtime AS "addtime"
+	</sql>
+	
+	<sql id="storeEvaluateJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="StoreEvaluate" >
+		SELECT 
+			<include refid="storeEvaluateColumns"/>
+		FROM store_evaluate a
+		<include refid="storeEvaluateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StoreEvaluate" >
+		SELECT 
+			<include refid="storeEvaluateColumns"/>
+		FROM store_evaluate a
+		<include refid="storeEvaluateJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn = #{orderSn}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name = #{storeName}
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="isanonymous != null and isanonymous != ''">
+				AND a.isanonymous = #{isanonymous}
+			</if>
+			<if test="beginAddtime != null and endAddtime != null and beginAddtime != '' and endAddtime != ''">
+				AND a.addtime BETWEEN #{beginAddtime} AND #{endAddtime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StoreEvaluate" >
+		SELECT 
+			<include refid="storeEvaluateColumns"/>
+		FROM store_evaluate a
+		<include refid="storeEvaluateJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO store_evaluate(
+			id,
+			order_id,
+			order_sn,
+			store_id,
+			store_name,
+			purchaser_id,
+			purchaser_account_id,
+			score_product_quality,
+			score_demand_response,
+			score_delivery_credit,
+			score_supply_speed,
+			score_customer_service,
+			isanonymous,
+			addtime
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{orderSn},
+			#{storeId},
+			#{storeName},
+			#{purchaserId},
+			#{purchaserAccountId},
+			#{scoreProductQuality},
+			#{scoreDemandResponse},
+			#{scoreDeliveryCredit},
+			#{scoreSupplySpeed},
+			#{scoreCustomerService},
+			#{isanonymous},
+			#{addtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE store_evaluate SET 	
+			order_id = #{orderId},
+			order_sn = #{orderSn},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			purchaser_id = #{purchaserId},
+			purchaser_account_id = #{purchaserAccountId},
+			score_product_quality = #{scoreProductQuality},
+			score_demand_response = #{scoreDemandResponse},
+			score_delivery_credit = #{scoreDeliveryCredit},
+			score_supply_speed = #{scoreSupplySpeed},
+			score_customer_service = #{scoreCustomerService},
+			isanonymous = #{isanonymous},
+			addtime = #{addtime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM store_evaluate
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE store_evaluate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="StoreEvaluate" statementType="STATEMENT">
+		select * FROM store_evaluate  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

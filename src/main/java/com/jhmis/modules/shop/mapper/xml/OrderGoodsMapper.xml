@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.OrderGoodsMapper">
+    
+	<sql id="orderGoodsColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.goods_type AS "goodsType",
+		a.price AS "price",
+		a.num AS "num",
+		a.main_pic_url AS "mainPicUrl",
+		a.pay_price AS "payPrice",
+		a.supply_price AS "supplyPrice",
+		a.purchaser_id AS "purchaserId",
+		a.category_id AS "categoryId",
+		a.is_exchange AS "isExchange",
+		a.create_date AS "createDate",
+		a.store_goods_id AS "storeGoodsId",
+		a.evaluate_status as "evaluateStatus",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGoodsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OrderGoods" >
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoods" >
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="goodsType != null and goodsType != ''">
+				AND a.goods_type = #{goodsType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoods" >
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_goods(
+			id,
+			order_id,
+			store_id,
+			store_name,
+			goods_code,
+			goods_name,
+			goods_type,
+			price,
+			num,
+			main_pic_url,
+			pay_price,
+			supply_price,
+			purchaser_id,
+			del_flag,
+			store_goods_id,
+			create_date,
+			category_id
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{storeId},
+			#{storeName},
+			#{goodsCode},
+			#{goodsName},
+			#{goodsType},
+			#{price},
+			#{num},
+			#{mainPicUrl},
+			#{payPrice},
+			#{supplyPrice},
+			#{purchaserId},
+			#{delFlag},
+			#{storeGoodsId},
+			#{createDate},
+			#{categoryId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods SET 	
+			order_id = #{orderId},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			goods_type = #{goodsType},
+			price = #{price},
+			num = #{num},
+			main_pic_url = #{mainPicUrl},
+			pay_price = #{payPrice},
+			supply_price = #{supplyPrice},
+			purchaser_id = #{purchaserId},
+			category_id = #{categoryId},
+			is_exchange = #{isExchange},
+			evaluate_status = #{evaluateStatus}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM order_goods
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE order_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="deleteByLogicOrderId">
+		UPDATE order_goods SET
+		del_flag = 1
+		WHERE order_id = #{orderId}
+	</update>
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OrderGoods" statementType="STATEMENT">
+		select * FROM order_goods  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

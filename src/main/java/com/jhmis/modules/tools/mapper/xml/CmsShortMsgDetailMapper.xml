@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.tools.mapper.CmsShortMsgDetailMapper">
+    
+	<sql id="cmsShortMsgDetailColumns">
+		a.id AS "id",
+		a.shortmsgid AS "shortmsgid",
+		a.mobilephone AS "mobilephone",
+		a.result AS "result",
+		a.sendtime AS "sendtime",
+		a.sender AS "sender"
+	</sql>
+	
+	<sql id="cmsShortMsgDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsShortMsgDetail" >
+		SELECT 
+			<include refid="cmsShortMsgDetailColumns"/>
+		FROM cms_short_msg_detail a
+		<include refid="cmsShortMsgDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsShortMsgDetail" >
+		SELECT 
+			<include refid="cmsShortMsgDetailColumns"/>
+		FROM cms_short_msg_detail a
+		<include refid="cmsShortMsgDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsShortMsgDetail" >
+		SELECT 
+			<include refid="cmsShortMsgDetailColumns"/>
+		FROM cms_short_msg_detail a
+		<include refid="cmsShortMsgDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_short_msg_detail(
+			id,
+			shortmsgid,
+			mobilephone,
+			result,
+			sendtime,
+			sender
+		) VALUES (
+			#{id},
+			#{shortmsgid},
+			#{mobilephone},
+			#{result},
+			#{sendtime},
+			#{sender}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_short_msg_detail SET 	
+			shortmsgid = #{shortmsgid},
+			mobilephone = #{mobilephone},
+			result = #{result},
+			sendtime = #{sendtime},
+			sender = #{sender}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_short_msg_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_short_msg_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsShortMsgDetail" statementType="STATEMENT">
+		select * FROM cms_short_msg_detail  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopmsgproduct.ShopMsgProductMapper">
+    
+	<sql id="shopMsgProductColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.product_group_name AS "productGroupName",
+		a.product_group_code AS "productGroupCode",
+		a.estimated_quantity AS "estimatedQuantity",
+		a.purchase_budget AS "purchaseBudget",
+		a.product_descp AS "productDescp",
+		a.be_wisdom AS "beWisdom"
+	</sql>
+	
+	<sql id="shopMsgProductJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsgProduct" >
+		SELECT 
+			<include refid="shopMsgProductColumns"/>
+		FROM shop_msg_product a
+		<include refid="shopMsgProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgProduct" >
+		SELECT 
+			<include refid="shopMsgProductColumns"/>
+		FROM shop_msg_product a
+		<include refid="shopMsgProductJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name = #{productGroupName}
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code = #{productGroupCode}
+			</if>
+			<if test="estimatedQuantity != null and estimatedQuantity != ''">
+				AND a.estimated_quantity = #{estimatedQuantity}
+			</if>
+			<if test="purchaseBudget != null and purchaseBudget != ''">
+				AND a.purchase_budget = #{purchaseBudget}
+			</if>
+			<if test="productDescp != null and productDescp != ''">
+				AND a.product_descp = #{productDescp}
+			</if>
+			<if test="beWisdom != null and beWisdom != ''">
+				AND a.be_wisdom = #{beWisdom}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopMsgProduct" >
+		SELECT 
+			<include refid="shopMsgProductColumns"/>
+		FROM shop_msg_product a
+		<include refid="shopMsgProductJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_product(
+			id,
+			msg_id,
+			product_group_name,
+			product_group_code,
+			estimated_quantity,
+			purchase_budget,
+			product_descp,
+			be_wisdom
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{productGroupName},
+			#{productGroupCode},
+			#{estimatedQuantity},
+			#{purchaseBudget},
+			#{productDescp},
+			#{beWisdom}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_product SET 	
+			msg_id = #{msgId},
+			product_group_name = #{productGroupName},
+			product_group_code = #{productGroupCode},
+			estimated_quantity = #{estimatedQuantity},
+			purchase_budget = #{purchaseBudget},
+			product_descp = #{productDescp},
+			be_wisdom = #{beWisdom}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_product
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_product SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgProduct" statementType="STATEMENT">
+		select * FROM shop_msg_product  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="deleteByMsgId">
+		DELETE FROM shop_msg_product
+		WHERE msg_id = #{msgId}
+	</select>
+</mapper>

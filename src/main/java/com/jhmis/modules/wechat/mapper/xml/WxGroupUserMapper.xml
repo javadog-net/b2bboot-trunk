@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxGroupUserMapper">
+    
+	<sql id="wxGroupUserColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.user_id AS "userId",
+		a.join_time AS "joinTime",
+		a.is_admin AS "isAdmin",
+		a.is_read AS "isRead",
+		a.is_stop_speak AS "isStopSpeak",
+		a.group_name AS "groupName",
+		a.build_time AS "buildTime",
+		a.description AS "description",
+		a.status AS "status",
+		a.content AS "content",
+		a.send_time AS sendTime,
+		a.source AS "source",
+		a.sourceStatus AS "source_status",
+		a.img AS "img",
+		a.name AS "name",
+		a.real_name as "userName"
+	</sql>
+	
+	<sql id="wxGroupUserJoins">
+		
+		LEFT JOIN purchaser_account userId ON userId.id = a.user_id
+	</sql>
+	
+    
+	<select id="get" resultType="WxGroupUser" >
+		SELECT 
+			<include refid="wxGroupUserColumns"/>
+		FROM wx_group_user a
+		<include refid="wxGroupUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxGroupUser" >
+		SELECT 
+			*
+		FROM wx_group_user a
+		<include refid="wxGroupUserJoins"/>
+		<where>
+			${dataScope}
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findGeTuiUser" resultType="WxGroupUser">
+	
+	SELECT 
+			*
+		FROM wx_group_user
+   WHERE group_id = #{groupId} and user_id !=#{userId}
+	</select>
+	<select id="findIsOrAdmin" resultType="WxGroupUser">
+	
+	SELECT 
+			*
+		FROM wx_group_user
+   WHERE group_id = #{groupId} and user_id =#{userId}
+	</select>
+	
+	<delete id="deleteGroupUser">
+	
+	DELETE FROM wx_group_user
+	
+   WHERE group_id = #{groupId} and user_id =#{userId}
+	</delete>
+	<select id="findAllList" resultType="WxGroupUser" >
+		SELECT 
+			<include refid="wxGroupUserColumns"/>
+		FROM wx_group_user a
+		<include refid="wxGroupUserJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_group_user(
+			id,
+			group_id,
+			user_id,
+			join_time,
+			is_admin,
+			is_read,
+			is_stop_speak
+		) VALUES (
+			#{id},
+			#{groupId},
+			#{userId},
+			#{joinTime},
+			#{isAdmin},
+			#{isRead},
+			#{isStopSpeak}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_group_user SET 	
+			group_id = #{groupId},
+			user_id = #{userId},
+			join_time = #{joinTime},
+			is_admin = #{isAdmin},
+			is_read=#{isRead},
+			is_stop_speak=#{isStopSpeak}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_group_user
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_group_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="updateIsRead">
+		UPDATE wx_group_user SET 
+			is_read = #{state}
+		WHERE group_id = #{groupId} and user_id !=#{userId}
+	</update>
+	<update id="updateIsReadByUidAndGid">
+		UPDATE wx_group_user SET 
+			is_read = "1"
+		WHERE group_id = #{groupId} and user_id=#{id}
+	</update>
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxGroupUser" statementType="STATEMENT">
+		select * FROM wx_group_user  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="getGroupList" resultType="WxGroupUser" parameterType="java.lang.String">
+	SELECT
+	*
+FROM
+	(
+		SELECT DISTINCT
+			wg.id,
+			wg.group_name,
+			wg.user_id,
+			wg.build_time,
+			wg.description,
+			wgu.group_id,
+			wgu.join_time,
+			wgu.is_admin,
+			wgu.is_read,
+			wm.`name`,
+			wm.img,
+			pa.real_name
+		FROM
+			wx_group_user wgu
+		INNER JOIN wx_group wg ON wgu.group_id = wg.id
+		INNER JOIN wx_meeting wm ON wm.id = wg.source
+		LEFT JOIN purchaser_account pa on pa.id = wgu.user_id
+		WHERE
+			wgu.user_id = #{userId}
+		AND wg.source_status = '0'
+		GROUP BY
+			wg.id
+	) a inner
+JOIN (
+	SELECT
+		*
+	FROM
+		(
+			SELECT
+				max(send_time) AS stime,
+				group_id AS gid
+			FROM
+				wx_group_message
+			GROUP BY
+				group_id
+		) t
+	INNER JOIN wx_group_message wgm ON t.stime = wgm.send_time
+	AND t.gid = wgm.group_id
+) b ON a.group_id = b.group_id
+	</select>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="getIndustryCircle" resultType="WxGroupUser" parameterType="java.lang.String">
+	SELECT
+	*
+FROM
+	(
+		SELECT DISTINCT
+			wg.id,
+			wg.group_name,
+			wg.user_id,
+			wg.build_time,
+			wg.description,
+			wgu.group_id,
+			wgu.join_time,
+			wgu.is_admin,
+			wgu.is_read,
+			pa.real_name
+		FROM
+			wx_group_user wgu
+		LEFT JOIN wx_group wg ON wgu.group_id = wg.id
+		INNER JOIN wx_industry wi ON wg.source = wi.wx_industry_id
+		LEFT JOIN purchaser_account pa on pa.id = wgu.user_id
+		WHERE
+			wgu.user_id = #{userId}
+		AND wg.source_status = 1
+	) a
+INNER JOIN (
+	SELECT
+		*
+	FROM
+		(
+			SELECT
+				max(send_time) AS stime,
+				group_id AS gid
+			FROM
+				wx_group_message
+			GROUP BY
+				group_id
+		) t
+	INNER JOIN wx_group_message wgm ON t.stime = wgm.send_time
+	AND t.gid = wgm.group_id
+) b ON a.group_id = b.group_id
+	</select>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="getUserGroup" resultType="WxGroupUser" parameterType="java.lang.String">
+	   select * from wx_group_user wgu INNER JOIN wx_group wg on wgu.group_id = wg.id where wgu.user_id = #{userId}
+	</select>
+
+	<select id="findrepeatgroup" resultType="WxGroupUser" parameterType="java.lang.String" >
+	      select * from wx_group_user where user_id=#{userid}
+	</select>
+	
+	
+	<select id="getGroupUsers" resultType="java.lang.String" parameterType="java.lang.String">
+		select user_id from wx_group_user where group_id=#{groupId} order by is_admin
+	</select>
+	
+	
+<delete id="deletebyidandgroupid">
+	DELETE FROM wx_group_user
+		WHERE user_id = #{userid} and group_id=#{groupid}
+	</delete>  
+	
+	<delete id="deletebyuserid">
+	DELETE FROM wx_group_user
+		WHERE user_id = #{id}
+	</delete> 
+	
+	
+	<select id="getIsReadGroup" resultType="WxGroupUser">
+	
+	select * from wx_group_user where user_id=#{id}
+	
+	</select>
+	
+	
+	
+</mapper>

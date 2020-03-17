@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.StoreJoininMapper">
+    
+	<sql id="storeJoininColumns">
+		a.id AS "id",
+		a.dealer_id AS "dealerId",
+		a.store_name AS "storeName",
+		a.apply_year AS "applyYear",
+		a.audit_state AS "auditState",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_desc AS "auditDesc",
+		a.create_by AS "createById",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateById",
+		a.remarks AS "remarks",
+		d.company_code AS "companyCode",
+		d.company_name AS "companyName",
+		d.contacts AS "contacts",
+		d.tel AS "tel"
+	</sql>
+	
+	<sql id="storeJoininJoins">
+		LEFT JOIN dealer d on a.dealer_id = d.id
+	</sql>
+	
+    
+	<select id="get" resultType="StoreJoinin" >
+		SELECT 
+			<include refid="storeJoininColumns"/>
+		FROM store_joinin a
+		<include refid="storeJoininJoins"/>
+        WHERE
+        a.id = #{id}
+	</select>
+
+    <select id="getByDealerId" resultType="StoreJoinin" >
+        SELECT
+        <include refid="storeJoininColumns"/>
+        FROM store_joinin a
+        <include refid="storeJoininJoins"/>
+        WHERE
+        a.dealer_id = #{dealerId}
+    </select>
+
+	<select id="findList" resultType="StoreJoinin" >
+		SELECT 
+			<include refid="storeJoininColumns"/>
+		FROM store_joinin a
+		<include refid="storeJoininJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id = #{dealerId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+            <if test="companyCode != null and companyCode != ''">
+                AND d.company_code LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyCode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyCode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyCode},'%')</if>
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND d.company_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+            </if>
+            <if test="contacts != null and contacts != ''">
+                AND d.contacts LIKE
+                <if test="dbName == 'oracle'">'%'||#{contacts}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{contacts}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{contacts},'%')</if>
+            </if>
+            <if test="tel != null and tel != ''">
+                AND d.tel LIKE
+                <if test="dbName == 'oracle'">'%'||#{tel}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{tel}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{tel},'%')</if>
+            </if>
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StoreJoinin" >
+		SELECT 
+			<include refid="storeJoininColumns"/>
+		FROM store_joinin a
+		<include refid="storeJoininJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO store_joinin(
+			id,
+			dealer_id,
+			store_name,
+			apply_year,
+			audit_state,
+			audit_time,
+			auditor,
+			audit_desc,
+			create_by,
+			create_date,
+			update_date,
+			update_by,
+			remarks
+		) VALUES (
+			#{id},
+			#{dealerId},
+			#{storeName},
+			#{applyYear},
+			#{auditState},
+			#{auditTime},
+			#{auditor},
+			#{auditDesc},
+			#{createById},
+			#{createDate},
+			#{updateDate},
+			#{updateById},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE store_joinin SET 	
+			dealer_id = #{dealerId},
+			store_name = #{storeName},
+			apply_year = #{applyYear},
+			audit_state = #{auditState},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			audit_desc = #{auditDesc},
+			update_date = #{updateDate},
+			update_by = #{updateById},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM store_joinin
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE store_joinin SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="StoreJoinin" statementType="STATEMENT">
+		select * FROM store_joinin  where ${propertyName} = '${value}'
+	</select>
+
+    <update id="updateAuditState" parameterType="StoreJoinin">
+        update store_joinin set
+          audit_state = #{auditState},
+          audit_desc = #{auditDesc},
+          auditor = #{auditor},
+          audit_time = #{auditTime}
+        where id= #{id}
+    </update>
+</mapper>

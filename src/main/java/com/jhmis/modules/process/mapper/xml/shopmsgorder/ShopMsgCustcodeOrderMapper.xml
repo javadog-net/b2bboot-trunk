@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopmsgorder.ShopMsgCustcodeOrderMapper">
+    
+	<sql id="shopMsgCustcodeOrderColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.org_id AS "orgId",
+		a.org_name AS "orgName",
+		a.company_name AS "companyName",
+		a.from_source AS "fromSource",
+		a.cancel_flag AS "cancelFlag",
+		a.canceler AS "canceler",
+		a.cancel_date AS "cancelDate",
+		a.cancel_reason AS "cancelReason",
+		a.cust_name AS "custName",
+		a.cust_code AS "custCode",
+		a.address AS "address",
+		a.under_take AS "underTake",
+		a.memo AS "memo",
+		a.total_count AS "totalCount",
+		a.create_date AS "createDate",
+		a.is_end AS "isEnd",
+		a.is_bind AS "isBind",
+		a.timeout_flag AS "timeoutFlag",
+		a.timeout_reason AS "timeoutReason",
+		a.bind_time AS "bindTime",
+		a.is_install AS "isInstall",
+		a.install_persion AS "installPersion",
+		a.install_date AS "installDate",
+		a.is_deliver AS "isDeliver",
+		a.deliver_num AS "deliverNum",
+		a.deliver_time AS "deliverTime",
+		a.is_sign AS "isSign",
+		a.sign_url AS "signUrl",
+		a.sign_date AS "signDate",
+		a.is_sunburn AS "isSunburn",
+		a.is_backpass AS "isBackpass",
+		a.pro_group AS "proGroup",
+		a.pro_group_code AS "proGroupCode",
+		a.order_no as "orderNo"
+	</sql>
+	
+	<sql id="shopMsgCustcodeOrderJoins">
+		left join shop_msg sm on a.msg_id = sm.id
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="shopMsgCustcodeOrderColumns"/>
+		FROM shop_msg_custcode_order a
+		<include refid="shopMsgCustcodeOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="shopMsgCustcodeOrderColumns"/>,sm.province_name as provinceName,sm.city_name as cityName,sm.project_code as projectCode,sm.msg_no as msgNo
+		FROM shop_msg_custcode_order a
+		<include refid="shopMsgCustcodeOrderJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND a.org_name = #{orgName}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="fromSource != null and fromSource != ''">
+				AND a.from_source = #{fromSource}
+			</if>
+			<if test="cancelFlag != null and cancelFlag != ''">
+				AND a.cancel_flag = #{cancelFlag}
+			</if>
+			<if test="canceler != null and canceler != ''">
+				AND a.canceler = #{canceler}
+			</if>
+			<if test="cancelDate != null and cancelDate != ''">
+				AND a.cancel_date = #{cancelDate}
+			</if>
+			<if test="cancelReason != null and cancelReason != ''">
+				AND a.cancel_reason = #{cancelReason}
+			</if>
+			<if test="custName != null and custName != ''">
+				AND a.cust_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{custName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{custName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{custName},'%')</if>
+			</if>
+			<if test="custCode != null and custCode != ''">
+				AND a.cust_code in (${custCode})
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="underTake != null and underTake != ''">
+				AND a.under_take = #{underTake}
+			</if>
+			<if test="memo != null and memo != ''">
+				AND a.memo = #{memo}
+			</if>
+			<if test="totalCount != null and totalCount != ''">
+				AND a.total_count = #{totalCount}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="isEnd != null and isEnd != ''">
+				AND a.is_end = #{isEnd}
+			</if>
+			<if test="isBind != null and isBind != ''">
+				AND a.is_bind = #{isBind}
+			</if>
+			<if test="timeoutFlag != null and timeoutFlag != ''">
+				AND a.timeout_flag = #{timeoutFlag}
+			</if>
+			<if test="timeoutReason != null and timeoutReason != ''">
+				AND a.timeout_reason = #{timeoutReason}
+			</if>
+			<if test="bindTime != null and bindTime != ''">
+				AND a.bind_time = #{bindTime}
+			</if>
+			<if test="isInstall != null and isInstall != ''">
+				AND a.is_install = #{isInstall}
+			</if>
+			<if test="installPersion != null and installPersion != ''">
+				AND a.install_persion = #{installPersion}
+			</if>
+			<if test="installDate != null and installDate != ''">
+				AND a.install_date = #{installDate}
+			</if>
+			<if test="isDeliver != null and isDeliver != ''">
+				AND a.is_deliver = #{isDeliver}
+			</if>
+			<if test="deliverNum != null and deliverNum != ''">
+				AND a.deliver_num = #{deliverNum}
+			</if>
+			<if test="deliverTime != null and deliverTime != ''">
+				AND a.deliver_time = #{deliverTime}
+			</if>
+			<if test="isSign != null and isSign != ''">
+				AND a.is_sign = #{isSign}
+			</if>
+			<if test="signUrl != null and signUrl != ''">
+				AND a.sign_url = #{signUrl}
+			</if>
+			<if test="signDate != null and signDate != ''">
+				AND a.sign_date = #{signDate}
+			</if>
+			<if test="isSunburn != null and isSunburn != ''">
+				AND a.is_sunburn = #{isSunburn}
+			</if>
+			<if test="isBackpass != null and isBackpass != ''">
+				AND a.is_backpass = #{isBackpass}
+			</if>
+			<if test="proGroup != null and proGroup != ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (a.pro_group = "中央空调;商用空调" || a.pro_group = "中央空调" || a.pro_group = "商用空调" || a.pro_group = "商用空调;中央空调")
+				</if>
+				<if test="isSkAdmin == null or isSkAdmin == ''">
+					AND a.pro_group LIKE
+					<if test="dbName == 'oracle'">'%'||#{proGroup}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{proGroup}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{proGroup},'%')</if>
+				</if>
+			</if>
+			<if test="proGroup == null or proGroup == ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (a.pro_group = "中央空调;商用空调" || a.pro_group = "中央空调" || a.pro_group = "商用空调" || a.pro_group = "商用空调;中央空调")
+				</if>
+			</if>
+			<if test="proGroupCode != null and proGroupCode != ''">
+				AND a.pro_group_code = #{proGroupCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="shopMsgCustcodeOrderColumns"/>
+		FROM shop_msg_custcode_order a
+		<include refid="shopMsgCustcodeOrderJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_custcode_order(
+			id,
+			msg_id,
+			org_id,
+			org_name,
+			company_name,
+			from_source,
+			cancel_flag,
+			canceler,
+			cancel_date,
+			cancel_reason,
+			cust_name,
+			cust_code,
+			address,
+			under_take,
+			memo,
+			total_count,
+			create_date,
+			is_end,
+			timeout_flag,
+			timeout_reason,
+			bind_time,
+			is_install,
+			install_persion,
+			install_date,
+			is_deliver,
+			deliver_num,
+			deliver_time,
+			is_sign,
+			sign_url,
+			sign_date,
+			is_sunburn,
+			is_backpass,
+			pro_group,
+			pro_group_code
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{orgId},
+			#{orgName},
+			#{companyName},
+			#{fromSource},
+			#{cancelFlag},
+			#{canceler},
+			#{cancelDate},
+			#{cancelReason},
+			#{custName},
+			#{custCode},
+			#{address},
+			#{underTake},
+			#{memo},
+			#{totalCount},
+			#{createDate},
+			#{isEnd},
+			#{timeoutFlag},
+			#{timeoutReason},
+			#{bindTime},
+			#{isInstall},
+			#{installPersion},
+			#{installDate},
+			#{isDeliver},
+			#{deliverNum},
+			#{deliverTime},
+			#{isSign},
+			#{signUrl},
+			#{signDate},
+			#{isSunburn},
+			#{isBackpass},
+			#{proGroup},
+			#{proGroupCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_custcode_order SET 	
+			msg_id = #{msgId},
+			org_id = #{orgId},
+			org_name = #{orgName},
+			company_name = #{companyName},
+			from_source = #{fromSource},
+			cancel_flag = #{cancelFlag},
+			canceler = #{canceler},
+			cancel_date = #{cancelDate},
+			cancel_reason = #{cancelReason},
+			cust_name = #{custName},
+			cust_code = #{custCode},
+			address = #{address},
+			under_take = #{underTake},
+			memo = #{memo},
+			total_count = #{totalCount},
+			is_end = #{isEnd},
+			is_bind = #{isBind},
+			timeout_flag = #{timeoutFlag},
+			timeout_reason = #{timeoutReason},
+			bind_time = #{bindTime},
+			is_install = #{isInstall},
+			install_persion = #{installPersion},
+			install_date = #{installDate},
+			is_deliver = #{isDeliver},
+			deliver_num = #{deliverNum},
+			deliver_time = #{deliverTime},
+			is_sign = #{isSign},
+			sign_url = #{signUrl},
+			sign_date = #{signDate},
+			is_sunburn = #{isSunburn},
+			is_backpass = #{isBackpass},
+			pro_group = #{proGroup},
+			pro_group_code = #{proGroupCode}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_custcode_order
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_custcode_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgCustcodeOrder" statementType="STATEMENT">
+		select * FROM shop_msg_custcode_order  where ${propertyName} = '${value}'
+	</select>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="dealerOrderAllStatus" resultType="Integer" parameterType="String">
+	select count(*) from shop_msg_custcode_order
+		   where cancel_flag=1 and cust_code= #{dealerCode}
+		   union all
+		select count(*) from shop_msg_custcode_order
+		   where cancel_flag=3 and cust_code= #{dealerCode}
+		   union all
+		select count(*) from shop_msg_custcode_order
+		   where under_take='0' and is_bind=1 and cust_code= #{dealerCode}
+		   union all
+		select count(*) from shop_msg_custcode_order
+		   where under_take='0' and cancel_flag=0 and is_bind=0 and cust_code= #{dealerCode}
+		   union all
+		select count(*) from shop_msg_custcode_order
+		   where cancel_flag=2 and cust_code= #{dealerCode}
+		   union all
+		select count(*) from shop_msg_custcode_order
+		   where under_take='1' and is_bind=1 and cust_code= #{dealerCode}
+		   union all(
+		select count(*) from shop_msg_custcode_order
+		   where under_take='1' and cancel_flag=0 and is_bind=0 and cust_code= #{dealerCode})
+	</select>
+
+
+	<select id="dealerOrderUnderTake" resultType="Integer" parameterType="String">
+	select count(*)
+		from shop_msg_custcode_order
+		where under_take is NULL
+		and cancel_flag=0
+		and cust_code= #{dealerCode}
+	</select>
+
+</mapper>

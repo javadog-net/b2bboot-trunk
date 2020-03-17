@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.GoodsExtMapper">
+    
+	<sql id="goodsExtColumns">
+		a.code AS "code",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.state AS "state",
+		a.market_price AS "marketPrice",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="goodsExtJoins">
+		
+	</sql>
+	
+	<select id="get" resultType="GoodsExt" >
+		SELECT 
+			<include refid="goodsExtColumns"/>
+		FROM goods_ext a
+		<include refid="goodsExtJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsExt" >
+		SELECT 
+			<include refid="goodsExtColumns"/>
+		FROM goods_ext a
+		<include refid="goodsExtJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="categoryPid != null and categoryPid != ''">
+				AND a.category_pid = #{categoryPid}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsExt" >
+		SELECT 
+			<include refid="goodsExtColumns"/>
+		FROM goods_ext a
+		<include refid="goodsExtJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_ext(
+			code,
+			category_pid,
+			category_id,
+			state,
+			market_price,
+			update_by,
+			create_date,
+			update_date,
+			remarks
+		) VALUES (
+			#{code},
+			#{categoryPid},
+			#{categoryId},
+			#{state},
+			#{marketPrice},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_ext SET 	
+			code = #{code},
+			category_pid = #{categoryPid},
+			category_id = #{categoryId},
+			state = #{state},
+			market_price = #{marketPrice},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM goods_ext
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE goods_ext SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GoodsExt" statementType="STATEMENT">
+		select * FROM goods_ext  where ${propertyName} = '${value}'
+	</select>
+
+	<!--物理删除-->
+	<delete id="deleteByCode">
+		delete  FROM goods_ext
+		WHERE code = #{code}
+	</delete>
+	
+</mapper>

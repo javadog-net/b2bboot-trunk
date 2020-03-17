@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopProjectProductDetailMapper">
+    
+	<sql id="oldShopProjectProductDetailColumns">
+		a.id AS "id",
+		a.projectcode AS "projectcode",
+		a.currstate AS "currstate",
+		a.amount AS "amount",
+		a.cjprice AS "cjprice",
+		a.cjpricesum AS "cjpricesum",
+		a.price AS "price",
+		a.pricesum AS "pricesum",
+		a.bargainprice AS "bargainprice",
+		a.bargainpricesum AS "bargainpricesum",
+		a.stepflrebat AS "stepflrebat",
+		a.productid AS "productid",
+		a.productname AS "productname",
+		a.classcode AS "classcode",
+		a.classname AS "classname",
+		a.modelcode AS "modelcode",
+		a.modelname AS "modelname",
+		a.sendbccstate AS "sendbccstate",
+		a.bccfxprice AS "bccfxprice",
+		a.bccblprice AS "bccblprice",
+		a.bccbbprice AS "bccbbprice",
+		a.plprice AS "plprice",
+		a.fxprice AS "fxprice",
+		a.blprice AS "blprice",
+		a.bbprice AS "bbprice",
+		a.httype AS "httype",
+		a.sysdatetime AS "sysdatetime",
+		a.isvalid AS "isvalid",
+		a.isprochange AS "isprochange",
+		a.modlebllv AS "modlebllv",
+		a.xqqty AS "xqqty",
+		a.companyname AS "companyname",
+		a.manager AS "manager",
+		a.mobilephone AS "mobilephone",
+		a.relation AS "relation",
+		a.tzspg AS "tzspg",
+		a.expr1 AS "expr1",
+		a.expr2 AS "expr2",
+		a.expr3 AS "expr3",
+		a.expr4 AS "expr4",
+		a.addressdetail AS "addressdetail",
+		a.modelblprice AS "modelblprice",
+		a.msgid AS "msgid"
+	</sql>
+	
+	<sql id="oldShopProjectProductDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopProjectProductDetail" >
+		SELECT 
+			<include refid="oldShopProjectProductDetailColumns"/>
+		FROM old_shop_project_product_detail a
+		<include refid="oldShopProjectProductDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopProjectProductDetail" >
+		SELECT 
+			<include refid="oldShopProjectProductDetailColumns"/>
+		FROM old_shop_project_product_detail a
+		<include refid="oldShopProjectProductDetailJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="projectcode != null and projectcode != ''">
+				AND a.projectcode = #{projectcode}
+			</if>
+			<if test="currstate != null and currstate != ''">
+				AND a.currstate = #{currstate}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="cjprice != null and cjprice != ''">
+				AND a.cjprice = #{cjprice}
+			</if>
+			<if test="cjpricesum != null and cjpricesum != ''">
+				AND a.cjpricesum = #{cjpricesum}
+			</if>
+			<if test="price != null and price != ''">
+				AND a.price = #{price}
+			</if>
+			<if test="pricesum != null and pricesum != ''">
+				AND a.pricesum = #{pricesum}
+			</if>
+			<if test="bargainprice != null and bargainprice != ''">
+				AND a.bargainprice = #{bargainprice}
+			</if>
+			<if test="bargainpricesum != null and bargainpricesum != ''">
+				AND a.bargainpricesum = #{bargainpricesum}
+			</if>
+			<if test="stepflrebat != null and stepflrebat != ''">
+				AND a.stepflrebat = #{stepflrebat}
+			</if>
+			<if test="productid != null and productid != ''">
+				AND a.productid = #{productid}
+			</if>
+			<if test="productname != null and productname != ''">
+				AND a.productname = #{productname}
+			</if>
+			<if test="classcode != null and classcode != ''">
+				AND a.classcode = #{classcode}
+			</if>
+			<if test="classname != null and classname != ''">
+				AND a.classname = #{classname}
+			</if>
+			<if test="modelcode != null and modelcode != ''">
+				AND a.modelcode = #{modelcode}
+			</if>
+			<if test="modelname != null and modelname != ''">
+				AND a.modelname = #{modelname}
+			</if>
+			<if test="sendbccstate != null and sendbccstate != ''">
+				AND a.sendbccstate = #{sendbccstate}
+			</if>
+			<if test="bccfxprice != null and bccfxprice != ''">
+				AND a.bccfxprice = #{bccfxprice}
+			</if>
+			<if test="bccblprice != null and bccblprice != ''">
+				AND a.bccblprice = #{bccblprice}
+			</if>
+			<if test="bccbbprice != null and bccbbprice != ''">
+				AND a.bccbbprice = #{bccbbprice}
+			</if>
+			<if test="plprice != null and plprice != ''">
+				AND a.plprice = #{plprice}
+			</if>
+			<if test="fxprice != null and fxprice != ''">
+				AND a.fxprice = #{fxprice}
+			</if>
+			<if test="blprice != null and blprice != ''">
+				AND a.blprice = #{blprice}
+			</if>
+			<if test="bbprice != null and bbprice != ''">
+				AND a.bbprice = #{bbprice}
+			</if>
+			<if test="httype != null and httype != ''">
+				AND a.httype = #{httype}
+			</if>
+			<if test="sysdatetime != null and sysdatetime != ''">
+				AND a.sysdatetime = #{sysdatetime}
+			</if>
+			<if test="isvalid != null and isvalid != ''">
+				AND a.isvalid = #{isvalid}
+			</if>
+			<if test="isprochange != null and isprochange != ''">
+				AND a.isprochange = #{isprochange}
+			</if>
+			<if test="modlebllv != null and modlebllv != ''">
+				AND a.modlebllv = #{modlebllv}
+			</if>
+			<if test="xqqty != null and xqqty != ''">
+				AND a.xqqty = #{xqqty}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				AND a.companyname = #{companyname}
+			</if>
+			<if test="manager != null and manager != ''">
+				AND a.manager = #{manager}
+			</if>
+			<if test="mobilephone != null and mobilephone != ''">
+				AND a.mobilephone = #{mobilephone}
+			</if>
+			<if test="relation != null and relation != ''">
+				AND a.relation = #{relation}
+			</if>
+			<if test="tzspg != null and tzspg != ''">
+				AND a.tzspg = #{tzspg}
+			</if>
+			<if test="expr1 != null and expr1 != ''">
+				AND a.expr1 = #{expr1}
+			</if>
+			<if test="expr2 != null and expr2 != ''">
+				AND a.expr2 = #{expr2}
+			</if>
+			<if test="expr3 != null and expr3 != ''">
+				AND a.expr3 = #{expr3}
+			</if>
+			<if test="expr4 != null and expr4 != ''">
+				AND a.expr4 = #{expr4}
+			</if>
+			<if test="addressdetail != null and addressdetail != ''">
+				AND a.addressdetail = #{addressdetail}
+			</if>
+			<if test="modelblprice != null and modelblprice != ''">
+				AND a.modelblprice = #{modelblprice}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msgid = #{msgid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopProjectProductDetail" >
+		SELECT 
+			<include refid="oldShopProjectProductDetailColumns"/>
+		FROM old_shop_project_product_detail a
+		<include refid="oldShopProjectProductDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_project_product_detail(
+			projectcode,
+			currstate,
+			amount,
+			cjprice,
+			cjpricesum,
+			price,
+			pricesum,
+			bargainprice,
+			bargainpricesum,
+			stepflrebat,
+			productid,
+			productname,
+			classcode,
+			classname,
+			modelcode,
+			modelname,
+			sendbccstate,
+			bccfxprice,
+			bccblprice,
+			bccbbprice,
+			plprice,
+			fxprice,
+			blprice,
+			bbprice,
+			httype,
+			sysdatetime,
+			isvalid,
+			isprochange,
+			modlebllv,
+			xqqty,
+			companyname,
+			manager,
+			mobilephone,
+			relation,
+			tzspg,
+			expr1,
+			expr2,
+			expr3,
+			expr4,
+			addressdetail,
+			modelblprice,
+			msgid
+		) VALUES (
+			#{projectcode},
+			#{currstate},
+			#{amount},
+			#{cjprice},
+			#{cjpricesum},
+			#{price},
+			#{pricesum},
+			#{bargainprice},
+			#{bargainpricesum},
+			#{stepflrebat},
+			#{productid},
+			#{productname},
+			#{classcode},
+			#{classname},
+			#{modelcode},
+			#{modelname},
+			#{sendbccstate},
+			#{bccfxprice},
+			#{bccblprice},
+			#{bccbbprice},
+			#{plprice},
+			#{fxprice},
+			#{blprice},
+			#{bbprice},
+			#{httype},
+			#{sysdatetime},
+			#{isvalid},
+			#{isprochange},
+			#{modlebllv},
+			#{xqqty},
+			#{companyname},
+			#{manager},
+			#{mobilephone},
+			#{relation},
+			#{tzspg},
+			#{expr1},
+			#{expr2},
+			#{expr3},
+			#{expr4},
+			#{addressdetail},
+			#{modelblprice},
+			#{msgid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_project_product_detail SET 	
+			projectcode = #{projectcode},
+			currstate = #{currstate},
+			amount = #{amount},
+			cjprice = #{cjprice},
+			cjpricesum = #{cjpricesum},
+			price = #{price},
+			pricesum = #{pricesum},
+			bargainprice = #{bargainprice},
+			bargainpricesum = #{bargainpricesum},
+			stepflrebat = #{stepflrebat},
+			productid = #{productid},
+			productname = #{productname},
+			classcode = #{classcode},
+			classname = #{classname},
+			modelcode = #{modelcode},
+			modelname = #{modelname},
+			sendbccstate = #{sendbccstate},
+			bccfxprice = #{bccfxprice},
+			bccblprice = #{bccblprice},
+			bccbbprice = #{bccbbprice},
+			plprice = #{plprice},
+			fxprice = #{fxprice},
+			blprice = #{blprice},
+			bbprice = #{bbprice},
+			httype = #{httype},
+			sysdatetime = #{sysdatetime},
+			isvalid = #{isvalid},
+			isprochange = #{isprochange},
+			modlebllv = #{modlebllv},
+			xqqty = #{xqqty},
+			companyname = #{companyname},
+			manager = #{manager},
+			mobilephone = #{mobilephone},
+			relation = #{relation},
+			tzspg = #{tzspg},
+			expr1 = #{expr1},
+			expr2 = #{expr2},
+			expr3 = #{expr3},
+			expr4 = #{expr4},
+			addressdetail = #{addressdetail},
+			modelblprice = #{modelblprice},
+			msgid = #{msgid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_project_product_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_project_product_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopProjectProductDetail" statementType="STATEMENT">
+		select * FROM old_shop_project_product_detail  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

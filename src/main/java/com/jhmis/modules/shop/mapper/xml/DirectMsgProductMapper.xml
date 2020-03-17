@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.DirectMsgProductMapper">
+    
+	<sql id="directMsgProductColumns">
+		a.id AS "id",
+		a.direct_msg_id AS "directMsgId",
+		a.direct_msg_order AS "directMsgOrder",
+		a.product_group_code AS "productGroupCode",
+		a.product_group_name AS "productGroupName",
+		a.store_goods_id AS "storeGoodsId",
+		a.num AS "num",
+		a.price AS "price",
+		a.goods_code AS "goodsCode",
+		a.add_time AS "addTime",
+		a.add_user AS "addUser"
+	</sql>
+	
+	<sql id="directMsgProductJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="DirectMsgProduct" >
+		SELECT 
+			<include refid="directMsgProductColumns"/>
+		FROM direct_msg_product a
+		<include refid="directMsgProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DirectMsgProduct" >
+		SELECT 
+			<include refid="directMsgProductColumns"/>
+		FROM direct_msg_product a
+		<include refid="directMsgProductJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="directMsgId != null and directMsgId != ''">
+				AND a.direct_msg_id = #{directMsgId}
+			</if>
+			<if test="directMsgOrder != null and directMsgOrder != ''">
+				AND a.direct_msg_order = #{directMsgOrder}
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code = #{productGroupCode}
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name = #{productGroupName}
+			</if>
+			<if test="storeGoodsId != null and storeGoodsId != ''">
+				AND a.store_goods_id = #{storeGoodsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DirectMsgProduct" >
+		SELECT 
+			<include refid="directMsgProductColumns"/>
+		FROM direct_msg_product a
+		<include refid="directMsgProductJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO direct_msg_product(
+			id,
+			direct_msg_id,
+			direct_msg_order,
+			product_group_code,
+			product_group_name,
+			store_goods_id,
+			num,
+			price,
+			goods_code,
+			add_time,
+			add_user
+		) VALUES (
+			#{id},
+			#{directMsgId},
+			#{directMsgOrder},
+			#{productGroupCode},
+			#{productGroupName},
+			#{storeGoodsId},
+			#{num},
+			#{price},
+			#{goodsCode},
+			#{addTime},
+			#{addUser}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE direct_msg_product SET 	
+			direct_msg_id = #{directMsgId},
+			direct_msg_order = #{directMsgOrder},
+			product_group_code = #{productGroupCode},
+			product_group_name = #{productGroupName},
+			store_goods_id = #{storeGoodsId},
+			num = #{num},
+			price = #{price},
+			goods_code = #{goodsCode},
+			add_time = #{addTime},
+			add_user = #{addUser}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM direct_msg_product
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE direct_msg_product SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DirectMsgProduct" statementType="STATEMENT">
+		select * FROM direct_msg_product  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

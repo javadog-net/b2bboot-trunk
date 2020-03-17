@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMeetingMapper">
+    
+	<sql id="wxMeetingColumns">
+		a.id AS "id",
+		a.create_id AS "createId",
+		a.name AS "name",
+		a.site AS "site",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.conference_length AS "conferenceLength",
+		a.generalize AS "generalize",
+		a.introduce AS "introduce",
+		a.guide AS "guide",
+		a.map AS "map",
+		a.closing_up AS "closingUp",
+		a.person_sign_num AS "personSignNum",
+		a.person_attend_num AS "personAttendNum",
+		a.originator AS "originator",
+		a.img AS "img",
+        a.detail_imgs AS "detailImgs",
+        a.banner_imgs AS "bannerImgs",
+		a.status AS "status",
+		a.address AS "address",
+		a.is_del AS "isDel",
+		a.add_time AS "addTime"
+	</sql>
+	
+	<sql id="wxMeetingJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMeeting" >
+		SELECT 
+			<include refid="wxMeetingColumns"/>
+		FROM wx_meeting a
+		<include refid="wxMeetingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMeeting" >
+		SELECT 
+			<include refid="wxMeetingColumns"/>
+		FROM wx_meeting a
+		<include refid="wxMeetingJoins"/>
+		<where>			
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND a.start_time = #{startTime}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if> 
+			
+			 <if test="isDel != null and isDel != ''">
+				AND a.is_del = #{idDel}
+			</if> 
+			 <if test="createId != null and createId != ''">
+				AND a.create_id = #{createId}
+			</if> 
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMeeting" >
+		SELECT 
+			<include refid="wxMeetingColumns"/>
+		FROM wx_meeting a
+		<include refid="wxMeetingJoins"/>
+		<where>			
+			${dataScope}
+			<if test="isDel != null and isDel != ''">
+				AND a.is_del = #{idDel}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_meeting(
+			id,
+			create_id,
+			name,
+			site,
+			start_time,
+			end_time,
+			conference_length,
+			generalize,
+			introduce,
+			guide,
+			map,
+			closing_up,
+			person_sign_num,
+			person_attend_num,
+			originator,
+			img,
+			detail_imgs,
+			banner_imgs,
+			status,
+			address,
+			is_del,
+			add_time
+		) VALUES (
+			#{id},
+			#{createId},
+			#{name},
+			#{site},
+			#{startTime},
+			#{endTime},
+			#{conferenceLength},
+			#{generalize},
+			#{introduce},
+			#{guide},
+			#{map},
+			#{closingUp},
+			#{personSignNum},
+			#{personAttendNum},
+			#{originator},
+			#{img},
+			#{detailImgs},
+			#{bannerImgs},
+			#{status},
+			#{address},
+			#{isDel},
+			#{addTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_meeting SET 	
+			name = #{name},
+			site = #{site},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			conference_length = #{conferenceLength},
+			generalize = #{generalize},
+			introduce = #{introduce},
+			guide = #{guide},
+			map = #{map},
+			closing_up = #{closingUp},
+			person_sign_num = #{personSignNum},
+			person_attend_num = #{personAttendNum},
+			originator = #{originator},
+			img = #{img},
+			detail_imgs = #{detailImgs},
+			banner_imgs = #{bannerImgs},
+			status = #{status},
+			address = #{address},
+			is_del = #{isDel}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_meeting
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_meeting SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMeeting" statementType="STATEMENT">
+		select * FROM wx_meeting  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!-- 根据时间进行获取会议列表信息 -->
+	<select id="findAllMeetingList" resultType="WxMeeting" >
+		<!-- SELECT
+		<include refid="wxMeetingColumns"/>
+		FROM wx_meeting a
+		<include refid="wxMeetingJoins"/>
+		<where>
+			<if test="label != null and label != ''">
+				<if test="label == 0">
+				AND a.start_time &gt; #{aimTime}
+				</if>
+				<if test="label == 1">
+					AND a.start_time &lt; #{aimTime}
+				</if>
+			</if>
+		</where>
+			ORDER BY a.start_time
+ -->	
+ select * from wx_meeting a where a.is_del="0" ORDER BY a.start_time desc
+ </select>
+	
+	
+
+	
+	<update id="addsignupnum" >
+	   Update wx_meeting set person_sign_num=#{num} where id=#{meetingid}
+	</update>
+	
+	
+	<select id="findlikemeeting" parameterType="String" resultType="WxMeeting"> 
+	select * from wx_meeting where is_del="0" and name like CONCAT("%",#{name},"%")
+	</select>
+	
+</mapper>

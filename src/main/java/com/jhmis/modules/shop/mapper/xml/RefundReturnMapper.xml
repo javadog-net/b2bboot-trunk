@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.RefundReturnMapper">
+    
+	<sql id="refundReturnColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.refund_sn AS "refundSn",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.purchaser_id AS "purchaserId",
+		a.purchaser_name AS "purchaserName",
+		a.code AS "code",
+		a.order_goods_id AS "orderGoodsId",
+		a.goods_name AS "goodsName",
+		a.goods_num AS "goodsNum",
+		a.refund_amount AS "refundAmount",
+		a.main_pic_url AS "mainPicUrl",
+		a.order_goods_type AS "orderGoodsType",
+		a.refund_type AS "refundType",
+		a.refund_state AS "refundState",
+		a.purchaser_desc AS "purchaserDesc",
+		a.return_type AS "returnType",
+		a.order_lock AS "orderLock",
+		a.shiping_code AS "shipingCode",
+		a.add_time AS "addTime",
+		a.pic_info AS "picInfo",
+		a.reason_info AS "reasonInfo",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_state AS "auditState",
+		a.audit_desc AS "auditDesc",
+		a.refund_time AS "refundTime",
+		a.reason_id AS "reasonId",
+		a.refund_desc AS "refundDesc"
+	</sql>
+	
+	<sql id="refundReturnJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="RefundReturn" >
+		SELECT 
+			<include refid="refundReturnColumns"/>
+		FROM refund_return a
+		<include refid="refundReturnJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RefundReturn" >
+		SELECT 
+			<include refid="refundReturnColumns"/>
+		FROM refund_return a
+		<include refid="refundReturnJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn = #{orderSn}
+			</if>
+			<if test="refundSn != null and refundSn != ''">
+				AND a.refund_sn = #{refundSn}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="purchaserName != null and purchaserName != ''">
+				AND a.purchaser_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{purchaserName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{purchaserName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{purchaserName},'%')</if>
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{code}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{code},'%')</if>
+			</if>
+			<if test="orderGoodsId != null and orderGoodsId != ''">
+				AND a.order_goods_id = #{orderGoodsId}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="orderGoodsType != null and orderGoodsType != ''">
+				AND a.order_goods_type = #{orderGoodsType}
+			</if>
+			<if test="refundType != null and refundType != ''">
+				AND a.refund_type = #{refundType}
+			</if>
+			<if test="refundState != null and refundState != ''">
+				AND a.refund_state = #{refundState}
+			</if>
+			<if test="returnType != null and returnType != ''">
+				AND a.return_type = #{returnType}
+			</if>
+			<if test="orderLock != null and orderLock != ''">
+				AND a.order_lock = #{orderLock}
+			</if>
+			<if test="shipingCode != null and shipingCode != ''">
+				AND a.shiping_code = #{shipingCode}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+			<if test="reasonId != null and reasonId != ''">
+				AND a.reason_id = #{reasonId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RefundReturn" >
+		SELECT 
+			<include refid="refundReturnColumns"/>
+		FROM refund_return a
+		<include refid="refundReturnJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO refund_return(
+			id,
+			order_id,
+			order_sn,
+			refund_sn,
+			store_id,
+			store_name,
+			purchaser_id,
+			purchaser_name,
+			code,
+			order_goods_id,
+			goods_name,
+			goods_num,
+			refund_amount,
+			main_pic_url,
+			order_goods_type,
+			refund_type,
+			refund_state,
+			purchaser_desc,
+			return_type,
+			order_lock,
+			shiping_code,
+			add_time,
+			pic_info,
+			reason_info,
+			audit_time,
+			auditor,
+			audit_state,
+			audit_desc,
+			refund_time,
+			reason_id,
+			refund_desc
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{orderSn},
+			#{refundSn},
+			#{storeId},
+			#{storeName},
+			#{purchaserId},
+			#{purchaserName},
+			#{code},
+			#{orderGoodsId},
+			#{goodsName},
+			#{goodsNum},
+			#{refundAmount},
+			#{mainPicUrl},
+			#{orderGoodsType},
+			#{refundType},
+			#{refundState},
+			#{purchaserDesc},
+			#{returnType},
+			#{orderLock},
+			#{shipingCode},
+			#{addTime},
+			#{picInfo},
+			#{reasonInfo},
+			#{auditTime},
+			#{auditor},
+			#{auditState},
+			#{auditDesc},
+			#{refundTime},
+			#{reasonId},
+			#{refundDesc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE refund_return SET 	
+			order_id = #{orderId},
+			order_sn = #{orderSn},
+			refund_sn = #{refundSn},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			purchaser_id = #{purchaserId},
+			purchaser_name = #{purchaserName},
+			code = #{code},
+			order_goods_id = #{orderGoodsId},
+			goods_name = #{goodsName},
+			goods_num = #{goodsNum},
+			refund_amount = #{refundAmount},
+			main_pic_url = #{mainPicUrl},
+			order_goods_type = #{orderGoodsType},
+			refund_type = #{refundType},
+			refund_state = #{refundState},
+			purchaser_desc = #{purchaserDesc},
+			return_type = #{returnType},
+			order_lock = #{orderLock},
+			shiping_code = #{shipingCode},
+			add_time = #{addTime},
+			pic_info = #{picInfo},
+			reason_info = #{reasonInfo},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			audit_state = #{auditState},
+			audit_desc = #{auditDesc},
+			refund_time = #{refundTime},
+			reason_id = #{reasonId},
+			refund_desc = #{refundDesc}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM refund_return
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE refund_return SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RefundReturn" statementType="STATEMENT">
+		select * FROM refund_return  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

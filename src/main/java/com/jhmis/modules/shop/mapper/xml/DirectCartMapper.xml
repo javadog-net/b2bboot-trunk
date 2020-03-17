@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.DirectCartMapper">
+    
+	<sql id="directCartColumns">
+		a.id AS "id",
+		a.dealer_account_id AS "dealerAccountId",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.main_pic_url AS "mainPicUrl",
+		a.choose_num AS "chooseNum",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.store_goods_id AS "storeGoodsId",
+		a.product_group_code AS "productGroupCode",
+		a.product_group_name AS "productGroupName"
+	</sql>
+	
+	<sql id="directCartJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="DirectCart" >
+		SELECT 
+			<include refid="directCartColumns"/>,market_price as price
+		FROM direct_cart a
+		left join store_goods sg on a.store_goods_id = sg.id
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DirectCart" >
+		SELECT 
+			<include refid="directCartColumns"/>,market_price as price
+		FROM direct_cart a
+		left join store_goods sg on a.store_goods_id = sg.id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="dealerAccountId != null and dealerAccountId != ''">
+				AND a.dealer_account_id = #{dealerAccountId}
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name = #{goodsName}
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code = #{productGroupCode}
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name = #{productGroupName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DirectCart" >
+		SELECT 
+			<include refid="directCartColumns"/>
+		FROM direct_cart a
+		<include refid="directCartJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO direct_cart(
+			id,
+			dealer_account_id,
+			goods_code,
+			goods_name,
+			store_id,
+			store_name,
+			main_pic_url,
+			choose_num,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			store_goods_id,
+			product_group_code,
+			product_group_name
+		) VALUES (
+			#{id},
+			#{dealerAccountId},
+			#{goodsCode},
+			#{goodsName},
+			#{storeId},
+			#{storeName},
+			#{mainPicUrl},
+			#{chooseNum},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{storeGoodsId},
+			#{productGroupCode},
+			#{productGroupName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE direct_cart SET 	
+			dealer_account_id = #{dealerAccountId},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			main_pic_url = #{mainPicUrl},
+			choose_num = #{chooseNum},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			store_goods_id = #{storeGoodsId},
+			product_group_code = #{productGroupCode},
+			product_group_name = #{productGroupName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM direct_cart
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE direct_cart SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DirectCart" statementType="STATEMENT">
+		select * FROM direct_cart  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="getCartCount" resultType="Integer">
+		SELECT  count(id) FROM  direct_cart
+		<if test="dealerAccountId != null and dealerAccountId !=''">
+			WHERE	dealer_account_id = #{dealerAccountId}
+		</if>
+	</select>
+
+
+	<select id="getGroupProduct" resultType="DirectCart" >
+		SELECT * from direct_cart where dealer_account_id = #{dealerId} group by  product_group_code
+	</select>
+
+	<select id="selectCartList" resultType="DirectCart">
+		SELECT
+		<include refid="directCartColumns"/>
+		FROM  cart a  where a.id IN
+		<foreach collection="idList" item="id" index="index"
+				 open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+</mapper>

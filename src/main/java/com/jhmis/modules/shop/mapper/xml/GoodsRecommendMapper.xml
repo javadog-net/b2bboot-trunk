@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.GoodsRecommendMapper">
+    
+	<sql id="goodsRecommendColumns">
+		a.id AS "id",
+		a.goods_code AS "goodsCode",
+		a.store_id AS "storeId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.sort AS "sort"
+	</sql>
+	
+	<sql id="goodsRecommendJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="GoodsRecommend" >
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsRecommend" >
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsRecommend" >
+		SELECT 
+			<include refid="goodsRecommendColumns"/>
+		FROM goods_recommend a
+		<include refid="goodsRecommendJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_recommend(
+			id,
+			goods_code,
+			store_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			sort
+		) VALUES (
+			#{id},
+			#{goodsCode},
+			#{storeId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{sort}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_recommend SET 	
+			goods_code = #{goodsCode},
+			store_id = #{storeId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM goods_recommend
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE goods_recommend SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GoodsRecommend" statementType="STATEMENT">
+		select * FROM goods_recommend  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

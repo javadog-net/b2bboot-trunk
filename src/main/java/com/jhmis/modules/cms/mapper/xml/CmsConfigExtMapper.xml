@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CmsConfigExtMapper">
+    
+	<sql id="cmsConfigExtColumns">
+		a.id AS "id",
+		a.types AS "types",
+		a.img_min_width AS "imgMinWidth",
+		a.img_min_height AS "imgMinHeight",
+		a.img_path AS "imgPath",
+		a.img_location AS "imgLocation",
+		a.img_left AS "imgLeft",
+		a.img_top AS "imgTop",
+		a.img_alpha AS "imgAlpha",
+		a.txt_min_width AS "txtMinWidth",
+		a.txt_min_height AS "txtMinHeight",
+		a.txt AS "txt",
+		a.txt_location AS "txtLocation",
+		a.txt_left AS "txtLeft",
+		a.txt_top AS "txtTop",
+		a.txt_alpha AS "txtAlpha",
+		a.txt_font_size AS "txtFontSize",
+		a.txt_font_color AS "txtFontColor",
+		a.txt_font_name AS "txtFontName"
+	</sql>
+	
+	<sql id="cmsConfigExtJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsConfigExt" >
+		SELECT 
+			<include refid="cmsConfigExtColumns"/>
+		FROM cms_config_ext a
+		<include refid="cmsConfigExtJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsConfigExt" >
+		SELECT 
+			<include refid="cmsConfigExtColumns"/>
+		FROM cms_config_ext a
+		<include refid="cmsConfigExtJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsConfigExt" >
+		SELECT 
+			<include refid="cmsConfigExtColumns"/>
+		FROM cms_config_ext a
+		<include refid="cmsConfigExtJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_config_ext(
+			id,
+			types,
+			img_min_width,
+			img_min_height,
+			img_path,
+			img_location,
+			img_left,
+			img_top,
+			img_alpha,
+			txt_min_width,
+			txt_min_height,
+			txt,
+			txt_location,
+			txt_left,
+			txt_top,
+			txt_alpha,
+			txt_font_size,
+			txt_font_color,
+			txt_font_name
+		) VALUES (
+			#{id},
+			#{types},
+			#{imgMinWidth},
+			#{imgMinHeight},
+			#{imgPath},
+			#{imgLocation},
+			#{imgLeft},
+			#{imgTop},
+			#{imgAlpha},
+			#{txtMinWidth},
+			#{txtMinHeight},
+			#{txt},
+			#{txtLocation},
+			#{txtLeft},
+			#{txtTop},
+			#{txtAlpha},
+			#{txtFontSize},
+			#{txtFontColor},
+			#{txtFontName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_config_ext SET 	
+			types = #{types},
+			img_min_width = #{imgMinWidth},
+			img_min_height = #{imgMinHeight},
+			img_path = #{imgPath},
+			img_location = #{imgLocation},
+			img_left = #{imgLeft},
+			img_top = #{imgTop},
+			img_alpha = #{imgAlpha},
+			txt_min_width = #{txtMinWidth},
+			txt_min_height = #{txtMinHeight},
+			txt = #{txt},
+			txt_location = #{txtLocation},
+			txt_left = #{txtLeft},
+			txt_top = #{txtTop},
+			txt_alpha = #{txtAlpha},
+			txt_font_size = #{txtFontSize},
+			txt_font_color = #{txtFontColor},
+			txt_font_name = #{txtFontName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_config_ext
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_config_ext SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsConfigExt" statementType="STATEMENT">
+		select * FROM cms_config_ext  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

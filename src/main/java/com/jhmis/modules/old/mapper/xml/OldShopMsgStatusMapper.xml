@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopMsgStatusMapper">
+    
+	<sql id="oldShopMsgStatusColumns">
+		a.id AS "id",
+		a.statuscontent AS "statuscontent",
+		a.statusname AS "statusname",
+		a.createtime AS "createtime",
+		a.inf AS "inf",
+		a.operator AS "operator",
+		a.content AS "content",
+		a.qutoesid AS "qutoesid",
+		a.bigprojectid AS "bigprojectid",
+		a.smallprojectid AS "smallprojectid",
+		a.overtimeflag AS "overtimeflag"
+	</sql>
+	
+	<sql id="oldShopMsgStatusJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopMsgStatus" >
+		SELECT 
+			<include refid="oldShopMsgStatusColumns"/>
+		FROM old_shop_msg_status a
+		<include refid="oldShopMsgStatusJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopMsgStatus" >
+		SELECT 
+			<include refid="oldShopMsgStatusColumns"/>
+		FROM old_shop_msg_status a
+		<include refid="oldShopMsgStatusJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopMsgStatus" >
+		SELECT 
+			<include refid="oldShopMsgStatusColumns"/>
+		FROM old_shop_msg_status a
+		<include refid="oldShopMsgStatusJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_msg_status(
+			id,
+			statuscontent,
+			statusname,
+			createtime,
+			inf,
+			operator,
+			content,
+			qutoesid,
+			bigprojectid,
+			smallprojectid,
+			overtimeflag
+		) VALUES (
+			#{id},
+			#{statuscontent},
+			#{statusname},
+			#{createtime},
+			#{inf},
+			#{operator},
+			#{content},
+			#{qutoesid},
+			#{bigprojectid},
+			#{smallprojectid},
+			#{overtimeflag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_msg_status SET 	
+			statuscontent = #{statuscontent},
+			statusname = #{statusname},
+			createtime = #{createtime},
+			inf = #{inf},
+			operator = #{operator},
+			content = #{content},
+			qutoesid = #{qutoesid},
+			bigprojectid = #{bigprojectid},
+			smallprojectid = #{smallprojectid},
+			overtimeflag = #{overtimeflag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_msg_status
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_msg_status SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopMsgStatus" statementType="STATEMENT">
+		select * FROM old_shop_msg_status  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

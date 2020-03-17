@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.CmsWinPrizeMapper">
+
+	<sql id="cmsWinPrizeColumns">
+		a.id AS "id",
+		a.actv_id AS "actvId",
+		a.meeting_id AS
+		"meetingId",
+		a.prize_id AS "prizeId",
+		a.user_id AS "userId",
+		a.add_time
+		AS "addTime",
+		a.remark AS "remark",
+		a.wp_status AS "wpStatus"
+	</sql>
+
+	<sql id="cmsWinPrizeJoins">
+	LEFT JOIN purchaser_account userId ON userId.id = a.user_id
+	</sql>
+
+
+	<select id="get" resultType="CmsWinPrize">
+		SELECT
+		<include refid="cmsWinPrizeColumns" />
+		FROM cms_win_prize a
+		<include refid="cmsWinPrizeJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CmsWinPrize">
+		SELECT
+		<include refid="cmsWinPrizeColumns" />
+		FROM cms_win_prize a
+		<include refid="cmsWinPrizeJoins" />
+		<where>
+
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="actvId != null and actvId != ''">
+				AND a.actv_id = #{actvId}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+			<if test="prizeId != null and prizeId != ''">
+				AND a.prize_id = #{prizeId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+			<if test="wpStatus != null and wpStatus != ''">
+				AND a.wp_status = #{wpStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="CmsWinPrize">
+		SELECT
+		<include refid="cmsWinPrizeColumns" />
+		FROM cms_win_prize a
+		<include refid="cmsWinPrizeJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO cms_win_prize(
+		id,
+		actv_id,
+		meeting_id,
+		prize_id,
+		user_id,
+		add_time,
+		remark,
+		wp_status
+		) VALUES (
+		#{id},
+		#{actvId},
+		#{meetingId},
+		#{prizeId},
+		#{userId},
+		#{addTime},
+		#{remark},
+		#{wpStatus}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE cms_win_prize SET
+		actv_id = #{actvId},
+		meeting_id = #{meetingId},
+		prize_id = #{prizeId},
+		user_id = #{userId},
+		add_time = #{addTime},
+		remark = #{remark},
+		wp_status = #{wpStatus}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM cms_win_prize
+		WHERE id = #{id}
+		
+	</update>
+
+<delete id="deletebyuserid">
+DELETE FROM cms_win_prize
+		WHERE user_id = #{id}
+</delete>
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE cms_win_prize SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsWinPrize"
+		statementType="STATEMENT">
+		select * FROM cms_win_prize where ${propertyName} =
+		'${value}'
+	</select>
+
+	<!-- 查询中奖人员 -->
+	<select id="findDrawList" resultType="CmsWinPrize">
+		select * from cms_win_prize w LEFT JOIN cms_prize p
+		on w.prize_id=p.id
+		LEFT JOIN cms_signup_draw s on s.user_id=w.user_id and s.actv_id=w.actv_id
+		where 
+			w.actv_id=#{actvid}
+			
+			<if test="phone != null and phone != ''">
+				AND s.user_phone = #{phone}
+			</if>
+	        <if test="companyname != null and companyname != ''">
+				AND s.company_name like CONCAT("%",#{companyname},"%")
+			</if>
+			<if test="username != null and username != ''">
+				AND s.user_name = #{username}
+			</if>
+		
+	</select>
+	<!-- <resultMap type="com.jhmis.modules.wechat.entity.CmsWinPrize" id="dididi"> 
+		<result column="remark" jdbcType="VARCHAR" property="remark" /> <association 
+		property="cmsPrize" javaType="com.jhmis.modules.wechat.entity.CmsPrize"> 
+		<result column="prize_name" jdbcType="VARCHAR" property="prizeName" /> </association> 
+		<association property="cmsSignupDraw" javaType="com.jhmis.modules.wechat.entity.CmsSignupDraw"/> 
+		</resultMap> -->
+	<select id="getByid" resultType="CmsWinPrize">
+		select * from cms_win_prize w LEFT JOIN cms_prize p
+		on w.prize_id=p.id
+		LEFT JOIN cms_signup_draw s on s.user_id=w.user_id and s.actv_id=w.actv_id
+		where w.actv_id=#{actvid} and w.user_id=#{userId}
+	</select>
+</mapper>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.TGridAreaMapper">
+    
+	<sql id="tGridAreaColumns">
+		a.id AS "id",
+		a.gmcode AS "gmcode",
+		a.gmname AS "gmname",
+		a.wgxw AS "wgxw",
+		a.wgxwcode AS "wgxwcode",
+		a.wgcode AS "wgcode",
+		a.wgname AS "wgname",
+		a.threexzq AS "threexzq",
+		a.xzqcode AS "xzqcode",
+		a.xzqname AS "xzqname",
+		a.province AS "province",
+		a.provincecode AS "provincecode",
+		a.city AS "city",
+		a.citycode AS "citycode",
+		a.district AS "district",
+		a.districtcode AS "districtcode",
+		a.pushed_time AS "pushedTime"
+	</sql>
+	
+	<sql id="tGridAreaJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="TGridArea" >
+		SELECT 
+			<include refid="tGridAreaColumns"/>
+		FROM t_grid_area a
+		<include refid="tGridAreaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TGridArea" >
+		SELECT 
+			<include refid="tGridAreaColumns"/>
+		FROM t_grid_area a
+		<include refid="tGridAreaJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="gmcode != null and gmcode != ''">
+				AND a.gmcode = #{gmcode}
+			</if>
+			<if test="gmname != null and gmname != ''">
+				AND a.gmname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{gmname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gmname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gmname},'%')</if>
+			</if>
+			<if test="wgxw != null and wgxw != ''">
+				AND a.wgxw LIKE 
+					<if test="dbName == 'oracle'">'%'||#{wgxw}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{wgxw}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{wgxw},'%')</if>
+			</if>
+			<if test="wgxwcode != null and wgxwcode != ''">
+				AND a.wgxwcode = #{wgxwcode}
+			</if>
+			<if test="wgcode != null and wgcode != ''">
+				AND a.wgcode = #{wgcode}
+			</if>
+			<if test="wgname != null and wgname != ''">
+				AND a.wgname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{wgname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{wgname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{wgname},'%')</if>
+			</if>
+			<if test="threexzq != null and threexzq != ''">
+				AND a.threexzq = #{threexzq}
+			</if>
+			<if test="xzqcode != null and xzqcode != ''">
+				AND a.xzqcode = #{xzqcode}
+			</if>
+			<if test="xzqname != null and xzqname != ''">
+				AND a.xzqname = #{xzqname}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provincecode != null and provincecode != ''">
+				AND a.provincecode = #{provincecode}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="citycode != null and citycode != ''">
+				AND a.citycode = #{citycode}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtcode != null and districtcode != ''">
+				AND a.districtcode = #{districtcode}
+			</if>
+			<if test="pushedTime != null and pushedTime != ''">
+				AND a.pushed_time = #{pushedTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findAllList" resultType="TGridArea" >
+		SELECT 
+			<include refid="tGridAreaColumns"/>
+		FROM t_grid_area a
+		<include refid="tGridAreaJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_grid_area(
+			gmcode,
+			gmname,
+			wgxw,
+			wgxwcode,
+			wgcode,
+			wgname,
+			threexzq,
+			xzqcode,
+			xzqname,
+			province,
+			provincecode,
+			city,
+			citycode,
+			district,
+			districtcode,
+			pushed_time
+		) VALUES (
+			#{gmcode},
+			#{gmname},
+			#{wgxw},
+			#{wgxwcode},
+			#{wgcode},
+			#{wgname},
+			#{threexzq},
+			#{xzqcode},
+			#{xzqname},
+			#{province},
+			#{provincecode},
+			#{city},
+			#{citycode},
+			#{district},
+			#{districtcode},
+			#{pushedTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_grid_area SET 	
+			gmcode = #{gmcode},
+			gmname = #{gmname},
+			wgxw = #{wgxw},
+			wgxwcode = #{wgxwcode},
+			wgcode = #{wgcode},
+			wgname = #{wgname},
+			threexzq = #{threexzq},
+			xzqcode = #{xzqcode},
+			xzqname = #{xzqname},
+			province = #{province},
+			provincecode = #{provincecode},
+			city = #{city},
+			citycode = #{citycode},
+			district = #{district},
+			districtcode = #{districtcode},
+			pushed_time = #{pushedTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_grid_area
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE t_grid_area SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TGridArea" statementType="STATEMENT">
+		select * FROM t_grid_area  where ${propertyName} = '${value}'
+	</select>
+	
+	<!-- 根据工贸id查询工贸名称 -->
+	<select id="findNameByCode" resultType="java.lang.String">
+		select gmname from t_grid_area where gmcode=#{gmcode} limit 1;
+	</select>
+	
+	<!-- 获取省份 -->
+	<select id="getProvince" resultType="java.lang.String">
+		select distinct province from t_grid_area;
+	</select>
+	
+	<!-- 根据省名称获取城市 -->
+	<select id="getCityByProvince" resultType="java.lang.String">
+		select distinct city from t_grid_area where province=#{province};
+	</select>
+	
+	<!-- 根据省名称和城市名称获取区县 -->
+	<select id="getAreaByCity" resultType="java.lang.String">
+		select district district from t_grid_area where province=#{province} and city=#{city};
+	</select>
+	
+</mapper>

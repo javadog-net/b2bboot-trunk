@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserMsgTplMapper">
+    
+	<sql id="purchaserMsgTplColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.type AS "type",
+		a.message_switch AS "messageSwitch",
+		a.message_content AS "messageContent",
+		a.sms_switch AS "smsSwitch",
+		a.sms_content AS "smsContent",
+		a.mail_switch AS "mailSwitch",
+		a.mail_subject AS "mailSubject",
+		a.mail_content AS "mailContent"
+	</sql>
+	
+	<sql id="purchaserMsgTplJoins">
+		
+	</sql>
+	
+    <resultMap type="PurchaserMsgTpl" id="PurchaserMsgTplResult" autoMapping="true">
+    	<result column="mail_content" property="mailContent"   typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="PurchaserMsgTplResult" >
+		SELECT 
+			<include refid="purchaserMsgTplColumns"/>
+		FROM purchaser_msg_tpl a
+		<include refid="purchaserMsgTplJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="PurchaserMsgTplResult" >
+		SELECT 
+			<include refid="purchaserMsgTplColumns"/>
+		FROM purchaser_msg_tpl a
+		<include refid="purchaserMsgTplJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="messageSwitch != null and messageSwitch != ''">
+				AND a.message_switch = #{messageSwitch}
+			</if>
+			<if test="smsSwitch != null and smsSwitch != ''">
+				AND a.sms_switch = #{smsSwitch}
+			</if>
+			<if test="mailSwitch != null and mailSwitch != ''">
+				AND a.mail_switch = #{mailSwitch}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="PurchaserMsgTplResult" >
+		SELECT 
+			<include refid="purchaserMsgTplColumns"/>
+		FROM purchaser_msg_tpl a
+		<include refid="purchaserMsgTplJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_msg_tpl(
+			id,
+			code,
+			name,
+			type,
+			message_switch,
+			message_content,
+			sms_switch,
+			sms_content,
+			mail_switch,
+			mail_subject,
+			mail_content
+		) VALUES (
+			#{id},
+			#{code},
+			#{name},
+			#{type},
+			#{messageSwitch},
+			#{messageContent},
+			#{smsSwitch},
+			#{smsContent},
+			#{mailSwitch},
+			#{mailSubject},
+			#{mailContent}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_msg_tpl SET 	
+			code = #{code},
+			name = #{name},
+			type = #{type},
+			message_switch = #{messageSwitch},
+			message_content = #{messageContent},
+			sms_switch = #{smsSwitch},
+			sms_content = #{smsContent},
+			mail_switch = #{mailSwitch},
+			mail_subject = #{mailSubject},
+			mail_content = #{mailContent}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_msg_tpl
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_msg_tpl SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserMsgTpl" statementType="STATEMENT">
+		select * FROM purchaser_msg_tpl  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

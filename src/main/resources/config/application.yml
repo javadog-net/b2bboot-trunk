@@ -1,0 +1,362 @@
+#============================#
+#===== Project settings =====#
+#============================#
+
+# 产品或项目名称、版本、版权年份
+productName: 企业购
+productVersion: V1.0
+copyrightYear: 2018
+# 缺省样式ani(左侧菜单) 或者 adv(顶部横向菜单)
+defaultTheme: adv
+# 软件提供商公司或个人名称
+companyName: jhmis
+
+#是否演示模式
+demoMode: false
+
+#============================#
+#===== Database sttings =====#
+#============================#
+
+spring:
+  datasource:
+    primary:
+      url: jdbc:oracle:thin:@10.138.1.78:1521/haiermdm
+      username: hrgcC
+      password: hrgc%123
+      driver-class-name: oracle.jdbc.OracleDriver
+    second:
+      url: jdbc:mysql://10.138.42.10:3306/Haier_HPS?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+      username: HPS_QYG
+      password: HPS_QYG@2018
+      driver-class-name: com.mysql.jdbc.Driver
+      druid:
+        stat:
+          enabled: true
+        wall:
+          enabled: true
+        max-idle: 10
+        max-wait: 10000
+        min-idle: 5
+        initial-size: 5
+        validation-query: SELECT 1
+        #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+        testWhileIdle: true
+        #指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+        testOnBorrow: true
+        #指明是否在归还到池中前进行检验
+        testOnReturn: true
+        time-between-eviction-runs-millis: 18800
+        removeAbandoned: true
+        removeAbandonedTimeout: 300
+        logAbandoned: true
+# 数据库连接
+jdbc:
+
+  # Mysql 数据库配置
+  type: mysql
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1:3306/b2bboot?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+  username: root
+  password: root
+  testSql: SELECT 1
+  dual: from dual
+
+# 数据库连接
+#jdbc:
+
+#  # Mysql 数据库配置
+#  type: mysql
+#  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://jhmis.net:3306/b2bboot?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#  username: tity
+#  password: jhdz452000
+#  testSql: SELECT 1
+#  dual: from dual
+#
+#  # Oracle 数据库配置
+#  type: oracle
+#  driver: oracle.jdbc.driver.OracleDriver
+#  url: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+#  username: root
+#  password: root
+#  testSql: SELECT 1 FROM DUAL
+#  dual: from dual
+#
+#  # Sql Server 数据库配置
+#  type: mssql
+#  driver: net.sourceforge.jtds.jdbc.Driver
+#  url: jdbc:jtds:sqlserver://127.0.0.1:1433/b2b
+#  username: root
+#  password: root
+#  testSql: SELECT 1
+#  dual:
+#
+#  # PostgreSql 数据库配置（注意：一定要创建的schema与username相同，否则将找不到数据表字典信息）
+#  type: postgresql
+#  driver: org.postgresql.Driver
+#  url: jdbc:postgresql://127.0.0.1:5432/b2b
+#  username: root
+#  password: root
+#  testSql: SELECT 1
+#  dual:
+#
+
+# 数据库连接池配置
+  pool:
+    # 初始化连接数
+    init: 1
+    # 最小连接数
+    minIdle: 3
+    # 最大连接数
+    maxActive: 20
+  # Druid连接池监控
+  druid:
+    stat:
+      enabled: true
+    wall:
+      enabled: true
+    time-between-eviction-runs-millis: 18800
+    removeAbandoned: true
+    removeAbandonedTimeout: 300
+    logAbandoned: true
+
+#Mybatis配置
+mybatis:
+  # 扫描基础包设置（Aliases、@MyBatisDao），如果多个，用“,”分隔
+  scanBasePackage: com.jhmis.modules
+  configLocation:  classpath:/mybatis/mybatis-config.xml
+  typeAliasesPackage: com.jhmis.modules.**.entity.**
+  mapperLocations: classpath*:com/jhmis/modules/**/*Mapper.xml
+  configurationProperties:
+    dual: ${jdbc.dual}
+  enableRefresh: true
+#
+
+#============================#
+#===== System settings ======#
+#============================#
+
+
+
+#管理基础路径, 需同步修改：web.xml
+adminPath: /manager
+
+#前端基础路径
+frontPath: /f
+
+#网站URL后缀
+urlSuffix: .html
+
+#是否不允许刷新主页，不允许情况下，刷新主页会导致重新登录
+notAllowRefreshIndex: false
+
+#用户配置
+user:
+  #是否允许多账号同时登录
+  multiAccountLogin: true
+
+#分页配置
+page:
+  # 分页默认大小
+  pageSize: 20
+
+#硕正组件
+supcan:
+  # 是否使用缓存
+  useCache: false
+
+#oa设置
+oa:
+  #通知设置
+  notify:
+    #提醒设置
+    remind:
+      #间隔时间设置, 单位：毫秒, 30s=30000ms, 60s=60000ms
+      interval: 60000
+
+#============================#
+#==== Framework settings ====#
+#============================#
+shiro:
+
+  #索引页路径
+  defaultPath: ${shiro.loginUrl}
+
+  # 登录相关设置
+  loginUrl: ${adminPath}/login
+  logoutUrl: ${shiro.loginUrl}
+  successUrl: ${adminPath}?login
+
+  # URI 权限过滤器定义
+  # 如果是覆盖顺序没有影响，但是是新加入的顺序会在最后，所以这里最好写覆盖配置
+  # 要在前面排列，必须写在下面的default中
+  filterChainDefinitions: |
+
+
+
+  # 默认的授权过滤定义，如果在filterChainDefinitions中已经定义，则该定义会被覆盖。
+  # 注意顺序，排在前面的优先处理
+  defaultFilterChainDefinitions: |
+    /api/common/upload/** = jwt
+    /api/common/** = anon
+    /api/dealer/auth/** = anon
+    /api/purchaser/auth/** = anon
+    /api/** = jwt
+    /static/** = anon
+    /userfiles/** = anon
+    /api/wechat/program/login = anon
+    ${adminPath}/sys/user/validateLoginName = anon
+    ${adminPath}/sys/user/validateMobile = anon
+    ${adminPath}/sys/user/validateMobileExist = anon
+    ${adminPath}/sys/user/resetPassword = anon
+    ${adminPath}/sys/register = anon
+    ${adminPath}/sys/register/registerUser = anon
+    ${adminPath}/sys/register/getRegisterCode = anon
+    ${adminPath}/sys/register/validateMobileCode = anon
+    ${adminPath}/cas = cas
+    ${adminPath}/login = authc
+    ${adminPath}/logout = anon
+    ${adminPath}/** = user
+
+#jwt配置
+jwt:
+  #一天24 * 60 * 60 = 86400
+  expireTime: 2592000
+  secret: 452000
+#会话设置
+session:
+  #会话超时， 单位：毫秒， 20m=1200000ms, 30m=1800000ms, 60m=3600000ms
+  sessionTimeout: 2592000
+  #会话清理间隔时间， 单位：毫秒，2m=120000ms。
+  sessionTimeoutClean: 2592000
+  #自定义sessionIdName
+  sessionIdName: B2BJSESSIONID
+# Web 相关
+web:
+#
+  # MVC 视图相关
+  view:
+    #索引页路径
+    index: /
+    #视图文件存放路径
+    prefix: /webpage/
+    #视图文件后缀
+    suffix: .jsp
+  #最大文件上传限制，单位字节. 50M=50*1024*1024(B)=52428800 bytes，此处已经采用springboot默认处理，不需要了
+  maxUploadSize: 52428800
+  #静态文件后缀
+  staticFile: .css,.css.map,.js,.js.map,.png,.jpg,.gif,.jpeg,.bmp,.ico,.swf,.psd,.htc,.htm,.html,.crx,.xpi,.exe,.ipa,.apk
+
+#单点登录CAS设置
+cas:
+  server:
+    url: http://127.0.0.1:8180/cas
+  project:
+    url: http://127.0.0.1:8080/shareConditioner
+
+#上传文件绝对路径, 路径中不允许包含“userfiles”
+userfiles:
+  #basedir: d:/attachment
+  basedir: /web/b2bboot/static/upload
+  #上传路径url前缀 http://**,本地上传时，使用此变量，如果没值，根据request取得页面地址
+  fileHost:
+  #上传文件方式local本地上传，fastdfs,为空时本地上传
+  uploadkind: local
+  #允许上传的文件类型
+  avatar:
+      #允许上传的头像扩展名
+      ext: gif,jpg,jpeg,png
+      #允许上传的图片大小5M=5*1024*1024(B)=5242880 bytes
+      size: 5242880
+      width: 120
+      height: 120
+  image:
+    #允许上传的图片扩展名
+    ext: gif,jpg,jpeg,png
+    #允许上传的图片大小5M=5*1024*1024(B)=5242880 bytes
+    size: 5242880
+  media:
+    #允许上传的媒体扩展名
+    ext: mp3,mp4,flv,avi
+    #允许上传的图片大小200M=200*1024*1024(B)=209715200 bytes
+    size: 209715200
+  file:
+      #允许上传的文件扩展名
+      ext: doc,docx,csv,xls,xlsx,ppt,pptx,pdf,txt,rar,zip,wgt,apk,mp3,mp4,flv,avi
+      #允许上传的图片大小500M=500*1024*1024(B)=524288000 bytes
+      size: 524288000
+
+#fastdfs配置
+#fdfs:
+#  trackerList:
+#  fileHost:
+#
+
+#工程路径，在代码生成时获取不到工程路径时，可再此指定绝对路径。
+#projectPath: D:\\openproject\\shareConditioner
+#
+
+#============================#
+#===== Message settings =====#
+#============================#
+
+msg:
+  # 邮件发送参数
+  email:
+    fromEmail:
+    toEmail:
+    emailName:
+    emailPassword:
+  # 短信网关
+  sms:
+    beanName: smsSendService
+    url: http://localhost:80/msg/sendSms
+    data: account=demo&pswd=demo&product=
+    prefix: ~
+    suffix: 【b2b】
+
+#============================#
+#===== monitor settings =====#
+#============================#
+
+monitor:
+  cpu: 100
+  jvm: 100
+  ram: 100
+
+#============================#
+#===== dubbo settings =====#
+#============================#
+dubbo:
+  enable: true
+
+#============================#
+#===== MiNi program settings =====#
+#============================#
+wx:
+  program:
+    appid: wx57ad8d02858af932
+    secret: e158412e42e92d20e7596f113e0632f0
+    code2Session-url: https://api.weixin.qq.com/sns/jscode2session
+
+
+#海尔客户中心生产环境相关配置(客采)
+Jhmis.Client_Id: ws81uwAgTPOpMiHpuubC7g
+Jhmis.Client_Secret: 33362e393231303233303735f9f201471a676f520f9e6bf5b67d79c8c7687102dd7a7edc0e483e5e8b5b7056
+
+#车辆轨迹监控平台-B2B全流程轨迹查询
+smart:
+  id: 19
+  key: 9C7A38D851434A4FE05396108A0A8D0F
+
+#大数据订单状态对接
+rrs:
+  userId: b2bHaier
+  username: b2bHaier
+  key: 6A1D02DA475D4A7BE05396108A0BBC3T
+
+#打包发版日志
+fundebug:
+  apikey: 682b72ccff065a7c4074ed138e319f3a0c12736a1dad60aea66f29f990e308d3
+  version: 企业购B2B生产

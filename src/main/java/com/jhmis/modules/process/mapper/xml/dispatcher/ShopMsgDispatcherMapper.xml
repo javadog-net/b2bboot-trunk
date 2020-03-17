@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.dispatcher.ShopMsgDispatcherMapper">
+    
+	<sql id="shopMsgDispatcherColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.dispa_flag AS "dispaFlag",
+		a.dispa_date AS "dispaDate",
+		a.dispa_user AS "dispaUser",
+		a.custcode AS "custcode",
+		a.dispa_desc AS "dispaDesc",
+		a.create_date AS "createDate",
+		a.source AS "source",
+		a.is_closed AS "isClosed",
+		a.closer AS "closer",
+		a.close_date AS "closeDate",
+		a.close_reason AS "closeReason",
+		a.dispa_type AS "dispaType",
+		sm.company_name as "companyName",
+		sm.org_name as "orgName",
+		sm.pro_group as "proGroup",
+		sm.channel as "channel",
+		sm.connect_name as "connectName",
+		sm.mobile as "mobile"
+	</sql>
+	
+	<sql id="shopMsgDispatcherJoins">
+		left join shop_msg sm on a.msg_id = sm.id
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsgDispatcher" >
+		SELECT 
+			<include refid="shopMsgDispatcherColumns"/>
+		FROM shop_msg_dispatcher a
+		<include refid="shopMsgDispatcherJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgDispatcher" >
+		SELECT 
+			<include refid="shopMsgDispatcherColumns"/>
+		FROM shop_msg_dispatcher a
+		<include refid="shopMsgDispatcherJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="custcode != null and custcode != ''">
+				AND a.custcode = #{custcode}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="source != null and source != ''">
+				AND a.source = #{source}
+			</if>
+			<if test="dispaType != null and dispaType != ''">
+				AND a.dispa_type = #{dispaType}
+			</if>
+			<if test="dispaFlag != null and dispaFlag != ''">
+				AND a.dispa_flag = #{dispaFlag}
+			</if>
+			<if test="isClosed != null and isClosed != ''">
+				AND a.is_closed = #{isClosed}
+			</if>
+			<if test="proGroup != null and proGroup != ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (sm.pro_group = "中央空调;商用空调" || sm.pro_group = "中央空调" || sm.pro_group = "商用空调" || sm.pro_group = "商用空调;中央空调")
+				</if>
+				<if test="isSkAdmin == null or isSkAdmin == ''">
+					AND sm.pro_group LIKE
+					<if test="dbName == 'oracle'">'%'||#{proGroup}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{proGroup}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{proGroup},'%')</if>
+				</if>
+			</if>
+			<if test="proGroup == null or proGroup == ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (sm.pro_group = "中央空调;商用空调" || sm.pro_group = "中央空调" || sm.pro_group = "商用空调" || sm.pro_group = "商用空调;中央空调")
+				</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopMsgDispatcher" >
+		SELECT 
+			<include refid="shopMsgDispatcherColumns"/>
+		FROM shop_msg_dispatcher a
+		<include refid="shopMsgDispatcherJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_dispatcher(
+			id,
+			msg_id,
+			dispa_flag,
+			dispa_date,
+			dispa_user,
+			custcode,
+			dispa_desc,
+			create_date,
+			source,
+			is_closed,
+			closer,
+			close_date,
+			close_reason,
+			dispa_type
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{dispaFlag},
+			#{dispaDate},
+			#{dispaUser},
+			#{custcode},
+			#{dispaDesc},
+			#{createDate},
+			#{source},
+			#{isClosed},
+			#{closer},
+			#{closeDate},
+			#{closeReason},
+			#{dispaType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_dispatcher SET 	
+			msg_id = #{msgId},
+			dispa_flag = #{dispaFlag},
+			dispa_date = #{dispaDate},
+			dispa_user = #{dispaUser},
+			custcode = #{custcode},
+			dispa_desc = #{dispaDesc},
+			source = #{source},
+			is_closed = #{isClosed},
+			closer = #{closer},
+			close_date = #{closeDate},
+			close_reason = #{closeReason},
+			dispa_type = #{dispaType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_dispatcher
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_dispatcher SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgDispatcher" statementType="STATEMENT">
+		select * FROM shop_msg_dispatcher  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

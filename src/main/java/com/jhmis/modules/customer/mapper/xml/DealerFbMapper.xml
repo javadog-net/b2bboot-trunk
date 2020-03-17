@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.DealerFbMapper">
+    
+	<sql id="dealerFbColumns">
+		a.id AS "id",
+		a.company AS "company",
+		a.mobile AS "mobile",
+		a.contact AS "contact",
+		a.add_time AS "addTime",
+		a.is_check AS "isCheck",
+		a.relation AS "relation"
+	</sql>
+	
+	<sql id="dealerFbJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="DealerFb" >
+		SELECT 
+			<include refid="dealerFbColumns"/>
+		FROM customer_dealer_fb a
+		<include refid="dealerFbJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DealerFb" >
+		SELECT 
+			<include refid="dealerFbColumns"/>
+		FROM customer_dealer_fb a
+		<include refid="dealerFbJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="company != null and company != ''">
+				AND a.company = #{company}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="contact != null and contact != ''">
+				AND a.contact = #{contact}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="relation != null and relation != ''">
+				AND a.relation = #{relation}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DealerFb" >
+		SELECT 
+			<include refid="dealerFbColumns"/>
+		FROM customer_dealer_fb a
+		<include refid="dealerFbJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_dealer_fb(
+			id,
+			company,
+			mobile,
+			contact,
+			add_time,
+			is_check,
+			relation
+		) VALUES (
+			#{id},
+			#{company},
+			#{mobile},
+			#{contact},
+			#{addTime},
+			#{isCheck},
+			#{relation}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_dealer_fb SET 	
+			company = #{company},
+			mobile = #{mobile},
+			contact = #{contact},
+			add_time = #{addTime},
+			is_check = #{isCheck},
+			relation = #{relation}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_dealer_fb
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_dealer_fb SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DealerFb" statementType="STATEMENT">
+		select * FROM customer_dealer_fb  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

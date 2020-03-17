@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerMsgMapper">
+    
+	<sql id="customerMsgColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.project_name AS "projectName",
+		a.first_company_name AS "firstCompanyName",
+		a.first_company_org_code AS "firstCompanyOrgCode",
+		a.address_province AS "addressProvince",
+		a.address_province_name AS "addressProvinceName",
+		a.address_city AS "addressCity",
+		a.address_city_name AS "addressCityName",
+		a.address_county AS "addressCounty",
+		a.address_county_name AS "addressCountyName",
+		a.address_detail AS "addressDetail",
+		a.project_creater_code AS "projectCreaterCode",
+		a.project_creater_name AS "projectCreaterName",
+		a.project_source AS "projectSource",
+		a.center AS "center",
+		a.center_name AS "centerName",
+		a.project_manager_code AS "projectManagerCode",
+		a.project_manager_name AS "projectManagerName",
+		a.domain_model AS "domainModel",
+		a.domain_type AS "domainType",
+		a.add_time AS "addTime",
+		a.product_group AS "productGroup",
+		a.contractor_code AS "contractorCode",
+		a.contractor_name AS "contractorName",
+		a.status AS "status",
+		a.error_msg AS "errorMsg",
+		a.is_del AS "isDel",
+		a.remark AS "remark",
+		a.project_id AS "projectId",
+		a.user_id AS "userId",
+		a.data_source AS "dataSource",
+		a.estimated_time_bid AS "estimatedTimeBid",
+		a.first_contact_name AS "firstContactName",
+		a.position AS "position",
+		a.phone AS "phone",
+		a.industry_home_category AS "industryHomeCategory",
+		a.industry_category AS "industryCategory",
+		a.chance_point AS "chancePoint",
+		a.user_group AS "userGroup",
+		a.lock_user AS "lockUser",
+		a.customer_demand_analysis AS "customerDemandAnalysis",
+		a.be_send_with_one AS "beSendWithOne",
+		a.first_bid_document AS "firstBidDocument",
+		a.estimated_time_signing AS "estimatedTimeSigning",
+		a.estimated_time_delivery AS "estimatedTimeDelivery",
+		a.be_win_bid AS "beWinBid",
+		a.after_sales_bidding AS "afterSalesBidding",
+		a.need_direct_delivery_site AS "needDirectDeliverySite",
+		a.contract_attachement AS "contractAttachement",
+		a.win_bid_time AS "winBidTime",
+		a.product_series_one_code AS "productSeriesOneCode",
+	 	a.product_series_one_name AS "productSeriesOneName",
+		a.product_series_two_code AS "productSeriesTwoCode",
+	 	a.product_series_two_name AS "productSeriesTwoName",
+	 	a.brand_info_code AS "brandInfoCode",
+	 	a.brand_info_name AS "brandInfoName",
+		a.big_or_small AS "bigOrSmall",
+		a.industry_or_channel AS "industryOrChannel",
+		a.small_bill AS "smallBill",
+		cpi.nodename AS "nodename"
+<!--		cpi.loginLevel AS "loginLevel",
+ 		cpi.operateName AS "operateName",
+		cpi.operateStatus AS "operateStatus",
+		cpi.projectstate AS "projectstatus" -->
+		
+	</sql>
+	
+	<sql id="customerMsgJoins">
+		left join customer_project_info cpi on a.msg_id = cpi.msg_id
+	</sql>
+
+	<select id="get" resultType="CustomerMsg" >
+		SELECT 
+			<include refid="customerMsgColumns"/>
+		FROM customer_msg a
+		<include refid="customerMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByMsgid" resultType="CustomerMsg" >
+		SELECT 
+			<include refid="customerMsgColumns"/>
+		FROM customer_msg a
+		<include refid="customerMsgJoins"/>
+		WHERE a.msg_id = #{msgId}
+	</select>
+	
+	<select id="getByProjectId" resultType="CustomerMsg" >
+		SELECT 
+			<include refid="customerMsgColumns"/>
+		FROM customer_msg a
+		<include refid="customerMsgJoins"/>
+		WHERE a.project_id = #{projectId}
+	</select>
+	
+	<select id="findList" resultType="CustomerMsg" >
+		SELECT 
+			<include refid="customerMsgColumns"/>
+		FROM customer_msg a
+		<include refid="customerMsgJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{msgId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{msgId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{msgId},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="firstCompanyName != null and firstCompanyName != ''">
+				AND a.first_company_name = #{firstCompanyName}
+			</if>
+			<if test="firstCompanyOrgCode != null and firstCompanyOrgCode != ''">
+				AND a.first_company_org_code = #{firstCompanyOrgCode}
+			</if>
+			<if test="addressProvince != null and addressProvince != ''">
+				AND a.address_province = #{addressProvince}
+			</if>
+			<if test="addressProvinceName != null and addressProvinceName != ''">
+				AND a.address_province_name = #{addressProvinceName}
+			</if>
+			<if test="addressCity != null and addressCity != ''">
+				AND a.address_city = #{addressCity}
+			</if>
+			<if test="addressCityName != null and addressCityName != ''">
+				AND a.address_city_name = #{addressCityName}
+			</if>
+			<if test="addressCounty != null and addressCounty != ''">
+				AND a.address_county = #{addressCounty}
+			</if>
+			<if test="addressCountyName != null and addressCountyName != ''">
+				AND a.address_county_name = #{addressCountyName}
+			</if>
+			<if test="addressDetail != null and addressDetail != ''">
+				AND a.address_detail = #{addressDetail}
+			</if>
+            <if test="center != null and center != ''">
+                AND a.center = #{center}
+            </if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="projectCreaterCode != null and projectCreaterCode != ''">
+				AND a.project_creater_code = #{projectCreaterCode}
+			</if>
+			<if test="projectCreaterName != null and projectCreaterName != ''">
+				AND a.project_creater_name = #{projectCreaterName}
+			</if>
+			<if test="projectSource != null and projectSource != ''">
+				AND a.project_source = #{projectSource}
+			</if>
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="domainModel != null and domainModel != ''">
+				AND a.domain_model = #{domainModel}
+			</if>
+			<if test="domainType != null and domainType != ''">
+				AND a.domain_type = #{domainType}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				AND a.add_time between  #{startTime} and #{endTime}
+			</if>
+			<if test="productGroup != null and productGroup != ''">
+				AND a.product_group LIKE
+				<if test="dbName == 'oracle'">'%'||#{productGroup}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productGroup}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productGroup},'%')</if>
+			</if>
+            <if test="nodename != null and nodename != ''">
+                AND cpi.nodename LIKE
+                <if test="dbName == 'oracle'">'%'||#{nodename}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{nodename}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{nodename},'%')</if>
+            </if>
+            <if test="loginLevel != null and loginLevel != ''">
+                AND cpi.loginLevel LIKE
+                <if test="dbName == 'oracle'">'%'||#{loginLevel}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{loginLevel}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{loginLevel},'%')</if>
+            </if>
+                 
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="errorMsg != null and errorMsg != ''">
+				AND a.error_msg = #{errorMsg}
+			</if>
+			<if test="isDel != null and isDel != ''">
+				AND a.is_del = #{isDel}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="dataSource != null and dataSource != ''">
+				AND a.data_source = #{dataSource}
+			</if>
+			<if test="estimatedTimeBid != null and estimatedTimeBid != ''">
+				AND a.estimated_time_bid = #{estimatedTimeBid}
+			</if>
+			<if test="firstContactName != null and firstContactName != ''">
+				AND a.first_contact_name = #{firstContactName}
+			</if>
+			<if test="position != null and position != ''">
+				AND a.position = #{position}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="industryHomeCategory != null and industryHomeCategory != ''">
+				AND a.industry_home_category = #{industryHomeCategory}
+			</if>
+			<if test="industryCategory != null and industryCategory != ''">
+				AND a.industry_category = #{industryCategory}
+			</if>
+			<if test="chancePoint !=null and chancePoint != ''">
+				AND a.chance_point = #{chancePoint}
+			</if>
+			<if test="userGroup !=null and userGroup != ''">
+				AND a.user_group = #{userGroup}
+			</if>
+			<if test="lockUser !=null and lockUser != ''">
+				AND a.lock_user = #{lockUser}
+			</if>
+			<if test="customerDemandAnalysis !=null and customerDemandAnalysis != ''">
+				AND a.customer_demand_analysis = #{customerDemandAnalysis}
+			</if>
+			<if test="beSendWithOne !=null and beSendWithOne != ''">
+				AND a.be_send_with_one = #{beSendWithOne}
+			</if>
+			<if test="firstBidDocument !=null and firstBidDocument != ''">
+				AND a.first_bid_document = #{firstBidDocument}
+			</if>
+			<if test="estimatedTimeSigning !=null and estimatedTimeSigning != ''">
+				AND a.estimated_time_signing = #{estimatedTimeSigning}
+			</if>
+			<if test="estimatedTimeDelivery !=null and estimatedTimeDelivery != ''">
+				AND a.estimated_time_delivery = #{estimatedTimeDelivery}
+			</if>
+			<if test="beWinBid !=null and beWinBid != ''">
+				AND a.be_win_bid = #{beWinBid}
+			</if>
+			
+			<if test="afterSalesBidding !=null and afterSalesBidding != ''">
+				AND a.after_sales_bidding = #{afterSalesBidding}
+			</if>
+			
+			<if test="needDirectDeliverySite !=null and needDirectDeliverySite != ''">
+				AND a.need_direct_delivery_site = #{needDirectDeliverySite}
+			</if>
+			
+			<if test="contractAttachement !=null and contractAttachement != ''">
+				AND a.contract_attachement = #{contractAttachement}
+			</if>
+			<if test="winBidTime !=null and winBidTime != ''">
+				AND a.win_bid_time = #{winBidTime}
+			</if>
+			<if test="productSeriesOneCode !=null and productSeriesOneCode != ''">
+				AND a.product_series_one_code = #{productSeriesOneCode}
+			</if>
+			<if test="productSeriesOneName !=null and productSeriesOneName != ''">
+				AND a.product_series_one_name = #{productSeriesOneName}
+			</if>
+			<if test="productSeriesTwoCode !=null and productSeriesTwoCode != ''">
+				AND a.product_series_two_code = #{productSeriesTwoCode}
+			</if>
+			<if test="productSeriesTwoName !=null and productSeriesTwoName != ''">
+				AND a.product_series_two_name = #{productSeriesTwoName}
+			</if>
+			<if test="brandInfoCode !=null and brandInfoCode != ''">
+				AND a.brand_info_code = #{brandInfoCode}
+			</if>
+			<if test="brandInfoName !=null and brandInfoName != ''">
+				AND a.brand_info_name = #{brandInfoName}
+			</if>
+			<if test="bigOrSmall !=null and bigOrSmall != ''">
+				AND a.big_or_small = #{bigOrSmall}
+			</if>
+			<if test="industryOrChannel !=null and industryOrChannel != ''">
+				AND a.industry_or_channel = #{industryOrChannel}
+			</if>
+			<if test="smallBill !=null and smallBill != ''">
+				AND a.small_bill = #{smallBill}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>			
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerMsg" >
+		SELECT 
+			<include refid="customerMsgColumns"/>
+		FROM customer_msg a
+		<include refid="customerMsgJoins"/>
+		<where>			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_msg(
+			id,
+			msg_id,
+			project_name,
+			first_company_name,
+			first_company_org_code,
+			address_province,
+			address_province_name,
+			address_city,
+			address_city_name,
+			address_county,
+			address_county_name,
+			address_detail,
+			project_creater_code,
+			project_creater_name,
+			project_source,
+			project_manager_code,
+			project_manager_name,
+			domain_model,
+			domain_type,
+			add_time,
+			product_group,
+			contractor_code,
+			contractor_name,
+			status,
+			error_msg,
+			is_del,
+			remark,
+			project_id,
+			user_id,
+			data_source,
+			estimated_time_bid,
+			first_contact_name,
+			position,
+			phone,
+			industry_home_category,
+			industry_category,
+			center,
+			center_name,
+			chance_point,
+			user_group,
+			lock_user,
+			customer_demand_analysis,
+			be_send_with_one,
+			first_bid_document,
+			estimated_time_signing,
+			estimated_time_delivery,
+			be_win_bid,
+			after_sales_bidding,
+			need_direct_delivery_site,
+			contract_attachement,
+			win_bid_time,
+			product_series_one_code,
+	 		product_series_one_name,
+			product_series_two_code,
+	 		product_series_two_name,
+	 		brand_info_code,
+	 		brand_info_name,
+			big_or_small,
+			industry_or_channel,
+			small_bill
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{projectName},
+			#{firstCompanyName},
+			#{firstCompanyOrgCode},
+			#{addressProvince},
+			#{addressProvinceName},
+			#{addressCity},
+			#{addressCityName},
+			#{addressCounty},
+			#{addressCountyName},
+			#{addressDetail},
+			#{projectCreaterCode},
+			#{projectCreaterName},
+			#{projectSource},
+			#{projectManagerCode},
+			#{projectManagerName},
+			#{domainModel},
+			#{domainType},
+			#{addTime},
+			#{productGroup},
+			#{contractorCode},
+			#{contractorName},
+			#{status},
+			#{errorMsg},
+			#{isDel},
+			#{remark},
+			#{projectId},
+			#{userId},
+			#{dataSource},
+			#{estimatedTimeBid},
+			#{firstContactName},
+			#{position},
+			#{phone},
+			#{industryHomeCategory},
+			#{industryCategory},
+			#{center},
+			#{centerName},
+			#{chancePoint},
+			#{userGroup},
+			#{lockUser},
+			#{customerDemandAnalysis},
+			#{beSendWithOne},
+			#{firstBidDocument},
+			#{estimatedTimeSigning},
+			#{estimatedTimeDelivery},
+			#{beWinBid},
+			#{afterSalesBidding},
+			#{needDirectDeliverySite},
+			#{contractAttachement},
+			#{winBidTime},
+			#{productSeriesOneCode},
+	 		#{productSeriesOneName},
+			#{productSeriesTwoCode},
+	 		#{productSeriesTwoName},
+	 		#{brandInfoCode},
+	 		#{brandInfoName},
+			#{bigOrSmall},
+			#{industryOrChannel},
+			#{smallBill}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_msg SET 				
+			add_time = #{addTime},
+			product_group = #{productGroup},
+			error_msg = #{errorMsg},
+			is_del = #{isDel},
+			remark = #{remark},
+			project_id = #{projectId},
+			data_source = #{dataSource},
+			estimated_time_bid = #{estimatedTimeBid},
+			first_contact_name = #{firstContactName},
+			position = #{position},
+			phone = #{phone},
+			industry_home_category = #{industryHomeCategory},
+			industry_category = #{industryCategory},
+			chance_point = #{chancePoint},
+			user_group = #{userGroup},
+			lock_user = #{lockUser},
+			customer_demand_analysis = #{customerDemandAnalysis},
+			be_send_with_one = #{beSendWithOne},
+			first_bid_document = #{firstBidDocument},
+			estimated_time_signing = #{estimatedTimeSigning},
+			estimated_time_delivery = #{estimatedTimeDelivery},
+			be_win_bid = #{beWinBid},
+			after_sales_bidding = #{afterSalesBidding},
+			need_direct_delivery_site = #{needDirectDeliverySite},
+			contract_attachement = #{contractAttachement},
+			win_bid_time = #{winBidTime},
+			product_series_one_code = #{productSeriesOneCode},
+	 		product_series_one_name = #{productSeriesOneName},
+			product_series_two_code = #{productSeriesTwoCode},
+	 		product_series_two_name = #{productSeriesTwoName},
+	 		brand_info_code = #{brandInfoCode},
+	 		brand_info_name = #{brandInfoName},
+			big_or_small = #{bigOrSmall},
+			industry_or_channel = #{industryOrChannel},
+			small_bill = #{smallBill}
+		WHERE id = #{id}
+	</update>
+
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerMsg" statementType="STATEMENT">
+		select * FROM customer_msg  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

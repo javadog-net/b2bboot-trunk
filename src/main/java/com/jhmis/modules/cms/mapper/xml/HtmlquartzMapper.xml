@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.HtmlquartzMapper">
+    
+	<sql id="htmlquartzColumns">
+		a.id AS "id",
+		a.category_id AS "categoryId",
+		a.type AS "type",
+		a.exetime_hour AS "exetimeHour",
+		a.exetime_min AS "exetimeMin",
+		a.interval_type AS "intervalType",
+		a.interval_hour AS "intervalHour",
+		a.interval_min AS "intervalMin",
+		a.lastexe_time AS "lastexeTime",
+		a.nextexe_time AS "nextexeTime",
+		a.acquisitionid AS "acquisitionid",
+		a.objtype AS "objtype"
+	</sql>
+	
+	<sql id="htmlquartzJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Htmlquartz" >
+		SELECT 
+			<include refid="htmlquartzColumns"/>
+		FROM cms_htmlquartz a
+		<include refid="htmlquartzJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Htmlquartz" >
+		SELECT 
+			<include refid="htmlquartzColumns"/>
+		FROM cms_htmlquartz a
+		<include refid="htmlquartzJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="nextextTimeFlag != null and nextextTimeFlag=='1'">
+				AND a.nextexe_time is null
+			</if>
+			<if test="nextextTimeFlag != null and nextextTimeFlag=='2'">
+				AND a.nextexe_time is null AND nextexe_time <![CDATA[ < ]]> now()
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Htmlquartz" >
+		SELECT 
+			<include refid="htmlquartzColumns"/>
+		FROM cms_htmlquartz a
+		<include refid="htmlquartzJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_htmlquartz(
+			id,
+			category_id,
+			type,
+			exetime_hour,
+			exetime_min,
+			interval_type,
+			interval_hour,
+			interval_min,
+			lastexe_time,
+			nextexe_time,
+			acquisitionid,
+			objtype
+		) VALUES (
+			#{id},
+			#{categoryId},
+			#{type},
+			#{exetimeHour},
+			#{exetimeMin},
+			#{intervalType},
+			#{intervalHour},
+			#{intervalMin},
+			#{lastexeTime},
+			#{nextexeTime},
+			#{acquisitionid},
+			#{objtype}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_htmlquartz SET 	
+			category_id = #{categoryId},
+			type = #{type},
+			exetime_hour = #{exetimeHour},
+			exetime_min = #{exetimeMin},
+			interval_type = #{intervalType},
+			interval_hour = #{intervalHour},
+			interval_min = #{intervalMin},
+			lastexe_time = #{lastexeTime},
+			nextexe_time = #{nextexeTime},
+			acquisitionid = #{acquisitionid},
+			objtype = #{objtype}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_htmlquartz
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_htmlquartz SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Htmlquartz" statementType="STATEMENT">
+		select * FROM cms_htmlquartz  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

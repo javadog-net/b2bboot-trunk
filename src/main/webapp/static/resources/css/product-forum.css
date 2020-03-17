@@ -1,0 +1,229 @@
+.banner_img{
+	margin-bottom: 20px;
+}
+.banner_img img{
+	width: 100%;
+	height: 410px;
+}
+/* 产品经 */
+.product_classics{
+	margin-top: 37px;
+}
+
+.product_classics,.special_topic,.online_classroom{
+	margin-bottom: 20px;
+}
+.product_classics .pub_title,.worth_buying .pub_title,.special_topic .pub_title,.online_classroom .pub_title{
+	height: 47px;
+	margin-bottom: 2px;
+	line-height: 47px;
+	/* background-color: #0059A9;
+	padding-left: 5px;
+	padding-bottom: 1px;
+	border-left: 5px solid #0059A9;
+	border-bottom: 1px solid #0059A9; */
+}
+.product_classics .pub_title div:first-child,.worth_buying .pub_title div:first-child,.special_topic .pub_title div:first-child,.online_classroom .pub_title div:first-child{
+	background-color: #0059A9;
+	width: 10px;
+	height: 100%;
+	margin-right: 5px;
+}
+.product_classics .pub_title div:nth-child(2),.worth_buying .pub_title div:nth-child(2),.special_topic .pub_title div:nth-child(2),.online_classroom .pub_title div:nth-child(2){
+	background-color: #0059A9;
+	width: calc(100% - 15px);
+	height: 100%;
+	margin-bottom: 2px;
+}
+.product_classics .pub_title p,.worth_buying .pub_title p,.special_topic .pub_title p,.online_classroom .pub_title p{
+	background-color: #0059A9;
+	height: 1px;
+}
+.product_classics .pub_title div:nth-child(2)>span:first-child,.worth_buying .pub_title div:nth-child(2)>span:first-child,.special_topic .pub_title div:nth-child(2)>span:first-child,.online_classroom .pub_title div:nth-child(2)>span:first-child{
+	margin-left: 20px;
+	font-size: 18px;
+	color: #FEFEFE;
+}
+.product_classics .pub_title div:nth-child(2)>span:nth-child(2),.worth_buying .pub_title div:nth-child(2)>span:nth-child(2),.special_topic .pub_title div:nth-child(2)>span:nth-child(2),.online_classroom .pub_title div:nth-child(2)>span:nth-child(2){
+	margin-left: 20px;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.forum {
+	width: 100%;
+	height: 610px;
+	margin-top: 39px;
+}
+.forum>div{
+	width: calc(50% - 20px);
+	height: calc(50% - 20px);
+	float: left;
+	padding: 10px;
+}
+.forum>div>.inner-title{
+	font-size: 16px;
+	color: #333333;
+	padding-bottom: 8px;
+	border-bottom: 1px dashed #D9D9D9;
+}
+.forum>div>.inner-title img{
+	margin-top: 10px;
+	cursor: pointer;
+}
+.forum>div>.inner-content{
+	margin-top: 8px;
+	/* width:279px;
+	height:51px; */
+}
+.forum>div>.inner-content>img{
+	width: 124px;
+	height: 124px;
+}
+.forum>div>.inner-content>.inner-left{
+	width:393px;
+	height:51px;
+	margin-left: 15px;
+	color: #333333;
+}
+.forum>div>.inner-content>.inner-left>h5{
+	font-size: 14px;
+	color: #333333;
+	/* font-weight: 600; */
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: 26px;
+}
+.forum>div>.inner-content>.inner-left>h5:nth-child(2){
+	margin-bottom: 10px;
+}
+.forum>div>.inner-content>.inner-left>p{
+	font-size: 12px;
+	color: #333333;
+	overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+	line-height: 22px;
+}
+.forum>div>.inner-content>.inner-left>span{
+	display: inline-block;
+	float: right;
+	color: #0059A9;
+	margin-top: 5px;
+}
+
+.forum>div>ul{
+	padding: 20px;
+}
+.forum>div>ul>li{
+	font-size: 14px;
+	line-height: 36px;
+	color: #333333;
+}
+.forum>div>ul>li>span{
+	color: #DC5359;
+}
+/* 值得购 */
+.worth_buying{
+	
+}
+.worth_buying .worth_buying_content{
+	margin-top: 20px;
+}
+.worth_buying .worth_buying_content>div{
+	width: 550px;
+}
+.worth_buying .worth_buying_content img{
+	width: 100%;
+	height: 267px;
+}
+.worth_buying .worth_buying_content>div>ul{
+	padding: 20px 0px;
+}
+.worth_buying .worth_buying_content>div>ul>li{
+	font-size: 16px;
+	line-height: 36px;
+	color: #333333;
+}
+.worth_buying .worth_buying_content>div>ul>li>span{
+	color: #DC5359;
+}
+/* 特别专题 */
+.special_topic{
+	
+}
+.special_topic .special_topic_content{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+.special_topic .special_topic_content>div{
+	width: 288px;
+	height: 218px;
+}
+.special_topic .special_topic_content>div>img{
+	width: 100%;
+	height: 100%;
+}
+/* 在线课堂 */
+.online_classroom{
+	
+}
+.online_classroom .online_classroom_content{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+.online_classroom .online_classroom_content>div{
+	width: 288px;
+	height: 218px;
+}
+.online_classroom .online_classroom_content>div>img{
+	width: 100%;
+	height: 100%;
+}
+/* 图画产品 */
+.picture_products{
+	height: 380px;
+	background-color: #0059A9;
+}
+.picture_products .inner-title{
+	height: 30px;
+	padding: 20px 30px;
+}
+.picture_products .inner-title h2{
+	display: inline-block;
+	font-size: 	18px;
+	color: #FFFFFF;
+}
+.picture_products .inner-title span{
+	margin-left: 30px;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.inner-bar{
+	width: calc(100% - 140px) !important;
+	background-color: #0059A9 !important;
+	padding: 0 70px;
+}
+.inner-bar img{
+	width: 790px;
+}
+.inner-bar>div{
+	width: 240px;
+	font-size:14px;
+	color: #FFFFFF;
+	line-height: 34px;
+}
+
+/* 后添加轮播图 */
+.banner{
+	width: 1200px;
+	height: 410px;
+	/* background: red; */
+	margin: 0 auto;
+}
+.swiper-container {
+    width: 1200px;
+    height: 410px;
+}  

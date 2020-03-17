@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.CartMapper">
+    
+	<sql id="cartColumns">
+		a.id AS "id",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.main_pic_url AS "mainPicUrl",
+		a.choose_num AS "chooseNum",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.store_goods_id AS	"storeGoodsId",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="cartJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Cart" >
+		SELECT 
+			<include refid="cartColumns"/>
+		FROM cart a
+		<include refid="cartJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Cart" >
+		SELECT 
+			<include refid="cartColumns"/>
+		FROM cart a
+		<include refid="cartJoins"/>
+		<where>
+			1=1
+			${dataScope}
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="idList!= null">
+				<foreach collection="idList" item="id" index="index"
+						 open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Cart" >
+		SELECT 
+			<include refid="cartColumns"/>
+		FROM cart a
+		<include refid="cartJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cart(
+			id,
+			purchaser_account_id,
+			goods_code,
+			goods_name,
+			store_id,
+			store_name,
+			main_pic_url,
+			choose_num,
+			create_date,
+			update_date,
+			store_goods_id,
+			remarks
+		) VALUES (
+			#{id},
+			#{purchaserAccountId},
+			#{goodsCode},
+			#{goodsName},
+			#{storeId},
+			#{storeName},
+			#{mainPicUrl},
+			#{chooseNum},
+			#{createDate},
+			#{updateDate},
+			#{storeGoodsId},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cart SET 	
+			purchaser_account_id = #{purchaserAccountId},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			main_pic_url = #{mainPicUrl},
+			choose_num = #{chooseNum},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cart
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cart SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Cart" statementType="STATEMENT">
+		select * FROM cart  where ${propertyName} = '${value}'
+	</select>
+	<select id="getCartCount" resultType="Integer">
+		SELECT  count(id) FROM  cart
+		<if test="purchaserAccountId != null and purchaserAccountId !=''">
+			WHERE	purchaser_account_id = #{purchaserAccountId}
+		</if>
+
+	</select>
+
+	<select id="selectCartByStoreId" resultType="Cart">
+		SELECT
+		<include refid="cartColumns"/>
+		 FROM  cart a  where a.id IN
+		<foreach collection="idList" item="id" index="index"
+				 open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	    AND store_id=#{storeId}
+	</select>
+</mapper>

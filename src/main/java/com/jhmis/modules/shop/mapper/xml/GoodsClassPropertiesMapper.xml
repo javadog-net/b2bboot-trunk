@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.GoodsClassPropertiesMapper">
+
+    <sql id="goodsClassPropertiesColumns">
+		a.id AS "id",
+		a.class_id AS "classId",
+		a.name AS "name",
+		a.value AS "value",
+		a.is_search AS "isSearch",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+
+    <sql id="goodsClassPropertiesJoins">
+
+    </sql>
+
+
+    <select id="get" resultType="GoodsClassProperties">
+        SELECT
+        <include refid="goodsClassPropertiesColumns"/>
+        FROM goods_class_properties a
+        <include refid="goodsClassPropertiesJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GoodsClassProperties">
+        SELECT
+        <include refid="goodsClassPropertiesColumns"/>
+        FROM goods_class_properties a
+        <include refid="goodsClassPropertiesJoins"/>
+        <where>
+
+            ${dataScope}
+            <if test="classId != null and classId != ''">
+                AND a.class_id = #{classId}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+            <if test="value != null and value != ''">
+				AND a.value LIKE
+				<if test="dbName == 'oracle'">'%'||#{value}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{value}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{value},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="GoodsClassProperties">
+        SELECT
+        <include refid="goodsClassPropertiesColumns"/>
+        FROM goods_class_properties a
+        <include refid="goodsClassPropertiesJoins"/>
+        <where>
+
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO goods_class_properties(
+			id,
+			class_id,
+			name,
+			value,
+			is_search,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{classId},
+			#{name},
+			#{value},
+			#{isSearch},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE goods_class_properties SET 	
+			class_id = #{classId},
+			name = #{name},
+			value = #{value},
+			is_search = #{isSearch},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+		DELETE FROM goods_class_properties
+		WHERE id = #{id}
+	</update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+		UPDATE goods_class_properties SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="deleteByClassId">
+		delete FROM  goods_class_properties where class_id = #{classId}
+	</delete>
+
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="GoodsClassProperties" statementType="STATEMENT">
+		select * FROM goods_class_properties  where ${propertyName} = '${value}'
+	</select>
+    <!-- 根据classId获取属性并分组 -->
+    <select id="findConcatProperty" parameterType="String" resultType="GoodsClassProperties">
+		select name,group_concat(value)
+		from goods_class_properties GROUP BY name where class_id = #{classId}
+	</select>
+
+    <select id="findClassProperties" parameterType="String" resultType="GoodsClassProperties">
+		SELECT
+			<include refid="goodsClassPropertiesColumns"/>
+		FROM
+			goods_class_properties a
+		<where>
+			a.is_search = 1
+			<if test="classId != null and classId != ''">
+				AND a.class_id = #{classId}
+			</if>
+		</where>
+		ORDER BY a.name asc
+	</select>
+
+</mapper>

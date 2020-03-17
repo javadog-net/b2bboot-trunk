@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.ViewQygBrownItemMapper">
+    
+	<sql id="viewQygBrownItemColumns">
+		a.id AS "id",
+		a.brown_id AS "brownId",
+		a.product_id AS "productId",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.order_quantity AS "orderQuantity",
+		a.price AS "price",
+		a.actual_order_quantity AS "actualOrderQuantity",
+		a.izhikou AS "izhikou",
+		a.ihoufan AS "ihoufan",
+		a.itaifan AS "itaifan",
+		a.last_modified_date AS "lastModifiedDate",
+		a.cinvm_unit AS "cinvmUnit",
+		a.iinvr_cost AS "iinvrCost",
+		a.ave_policy AS "avePolicy",
+		a.cur_policy AS "curPolicy",
+		a.profit AS "profit",
+		a.created_by_id AS "createdById",
+		a.last_modified_by_id AS "lastModifiedById",
+		a.deleted AS "deleted",
+		a.created_by AS "createdBy",
+		a.created_date AS "createdDate",
+		a.last_modified_by AS "lastModifiedBy",
+		a.cre_pro_id AS "creProId",
+		a.mod_pro_id AS "modProId",
+		a.batch_date AS "batchDate"
+	</sql>
+	
+	<sql id="viewQygBrownItemJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ViewQygBrownItem" >
+		SELECT 
+			<include refid="viewQygBrownItemColumns"/>
+		FROM view_qyg_brown_item a
+		<include refid="viewQygBrownItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByMine" resultType="ViewQygBrownItem" >
+		SELECT
+		*
+		FROM view_qyg_brown_item a
+		<include refid="viewQygBrownItemJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="brownId != null and brownId != ''">
+				AND a.brown_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{brownId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{brownId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{brownId},'%')</if>
+			</if>
+			<if test="productId != null and productId != ''">
+				AND a.product_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{productId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productId},'%')</if>
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{productCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productCode},'%')</if>
+			</if>
+			<if test="productName != null and productName != ''">
+				AND a.product_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{productName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productName},'%')</if>
+			</if>
+			<if test="orderQuantity != null and orderQuantity != ''">
+				AND a.order_quantity LIKE
+				<if test="dbName == 'oracle'">'%'||#{orderQuantity}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orderQuantity}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orderQuantity},'%')</if>
+			</if>
+			<if test="price != null and price != ''">
+				AND a.price = #{price}
+			</if>
+			<if test="actualOrderQuantity != null and actualOrderQuantity != ''">
+				AND a.actual_order_quantity = #{actualOrderQuantity}
+			</if>
+			<if test="izhikou != null and izhikou != ''">
+				AND a.izhikou = #{izhikou}
+			</if>
+			<if test="ihoufan != null and ihoufan != ''">
+				AND a.ihoufan = #{ihoufan}
+			</if>
+			<if test="itaifan != null and itaifan != ''">
+				AND a.itaifan = #{itaifan}
+			</if>
+			<if test="lastModifiedDate != null and lastModifiedDate != ''">
+				AND a.last_modified_date = #{lastModifiedDate}
+			</if>
+			<if test="cinvmUnit != null and cinvmUnit != ''">
+				AND a.cinvm_unit = #{cinvmUnit}
+			</if>
+			<if test="iinvrCost != null and iinvrCost != ''">
+				AND a.iinvr_cost = #{iinvrCost}
+			</if>
+			<if test="avePolicy != null and avePolicy != ''">
+				AND a.ave_policy = #{avePolicy}
+			</if>
+			<if test="curPolicy != null and curPolicy != ''">
+				AND a.cur_policy = #{curPolicy}
+			</if>
+			<if test="profit != null and profit != ''">
+				AND a.profit = #{profit}
+			</if>
+			<if test="createdById != null and createdById != ''">
+				AND a.created_by_id = #{createdById}
+			</if>
+			<if test="lastModifiedById != null and lastModifiedById != ''">
+				AND a.last_modified_by_id = #{lastModifiedById}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="createdBy != null and createdBy != ''">
+				AND a.created_by = #{createdBy}
+			</if>
+			<if test="createdDate != null and createdDate != ''">
+				AND a.created_date = #{createdDate}
+			</if>
+			<if test="lastModifiedBy != null and lastModifiedBy != ''">
+				AND a.last_modified_by = #{lastModifiedBy}
+			</if>
+			<if test="creProId != null and creProId != ''">
+				AND a.cre_pro_id = #{creProId}
+			</if>
+			<if test="modProId != null and modProId != ''">
+				AND a.mod_pro_id = #{modProId}
+			</if>
+			<if test="batchDate != null and batchDate != ''">
+				AND a.batch_date = #{batchDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findList" resultType="ViewQygBrownItem" >
+		SELECT 
+			<include refid="viewQygBrownItemColumns"/>
+		FROM view_qyg_brown_item a
+		<include refid="viewQygBrownItemJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="brownId != null and brownId != ''">
+				AND a.brown_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{brownId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{brownId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{brownId},'%')</if>
+			</if>
+			<if test="productId != null and productId != ''">
+				AND a.product_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productId},'%')</if>
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productCode},'%')</if>
+			</if>
+			<if test="productName != null and productName != ''">
+				AND a.product_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productName},'%')</if>
+			</if>
+			<if test="orderQuantity != null and orderQuantity != ''">
+				AND a.order_quantity LIKE 
+					<if test="dbName == 'oracle'">'%'||#{orderQuantity}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{orderQuantity}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{orderQuantity},'%')</if>
+			</if>
+			<if test="price != null and price != ''">
+				AND a.price = #{price}
+			</if>
+			<if test="actualOrderQuantity != null and actualOrderQuantity != ''">
+				AND a.actual_order_quantity = #{actualOrderQuantity}
+			</if>
+			<if test="izhikou != null and izhikou != ''">
+				AND a.izhikou = #{izhikou}
+			</if>
+			<if test="ihoufan != null and ihoufan != ''">
+				AND a.ihoufan = #{ihoufan}
+			</if>
+			<if test="itaifan != null and itaifan != ''">
+				AND a.itaifan = #{itaifan}
+			</if>
+			<if test="lastModifiedDate != null and lastModifiedDate != ''">
+				AND a.last_modified_date = #{lastModifiedDate}
+			</if>
+			<if test="cinvmUnit != null and cinvmUnit != ''">
+				AND a.cinvm_unit = #{cinvmUnit}
+			</if>
+			<if test="iinvrCost != null and iinvrCost != ''">
+				AND a.iinvr_cost = #{iinvrCost}
+			</if>
+			<if test="avePolicy != null and avePolicy != ''">
+				AND a.ave_policy = #{avePolicy}
+			</if>
+			<if test="curPolicy != null and curPolicy != ''">
+				AND a.cur_policy = #{curPolicy}
+			</if>
+			<if test="profit != null and profit != ''">
+				AND a.profit = #{profit}
+			</if>
+			<if test="createdById != null and createdById != ''">
+				AND a.created_by_id = #{createdById}
+			</if>
+			<if test="lastModifiedById != null and lastModifiedById != ''">
+				AND a.last_modified_by_id = #{lastModifiedById}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="createdBy != null and createdBy != ''">
+				AND a.created_by = #{createdBy}
+			</if>
+			<if test="createdDate != null and createdDate != ''">
+				AND a.created_date = #{createdDate}
+			</if>
+			<if test="lastModifiedBy != null and lastModifiedBy != ''">
+				AND a.last_modified_by = #{lastModifiedBy}
+			</if>
+			<if test="creProId != null and creProId != ''">
+				AND a.cre_pro_id = #{creProId}
+			</if>
+			<if test="modProId != null and modProId != ''">
+				AND a.mod_pro_id = #{modProId}
+			</if>
+			<if test="batchDate != null and batchDate != ''">
+				AND a.batch_date = #{batchDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ViewQygBrownItem" >
+		SELECT 
+			<include refid="viewQygBrownItemColumns"/>
+		FROM view_qyg_brown_item a
+		<include refid="viewQygBrownItemJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO view_qyg_brown_item(
+			id,
+			brown_id,
+			product_id,
+			product_code,
+			product_name,
+			order_quantity,
+			price,
+			actual_order_quantity,
+			izhikou,
+			ihoufan,
+			itaifan,
+			last_modified_date,
+			cinvm_unit,
+			iinvr_cost,
+			ave_policy,
+			cur_policy,
+			profit,
+			created_by_id,
+			last_modified_by_id,
+			deleted,
+			created_by,
+			created_date,
+			last_modified_by,
+			cre_pro_id,
+			mod_pro_id,
+			batch_date
+		) VALUES (
+			#{id},
+			#{brownId},
+			#{productId},
+			#{productCode},
+			#{productName},
+			#{orderQuantity},
+			#{price},
+			#{actualOrderQuantity},
+			#{izhikou},
+			#{ihoufan},
+			#{itaifan},
+			#{lastModifiedDate},
+			#{cinvmUnit},
+			#{iinvrCost},
+			#{avePolicy},
+			#{curPolicy},
+			#{profit},
+			#{createdById},
+			#{lastModifiedById},
+			#{deleted},
+			#{createdBy},
+			#{createdDate},
+			#{lastModifiedBy},
+			#{creProId},
+			#{modProId},
+			#{batchDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE view_qyg_brown_item SET 	
+			brown_id = #{brownId},
+			product_id = #{productId},
+			product_code = #{productCode},
+			product_name = #{productName},
+			order_quantity = #{orderQuantity},
+			price = #{price},
+			actual_order_quantity = #{actualOrderQuantity},
+			izhikou = #{izhikou},
+			ihoufan = #{ihoufan},
+			itaifan = #{itaifan},
+			last_modified_date = #{lastModifiedDate},
+			cinvm_unit = #{cinvmUnit},
+			iinvr_cost = #{iinvrCost},
+			ave_policy = #{avePolicy},
+			cur_policy = #{curPolicy},
+			profit = #{profit},
+			created_by_id = #{createdById},
+			last_modified_by_id = #{lastModifiedById},
+			deleted = #{deleted},
+			created_by = #{createdBy},
+			created_date = #{createdDate},
+			last_modified_by = #{lastModifiedBy},
+			cre_pro_id = #{creProId},
+			mod_pro_id = #{modProId},
+			batch_date = #{batchDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM view_qyg_brown_item
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE view_qyg_brown_item SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ViewQygBrownItem" statementType="STATEMENT">
+		select * FROM view_qyg_brown_item  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

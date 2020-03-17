@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserAddressMapper">
+    
+	<sql id="purchaserAddressColumns">
+		a.id AS "id",
+		a.purchaser_id AS "purchaserId",
+		a.true_name AS "trueName",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.district_id AS "districtId",
+		a.area_info AS "areaInfo",
+		a.detail_address AS "detailAddress",
+		a.tel_phone AS "telPhone",
+		a.mobile_phone AS "mobilePhone",
+		a.is_default AS "isDefault",
+		a.zip_code AS "zipCode",
+		a.company_name AS "companyName",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="purchaserAddressJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserAddress" >
+		SELECT 
+			<include refid="purchaserAddressColumns"/>
+		FROM purchaser_address a
+		<include refid="purchaserAddressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserAddress" >
+		SELECT 
+			<include refid="purchaserAddressColumns"/>
+		FROM purchaser_address a
+		<include refid="purchaserAddressJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="isDefault != null and isDefault != ''">
+				AND a.is_default = #{isDefault}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.is_default DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserAddress" >
+		SELECT 
+			<include refid="purchaserAddressColumns"/>
+		FROM purchaser_address a
+		<include refid="purchaserAddressJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_address(
+			id,
+			purchaser_id,
+			true_name,
+			province_id,
+			city_id,
+			district_id,
+			area_info,
+			detail_address,
+			tel_phone,
+			mobile_phone,
+			is_default,
+			zip_code,
+		                              company_name,
+			remarks
+		) VALUES (
+			#{id},
+			#{purchaserId},
+			#{trueName},
+			#{provinceId},
+			#{cityId},
+			#{districtId},
+			#{areaInfo},
+			#{detailAddress},
+			#{telPhone},
+			#{mobilePhone},
+			#{isDefault},
+			#{zipCode},
+		          #{companyName},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_address SET 	
+			purchaser_id = #{purchaserId},
+			true_name = #{trueName},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			district_id = #{districtId},
+			area_info = #{areaInfo},
+			detail_address = #{detailAddress},
+			tel_phone = #{telPhone},
+			mobile_phone = #{mobilePhone},
+			is_default = #{isDefault},
+			zip_code = #{zipCode},
+		                             company_name=#{companyName},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <update id="clearDefault">
+        UPDATE purchaser_address SET
+        is_default= '0'
+        WHERE
+        purchaser_id = #{purchaserId}
+    </update>
+
+    <update id="setDefault">
+        UPDATE purchaser_address SET
+        is_default= '1'
+        WHERE
+        id= #{id}
+    </update>
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_address
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_address SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserAddress" statementType="STATEMENT">
+		select * FROM purchaser_address  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

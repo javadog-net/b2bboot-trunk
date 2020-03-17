@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.LinkMapper">
+    
+	<sql id="linkColumns">
+		a.id AS "id",
+		a.link_group AS "linkGroup",
+		a.link_type AS "linkType",
+		a.name AS "name",
+		a.url AS "url",
+		a.logo AS "logo",
+		a.descp AS "descp",
+		a.sort AS "sort",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="linkJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Link" >
+		SELECT 
+			<include refid="linkColumns"/>
+		FROM cms_link a
+		<include refid="linkJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Link" >
+		SELECT 
+			<include refid="linkColumns"/>
+		FROM cms_link a
+		<include refid="linkJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="linkType != null and linkType != ''">
+				AND a.link_type = #{linkType}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Link" >
+		SELECT 
+			<include refid="linkColumns"/>
+		FROM cms_link a
+		<include refid="linkJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_link(
+			id,
+			link_group,
+			link_type,
+			name,
+			url,
+			logo,
+			descp,
+			sort,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{linkGroup},
+			#{linkType},
+			#{name},
+			#{url},
+			#{logo},
+			#{descp},
+			#{sort},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_link SET 	
+			link_group = #{linkGroup},
+			link_type = #{linkType},
+			name = #{name},
+			url = #{url},
+			logo = #{logo},
+			descp = #{descp},
+			sort = #{sort},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_link
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_link SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Link" statementType="STATEMENT">
+		select * FROM cms_link  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserInvoiceMapper">
+    
+	<sql id="purchaserInvoiceColumns">
+		a.id AS "id",
+		a.purchaser_id AS "purchaserId",
+		a.kind AS "kind",
+		a.company_name AS "companyName",
+		a.tax_code AS "taxCode",
+		a.reg_addr AS "regAddr",
+		a.reg_phone AS "regPhone",
+		a.reg_bname AS "regBname",
+		a.reg_baccount AS "regBaccount",
+		a.rec_name AS "recName",
+		a.rec_mobphone AS "recMobphone",
+		a.rec_province_id AS "recProvinceId",
+		a.rec_city_id AS "recCityId",
+		a.rec_district__id AS "recDistrictId",
+		a.rec_area_info AS "recAreaInfo",
+		a.rec_detail_addr AS "recDetailAddr",
+		a.is_default AS "isDefault"
+	</sql>
+	
+	<sql id="purchaserInvoiceJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserInvoice" >
+		SELECT 
+			<include refid="purchaserInvoiceColumns"/>
+		FROM purchaser_invoice a
+		<include refid="purchaserInvoiceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserInvoice" >
+		SELECT 
+			<include refid="purchaserInvoiceColumns"/>
+		FROM purchaser_invoice a
+		<include refid="purchaserInvoiceJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="kind != null and kind != ''">
+				AND a.kind = #{kind}
+			</if>
+			<if test="recName != null and recName != ''">
+				AND a.rec_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{recName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{recName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{recName},'%')</if>
+			</if>
+			<if test="recMobphone != null and recMobphone != ''">
+				AND a.rec_mobphone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{recMobphone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{recMobphone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{recMobphone},'%')</if>
+			</if>
+			<if test="recProvinceId != null and recProvinceId != ''">
+				AND a.rec_province_id = #{recProvinceId}
+			</if>
+			<if test="recCityId != null and recCityId != ''">
+				AND a.rec_city_id = #{recCityId}
+			</if>
+			<if test="recDistrictId != null and recDistrictId != ''">
+				AND a.rec_district__id = #{recDistrictId}
+			</if>
+			<if test="isDefault != null and isDefault != ''">
+				AND a.is_default = #{isDefault}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.is_default DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserInvoice" >
+		SELECT 
+			<include refid="purchaserInvoiceColumns"/>
+		FROM purchaser_invoice a
+		<include refid="purchaserInvoiceJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_invoice(
+			id,
+			purchaser_id,
+			kind,
+			company_name,
+			tax_code,
+			reg_addr,
+			reg_phone,
+			reg_bname,
+			reg_baccount,
+			rec_name,
+			rec_mobphone,
+			rec_province_id,
+			rec_city_id,
+			rec_district__id,
+			rec_area_info,
+			rec_detail_addr,
+			is_default
+		) VALUES (
+			#{id},
+			#{purchaserId},
+			#{kind},
+			#{companyName},
+			#{taxCode},
+			#{regAddr},
+			#{regPhone},
+			#{regBname},
+			#{regBaccount},
+			#{recName},
+			#{recMobphone},
+			#{recProvinceId},
+			#{recCityId},
+			#{recDistrictId},
+			#{recAreaInfo},
+			#{recDetailAddr},
+			#{isDefault}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_invoice SET 	
+			purchaser_id = #{purchaserId},
+			kind = #{kind},
+			company_name = #{companyName},
+			tax_code = #{taxCode},
+			reg_addr = #{regAddr},
+			reg_phone = #{regPhone},
+			reg_bname = #{regBname},
+			reg_baccount = #{regBaccount},
+			rec_name = #{recName},
+			rec_mobphone = #{recMobphone},
+			rec_province_id = #{recProvinceId},
+			rec_city_id = #{recCityId},
+			rec_district__id = #{recDistrictId},
+			rec_area_info = #{recAreaInfo},
+			rec_detail_addr = #{recDetailAddr},
+			is_default = #{isDefault}
+		WHERE id = #{id}
+	</update>
+
+    <update id="clearDefault">
+        UPDATE purchaser_invoice SET
+        is_default= '0'
+        WHERE
+        purchaser_id = #{purchaserId}
+    </update>
+
+    <update id="setDefault">
+        UPDATE purchaser_invoice SET
+        is_default= '1'
+        WHERE
+        id= #{id}
+    </update>
+
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_invoice
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_invoice SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserInvoice" statementType="STATEMENT">
+		select * FROM purchaser_invoice  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

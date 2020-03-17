@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.IndustryProductsMapper">
+    
+	<sql id="industryProductsColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.describe AS "describe",
+		a.industrial_code AS "industrialCode",
+		a.industrial_name AS "industrialName",
+		a.intustry_account AS "intustryAccount",
+		a.transfer_system AS "transferSystem",
+		a.money AS "money",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="industryProductsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="IndustryProducts" >
+		SELECT 
+			<include refid="industryProductsColumns"/>
+		FROM industry_products a
+		<include refid="industryProductsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IndustryProducts" >
+		SELECT 
+			<include refid="industryProductsColumns"/>
+		FROM industry_products a
+		<include refid="industryProductsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="describe != null and describe != ''">
+				AND a.describe = #{describe}
+			</if>
+			<if test="industrialCode != null and industrialCode != ''">
+				AND a.industrial_code = #{industrialCode}
+			</if>
+			<if test="industrialName != null and industrialName != ''">
+				AND a.industrial_name = #{industrialName}
+			</if>
+			<if test="intustryAccount != null and intustryAccount != ''">
+				AND a.intustry_account = #{intustryAccount}
+			</if>
+			<if test="transferSystem != null and transferSystem != ''">
+				AND a.transfer_system = #{transferSystem}
+			</if>
+			<if test="money != null and money != ''">
+				AND a.money = #{money}
+			</if>
+			<if test="num != null and num != ''">
+				AND a.num = #{num}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IndustryProducts" >
+		SELECT 
+			<include refid="industryProductsColumns"/>
+		FROM industry_products a
+		<include refid="industryProductsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO industry_products(
+			id,
+			code,
+			name,
+			sort,
+			describe,
+			industrial_code,
+			industrial_name,
+			intustry_account,
+			transfer_system,
+			money,
+			num
+		) VALUES (
+			#{id},
+			#{code},
+			#{name},
+			#{sort},
+			#{describe},
+			#{industrialCode},
+			#{industrialName},
+			#{intustryAccount},
+			#{transferSystem},
+			#{money},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE industry_products SET 	
+			code = #{code},
+			name = #{name},
+			sort = #{sort},
+			describe = #{describe},
+			industrial_code = #{industrialCode},
+			industrial_name = #{industrialName},
+			intustry_account = #{intustryAccount},
+			transfer_system = #{transferSystem},
+			money = #{money},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM industry_products
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE industry_products SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="IndustryProducts" statementType="STATEMENT">
+		select * FROM industry_products  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

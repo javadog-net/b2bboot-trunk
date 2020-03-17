@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopMsgZykcMapper">
+    
+	<sql id="oldShopMsgZykcColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.addtime AS "addtime",
+		a.companyname AS "companyname",
+		a.cancletype AS "cancletype",
+		a.cancelreson AS "cancelreson",
+		a.cancletime AS "cancletime",
+		a.custcode AS "custcode",
+		a.tradecount AS "tradecount",
+		a.ischeck AS "ischeck",
+		a.checker AS "checker",
+		a.checktime AS "checktime",
+		a.pimageurl AS "pimageurl",
+		a.isclosed AS "isclosed",
+		a.canceldesc AS "canceldesc"
+	</sql>
+	
+	<sql id="oldShopMsgZykcJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopMsgZykc" >
+		SELECT 
+			<include refid="oldShopMsgZykcColumns"/>
+		FROM old_shop_msg_zykc a
+		<include refid="oldShopMsgZykcJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopMsgZykc" >
+		SELECT 
+			<include refid="oldShopMsgZykcColumns"/>
+		FROM old_shop_msg_zykc a
+		<include refid="oldShopMsgZykcJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopMsgZykc" >
+		SELECT 
+			<include refid="oldShopMsgZykcColumns"/>
+		FROM old_shop_msg_zykc a
+		<include refid="oldShopMsgZykcJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_msg_zykc(
+			id,
+			msgid,
+			addtime,
+			companyname,
+			cancletype,
+			cancelreson,
+			cancletime,
+			custcode,
+			tradecount,
+			ischeck,
+			checker,
+			checktime,
+			pimageurl,
+			isclosed,
+			canceldesc
+		) VALUES (
+			#{id},
+			#{msgid},
+			#{addtime},
+			#{companyname},
+			#{cancletype},
+			#{cancelreson},
+			#{cancletime},
+			#{custcode},
+			#{tradecount},
+			#{ischeck},
+			#{checker},
+			#{checktime},
+			#{pimageurl},
+			#{isclosed},
+			#{canceldesc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_msg_zykc SET 	
+			msgid = #{msgid},
+			addtime = #{addtime},
+			companyname = #{companyname},
+			cancletype = #{cancletype},
+			cancelreson = #{cancelreson},
+			cancletime = #{cancletime},
+			custcode = #{custcode},
+			tradecount = #{tradecount},
+			ischeck = #{ischeck},
+			checker = #{checker},
+			checktime = #{checktime},
+			pimageurl = #{pimageurl},
+			isclosed = #{isclosed},
+			canceldesc = #{canceldesc}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_msg_zykc
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_msg_zykc SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopMsgZykc" statementType="STATEMENT">
+		select * FROM old_shop_msg_zykc  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

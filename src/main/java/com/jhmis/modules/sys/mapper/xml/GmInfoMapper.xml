@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.sys.mapper.GmInfoMapper">
+    
+	<sql id="gmInfoColumns">
+		a.id AS "id",
+		a.gm_code AS "gmCode",
+		a.branch_code AS "branchCode",
+		a.gm_name AS "gmName",
+		a.gm_depart AS "gmDepart",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="gmInfoJoins">
+		
+	</sql>
+	
+	<select id="findByBranchCode" resultType="GmInfo">
+		select distinct
+		*
+		from sys_gm_info where branch_code= #{branchCode}
+	</select>
+    
+	<select id="get" resultType="GmInfo" >
+		SELECT 
+			<include refid="gmInfoColumns"/>
+		FROM sys_gm_info a
+		<include refid="gmInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GmInfo" >
+		SELECT 
+			<include refid="gmInfoColumns"/>
+		FROM sys_gm_info a
+		<include refid="gmInfoJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="gmCode != null and gmCode != ''">
+				AND a.gm_code = #{gmCode}
+			</if>
+			<if test="branchCode != null and branchCode != ''">
+				AND a.branch_code = #{branchCode}
+			</if>
+			<if test="gmName != null and gmName != ''">
+				AND a.gm_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{gmName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gmName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gmName},'%')</if>
+			</if>
+			<if test="gmDepart != null and gmDepart != ''">
+				AND a.gm_depart = #{gmDepart}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GmInfo" >
+		SELECT 
+			<include refid="gmInfoColumns"/>
+		FROM sys_gm_info a
+		<include refid="gmInfoJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_gm_info(
+			gm_code,
+			branch_code,
+			gm_name,
+			gm_depart,
+			remarks
+		) VALUES (
+			#{gmCode},
+			#{branchCode},
+			#{gmName},
+			#{gmDepart},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_gm_info SET 	
+			gm_code = #{gmCode},
+			branch_code = #{branchCode},
+			gm_name = #{gmName},
+			gm_depart = #{gmDepart},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sys_gm_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sys_gm_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GmInfo" statementType="STATEMENT">
+		select * FROM sys_gm_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.SkMvMapper">
+    
+	<sql id="skMvColumns">
+		a.id AS "id",
+		a.sk_mv_url AS "skMvUrl",
+		a.sk_mv_image AS "skMvImage",
+		a.sk_mv_name AS "skMvName",
+		a.sk_mv_introduction AS "skMvIntroduction",
+		a.sk_mv_addtime AS "skMvAddtime",
+		a.sk_mv_size AS "skMvSize",
+		a.sk_mv_adduser AS "skMvAdduser",
+		a.sk_mv_remark AS "skMvRemark",
+		d.sk_mv_visits AS "skMvVisits",
+		d.sk_mv_like AS "skMvLike",
+		d.sk_mv_comment_count AS "skMvCommentCount"
+	</sql>
+	
+	<sql id="skMvJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="SkMv" >
+		SELECT 
+		*
+		FROM sk_mv a
+		<include refid="skMvJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SkMv" >
+		SELECT 
+			*
+		FROM sk_mv a
+		<include refid="skMvJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="skMvUrl != null and skMvUrl != ''">
+				AND a.sk_mv_url = #{skMvUrl}
+			</if>
+			<if test="skMvImage != null and skMvImage != ''">
+				AND a.sk_mv_image = #{skMvImage}
+			</if>
+			<if test="skMvName != null and skMvName != ''">
+				AND a.sk_mv_name = #{skMvName}
+			</if>
+			<if test="skMvIntroduction != null and skMvIntroduction != ''">
+				AND a.sk_mv_introduction = #{skMvIntroduction}
+			</if>
+			<if test="skMvSize != null and skMvSize != ''">
+				AND a.sk_mv_size = #{skMvSize}
+			</if>
+			<if test="skMvAdduser != null and skMvAdduser != ''">
+				AND a.sk_mv_adduser = #{skMvAdduser}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAll" resultType="SkMv">
+	
+	select 
+	<include refid="skMvColumns"/> 
+          from sk_mv  a
+		left join sk_mv_details d on a.id=d.sk_mv_id
+		order BY sk_mv_remark desc,sk_mv_addtime desc
+	</select>
+
+	<select id="findById" resultType="SkMv">
+	
+	select 
+	<include refid="skMvColumns"/> 
+ from sk_mv  a
+	left join sk_mv_details d on a.id=d.sk_mv_id where a.id=#{id}
+	order by sk_mv_addtime desc
+	</select>
+	
+<select id="findIsTop" resultType="SkMv" >
+
+select * from sk_mv where sk_mv_remark="1"
+</select>
+	
+	
+	<select id="findAllList" resultType="SkMv" >
+		SELECT 
+			*
+		FROM sk_mv a
+		<include refid="skMvJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sk_mv(
+			id,
+			sk_mv_url,
+			sk_mv_image,
+			sk_mv_name,
+			sk_mv_introduction,
+			sk_mv_addtime,
+			sk_mv_size,
+			sk_mv_adduser,
+			sk_mv_remark
+		) VALUES (
+			#{id},
+			#{skMvUrl},
+			#{skMvImage},
+			#{skMvName},
+			#{skMvIntroduction},
+			#{skMvAddtime},
+			#{skMvSize},
+			#{skMvAdduser},
+			#{skMvRemark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sk_mv SET 	
+			sk_mv_url = #{skMvUrl},
+			sk_mv_image = #{skMvImage},
+			sk_mv_name = #{skMvName},
+			sk_mv_introduction = #{skMvIntroduction},
+			sk_mv_addtime = #{skMvAddtime},
+			sk_mv_size = #{skMvSize},
+			sk_mv_adduser = #{skMvAdduser},
+			sk_mv_remark = #{skMvRemark}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sk_mv
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sk_mv SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="isTop">
+		UPDATE sk_mv SET 
+			sk_mv_remark = #{top}
+		WHERE id = #{id}
+	</update>
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="SkMv" statementType="STATEMENT">
+		select * FROM sk_mv  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

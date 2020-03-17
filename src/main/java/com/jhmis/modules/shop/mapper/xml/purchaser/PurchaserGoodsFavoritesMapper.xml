@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserGoodsFavoritesMapper">
+    
+	<sql id="purchaserGoodsFavoritesColumns">
+		a.id AS "id",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.store_goods_id AS "storeGoodsId",
+		a.fav_date AS "favDate",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.goods_main_pic AS "goodsMainPic",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.log_price AS "logPrice",
+		a.log_msg AS "logMsg",
+		a.remarks AS "remarks",
+		b.name as brandName
+	</sql>
+	
+	<sql id="purchaserGoodsFavoritesJoins">
+		left join goods g on a.goods_code = g.code left join brand b on g.brand = b.id
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserGoodsFavorites" >
+		SELECT 
+			<include refid="purchaserGoodsFavoritesColumns"/>
+		FROM purchaser_goods_favorites a
+		<include refid="purchaserGoodsFavoritesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserGoodsFavorites" >
+		SELECT 
+			<include refid="purchaserGoodsFavoritesColumns"/>
+		FROM purchaser_goods_favorites a
+		<include refid="purchaserGoodsFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="storeGoodsId != null and storeGoodsId != ''">
+				AND a.store_goods_id = #{storeGoodsId}
+			</if>
+			<if test="favDate != null and favDate != ''">
+				AND a.fav_date = #{favDate}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="categoryPid != null and categoryPid != ''">
+				AND a.category_pid = #{categoryPid}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="logPrice != null and logPrice != ''">
+				AND a.log_price = #{logPrice}
+			</if>
+			<if test="logMsg != null and logMsg != ''">
+				AND a.log_msg = #{logMsg}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserGoodsFavorites" >
+		SELECT 
+			<include refid="purchaserGoodsFavoritesColumns"/>
+		FROM purchaser_goods_favorites a
+		<include refid="purchaserGoodsFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_goods_favorites(
+			id,
+			purchaser_account_id,
+			store_goods_id,
+			fav_date,
+			store_id,
+			store_name,
+			goods_code,
+			goods_name,
+			goods_main_pic,
+			category_pid,
+			category_id,
+			log_price,
+			log_msg,
+			remarks
+		) VALUES (
+			#{id},
+			#{purchaserAccountId},
+			#{storeGoodsId},
+			#{favDate},
+			#{storeId},
+			#{storeName},
+			#{goodsCode},
+			#{goodsName},
+			#{goodsMainPic},
+			#{categoryPid},
+			#{categoryId},
+			#{logPrice},
+			#{logMsg},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_goods_favorites SET 	
+			purchaser_account_id = #{purchaserAccountId},
+			store_goods_id = #{storeGoodsId},
+			fav_date = #{favDate},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			goods_main_pic = #{goodsMainPic},
+			category_pid = #{categoryPid},
+			category_id = #{categoryId},
+			log_price = #{logPrice},
+			log_msg = #{logMsg},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_goods_favorites
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_goods_favorites SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserGoodsFavorites" statementType="STATEMENT">
+		select * FROM purchaser_goods_favorites  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="checkAgain" parameterType="String" resultType="PurchaserGoodsFavorites">
+		select
+		<include refid="purchaserGoodsFavoritesColumns"/>
+		FROM purchaser_goods_favorites a <include refid="purchaserGoodsFavoritesJoins"/>  where a.store_goods_id = #{arg0} and a.purchaser_account_id = #{arg1}
+	</select>
+
+	<delete id="cancel" parameterType="String">
+		delete from purchaser_goods_favorites where  store_goods_id = #{arg0} and purchaser_account_id = #{arg1}
+	</delete>
+
+	<delete id="deleteById">
+		delete from purchaser_goods_favorites where id = #{arg0}
+	</delete>
+
+</mapper>

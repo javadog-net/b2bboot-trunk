@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.dealer.ProductSalesFormMapper">
+    
+	<sql id="productSalesFormColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.sales_organization AS "salesOrganization",
+		a.sales_channel AS "salesChannel",
+		a.sales_channel2 AS "salesChannel2",
+		a.market_level AS "marketLevel",
+		a.customer_code AS "customerCode",
+		a.so_create_closure AS "soCreateClosure",
+		a.active_date_begin AS "activeDateBegin",
+		a.active_date_end AS "activeDateEnd",
+		a.last_upd AS "lastUpd",
+		a.delete_flag AS "deleteFlag",
+		a.department AS "department",
+		a.combine_type AS "combineType",
+		a.put_methods AS "putMethods",
+		a.is_prod_template AS "isProdTemplate"
+	</sql>
+	
+	<sql id="productSalesFormJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ProductSalesForm" >
+		SELECT 
+			<include refid="productSalesFormColumns"/>
+		FROM product_sales_form a
+		<include refid="productSalesFormJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProductSalesForm" >
+		SELECT 
+			<include refid="productSalesFormColumns"/>
+		FROM product_sales_form a
+		<include refid="productSalesFormJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="salesOrganization != null and salesOrganization != ''">
+				AND a.sales_organization = #{salesOrganization}
+			</if>
+			<if test="salesChannel != null and salesChannel != ''">
+				AND a.sales_channel = #{salesChannel}
+			</if>
+			<if test="salesChannel2 != null and salesChannel2 != ''">
+				AND a.sales_channel2 = #{salesChannel2}
+			</if>
+			<if test="marketLevel != null and marketLevel != ''">
+				AND a.market_level = #{marketLevel}
+			</if>
+			<if test="customerCode != null and customerCode != ''">
+				AND a.customer_code = #{customerCode}
+			</if>
+			<if test="soCreateClosure != null and soCreateClosure != ''">
+				AND a.so_create_closure = #{soCreateClosure}
+			</if>
+			<if test="activeDateBegin != null and activeDateBegin != ''">
+				AND a.active_date_begin = #{activeDateBegin}
+			</if>
+			<if test="activeDateEnd != null and activeDateEnd != ''">
+				AND a.active_date_end = #{activeDateEnd}
+			</if>
+			<if test="department != null and department != ''">
+				AND a.department = #{department}
+			</if>
+			<if test="combineType != null and combineType != ''">
+				AND a.combine_type = #{combineType}
+			</if>
+			<if test="putMethods != null and putMethods != ''">
+				AND a.put_methods = #{putMethods}
+			</if>
+			<if test="isProdTemplate != null and isProdTemplate != ''">
+				AND a.is_prod_template = #{isProdTemplate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProductSalesForm" >
+		SELECT 
+			<include refid="productSalesFormColumns"/>
+		FROM product_sales_form a
+		<include refid="productSalesFormJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO product_sales_form(
+			id,
+			code,
+			sales_organization,
+			sales_channel,
+			sales_channel2,
+			market_level,
+			customer_code,
+			so_create_closure,
+			active_date_begin,
+			active_date_end,
+			last_upd,
+			delete_flag,
+			department,
+			combine_type,
+			put_methods,
+			is_prod_template
+		) VALUES (
+			#{id},
+			#{code},
+			#{salesOrganization},
+			#{salesChannel},
+			#{salesChannel2},
+			#{marketLevel},
+			#{customerCode},
+			#{soCreateClosure},
+			#{activeDateBegin},
+			#{activeDateEnd},
+			#{lastUpd},
+			#{deleteFlag},
+			#{department},
+			#{combineType},
+			#{putMethods},
+			#{isProdTemplate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE product_sales_form SET 	
+			code = #{code},
+			sales_organization = #{salesOrganization},
+			sales_channel = #{salesChannel},
+			sales_channel2 = #{salesChannel2},
+			market_level = #{marketLevel},
+			customer_code = #{customerCode},
+			so_create_closure = #{soCreateClosure},
+			active_date_begin = #{activeDateBegin},
+			active_date_end = #{activeDateEnd},
+			last_upd = #{lastUpd},
+			delete_flag = #{deleteFlag},
+			department = #{department},
+			combine_type = #{combineType},
+			put_methods = #{putMethods},
+			is_prod_template = #{isProdTemplate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM product_sales_form
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE product_sales_form SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ProductSalesForm" statementType="STATEMENT">
+		select * FROM product_sales_form  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

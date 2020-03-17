@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.ViewBusinessOpportunityMapper">
+    
+	<sql id="viewBusinessOpportunityColumns">
+		a.project_id AS "projectId",
+		a.project_code AS "projectCode",
+		a.project_name AS "projectName",
+		a.cust_code AS "custCode",
+		a.cust_name AS "custName",
+		a.center_code AS "centerCode",
+		a.center_name AS "centerName",
+		a.grid_center_name AS "gridCenterName",
+		a.grid_name AS "gridName",
+		a.first_company_name AS "firstCompanyName",
+		a.first_company_org_code AS "firstCompanyOrgCode",
+		a.brown_code AS "brownCode",
+		a.industry_home_category_id AS "industryHomeCategoryId",
+		a.industry_home_category_name AS "industryHomeCategoryName",
+		a.project_source AS "projectSource",
+		a.project_manager_name AS "projectManagerName",
+		a.project_manager_mobile AS "projectManagerMobile",
+		a.effect_time AS "effectTime",
+		a.dcheckdatedy AS "dcheckdatedy",
+		a.projectstate AS "projectstate",
+		a.last_modified_date_brown AS "lastModifiedDateBrown",
+		qtod.product_group AS "productGroup",
+		qtod.product_model AS "productModel",
+		qtod.sap_kwmeng AS "sapKwmeng",
+		qtoi.created_time AS "createdTime",
+		qtoi.sap_judge_date AS "sapJudgeDate",
+		qtoi.sap_judge_status AS "sapJudgeStatus",
+		qtoi.sap_ptd_send_date AS "sapPtdSendDate",
+		qtoi.plan_in_date AS "planInDate",
+		qtoi.sap_dn5date AS "sapDn5date",
+		qtoi.sap_dn1date AS "sapDn1date",
+		qtoi.sap_center_recieve_date AS "sapCenterRecieveDate",
+		qtoi.sap_reorder_date AS "sapReorderDate",
+		qtoi.order_type_no AS "orderTypeNo",
+		qtoi.order_no AS "orderNo",
+		qtoi.sap_dn AS "sapDn",
+		qtoi.sap_dn5 AS "sapDn5",
+		qtoi.sap_dn1 AS "sapDn1",
+		qtoi.sap_sended1 AS "sapSended1",
+		qtoi.sap_sended5 AS "sapSended5",
+		qtoi.sap_reorderd AS "sapReorderd",
+		qtoi.sap_judged AS "sapJudged"
+	</sql>
+
+
+	<sql id="viewBusinessOpportunityTaskColumns">
+		a.project_id AS "projectId",
+		a.project_code AS "projectCode",
+		a.project_name AS "projectName",
+		a.cust_code AS "custCode",
+		a.cust_name AS "custName",
+		a.center_code AS "centerCode",
+		a.center_name AS "centerName",
+		a.grid_center_name AS "gridCenterName",
+		a.grid_name AS "gridName",
+		a.first_company_name AS "firstCompanyName",
+		a.first_company_org_code AS "firstCompanyOrgCode",
+		a.brown_code AS "brownCode",
+		a.industry_home_category_id AS "industryHomeCategoryId",
+		a.industry_home_category_name AS "industryHomeCategoryName",
+		a.project_source AS "projectSource",
+		a.project_manager_name AS "projectManagerName",
+		a.project_manager_mobile AS "projectManagerMobile",
+		a.effect_time AS "effectTime",
+		a.dcheckdatedy AS "dcheckdatedy",
+		a.projectstate AS "projectstate",
+		a.last_modified_date_brown AS "lastModifiedDateBrown"
+	</sql>
+
+
+	<sql id="viewBusinessOpportunityJoins">
+		left join qyg_t_order_detail qtod on a.brown_code = qtod.price_version
+		left join qyg_t_order_info qtoi on qtoi.order_no = qtod.jshd_order_no
+	</sql>
+	
+    
+	<select id="get" resultType="ViewBusinessOpportunity" >
+		SELECT 
+			<include refid="viewBusinessOpportunityTaskColumns"/>
+		FROM view_business_opportunity a
+		WHERE a.brown_code = #{brownCode}
+	</select>
+	
+	<select id="findList" resultType="ViewBusinessOpportunity" >
+		SELECT 
+			<include refid="viewBusinessOpportunityColumns"/>
+		FROM view_business_opportunity a
+		<include refid="viewBusinessOpportunityJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="custCode != null and custCode != ''">
+				AND a.cust_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{custCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{custCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{custCode},'%')</if>
+			</if>
+			<if test="custName != null and custName != ''">
+				AND a.cust_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{custName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{custName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{custName},'%')</if>
+			</if>
+			<if test="centerCode != null and centerCode != ''">
+				AND a.center_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{centerCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{centerCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{centerCode},'%')</if>
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{centerName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{centerName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{centerName},'%')</if>
+			</if>
+			<if test="gridCenterName != null and gridCenterName != ''">
+				AND a.grid_center_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{gridCenterName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gridCenterName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gridCenterName},'%')</if>
+			</if>
+			<if test="gridName != null and gridName != ''">
+				AND a.grid_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{gridName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gridName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gridName},'%')</if>
+			</if>
+			<if test="firstCompanyName != null and firstCompanyName != ''">
+				AND a.first_company_name = #{firstCompanyName}
+			</if>
+			<if test="firstCompanyOrgCode != null and firstCompanyOrgCode != ''">
+				AND a.first_company_org_code = #{firstCompanyOrgCode}
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code = #{brownCode}
+			</if>
+			<if test="industryHomeCategoryId != null and industryHomeCategoryId != ''">
+				AND a.industry_home_category_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{industryHomeCategoryId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{industryHomeCategoryId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{industryHomeCategoryId},'%')</if>
+			</if>
+			<if test="industryHomeCategoryName != null and industryHomeCategoryName != ''">
+				AND a.industry_home_category_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{industryHomeCategoryName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{industryHomeCategoryName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{industryHomeCategoryName},'%')</if>
+			</if>
+			<if test="projectSource != null and projectSource != ''">
+				AND a.project_source LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectSource}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectSource}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectSource},'%')</if>
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="projectManagerMobile != null and projectManagerMobile != ''">
+				AND a.project_manager_mobile = #{projectManagerMobile}
+			</if>
+			<if test="effectTime != null and effectTime != ''">
+				AND a.effect_time = #{effectTime}
+			</if>
+			<if test="dcheckdatedy != null and dcheckdatedy != ''">
+				AND a.dcheckdatedy = #{dcheckdatedy}
+			</if>
+			<if test="projectstate != null and projectstate != ''">
+				AND a.projectstate LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectstate}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectstate}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectstate},'%')</if>
+			</if>
+			<if test="lastModifiedDateBrown != null and lastModifiedDateBrown != ''">
+				AND a.last_modified_date_brown = #{lastModifiedDateBrown}
+			</if>
+			<if test="orderTypeNo != null and orderTypeNo != ''">
+				AND qtoi.order_type_no LIKE
+				<if test="dbName == 'oracle'">'%'||#{orderTypeNo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orderTypeNo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orderTypeNo},'%')</if>
+			</if>
+
+			<if test="sapJudgeStatus != null and sapJudgeStatus != ''">
+				AND qtoi.sap_judge_status = #{sapJudgeStatus}
+			</if>
+			<if test="sapSended1 != null and sapSended1 != ''">
+				AND qtoi.sap_sended1 = #{sapSended1}
+			</if>
+			<if test="sapSended5 != null and sapSended5 != ''">
+				AND qtoi.sap_sended5 = #{sapSended5}
+			</if>
+			<if test="sapReorderd != null and sapReorderd != ''">
+				AND qtoi.sap_reorderd = #{sapReorderd}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findTaskList" resultType="ViewBusinessOpportunity" >
+		SELECT
+		<include refid="viewBusinessOpportunityTaskColumns"/>
+		FROM view_business_opportunity a
+		<include refid="viewBusinessOpportunityJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="custCode != null and custCode != ''">
+				AND a.cust_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{custCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{custCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{custCode},'%')</if>
+			</if>
+			<if test="custName != null and custName != ''">
+				AND a.cust_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{custName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{custName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{custName},'%')</if>
+			</if>
+			<if test="centerCode != null and centerCode != ''">
+				AND a.center_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{centerCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{centerCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{centerCode},'%')</if>
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{centerName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{centerName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{centerName},'%')</if>
+			</if>
+			<if test="gridCenterName != null and gridCenterName != ''">
+				AND a.grid_center_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{gridCenterName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{gridCenterName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{gridCenterName},'%')</if>
+			</if>
+			<if test="gridName != null and gridName != ''">
+				AND a.grid_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{gridName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{gridName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{gridName},'%')</if>
+			</if>
+			<if test="firstCompanyName != null and firstCompanyName != ''">
+				AND a.first_company_name = #{firstCompanyName}
+			</if>
+			<if test="firstCompanyOrgCode != null and firstCompanyOrgCode != ''">
+				AND a.first_company_org_code = #{firstCompanyOrgCode}
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code = #{brownCode}
+			</if>
+			<if test="industryHomeCategoryId != null and industryHomeCategoryId != ''">
+				AND a.industry_home_category_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{industryHomeCategoryId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{industryHomeCategoryId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{industryHomeCategoryId},'%')</if>
+			</if>
+			<if test="industryHomeCategoryName != null and industryHomeCategoryName != ''">
+				AND a.industry_home_category_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{industryHomeCategoryName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{industryHomeCategoryName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{industryHomeCategoryName},'%')</if>
+			</if>
+			<if test="projectSource != null and projectSource != ''">
+				AND a.project_source LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectSource}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectSource}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectSource},'%')</if>
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="projectManagerMobile != null and projectManagerMobile != ''">
+				AND a.project_manager_mobile = #{projectManagerMobile}
+			</if>
+			<if test="effectTime != null and effectTime != ''">
+				AND a.effect_time = #{effectTime}
+			</if>
+			<if test="dcheckdatedy != null and dcheckdatedy != ''">
+				AND a.dcheckdatedy = #{dcheckdatedy}
+			</if>
+			<if test="projectstate != null and projectstate != ''">
+				AND a.projectstate LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectstate}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectstate}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectstate},'%')</if>
+			</if>
+			<if test="lastModifiedDateBrown != null and lastModifiedDateBrown != ''">
+				AND a.last_modified_date_brown = #{lastModifiedDateBrown}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	
+	<select id="findAllList" resultType="ViewBusinessOpportunity" >
+		SELECT 
+			<include refid="viewBusinessOpportunityColumns"/>
+		FROM view_business_opportunity a
+		<include refid="viewBusinessOpportunityJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO view_business_opportunity(
+			project_id,
+			project_code,
+			project_name,
+			cust_code,
+			cust_name,
+			center_code,
+			center_name,
+			grid_center_name,
+			grid_name,
+			first_company_name,
+			first_company_org_code,
+			brown_code,
+			industry_home_category_id,
+			industry_home_category_name,
+			project_source,
+			project_manager_name,
+			project_manager_mobile,
+			effect_time,
+			dcheckdatedy,
+			projectstate,
+			last_modified_date_brown
+		) VALUES (
+			#{projectId},
+			#{projectCode},
+			#{projectName},
+			#{custCode},
+			#{custName},
+			#{centerCode},
+			#{centerName},
+			#{gridCenterName},
+			#{gridName},
+			#{firstCompanyName},
+			#{firstCompanyOrgCode},
+			#{brownCode},
+			#{industryHomeCategoryId},
+			#{industryHomeCategoryName},
+			#{projectSource},
+			#{projectManagerName},
+			#{projectManagerMobile},
+			#{effectTime},
+			#{dcheckdatedy},
+			#{projectstate},
+			#{lastModifiedDateBrown}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE view_business_opportunity SET 	
+			project_id = #{projectId},
+			project_code = #{projectCode},
+			project_name = #{projectName},
+			cust_code = #{custCode},
+			cust_name = #{custName},
+			center_code = #{centerCode},
+			center_name = #{centerName},
+			grid_center_name = #{gridCenterName},
+			grid_name = #{gridName},
+			first_company_name = #{firstCompanyName},
+			first_company_org_code = #{firstCompanyOrgCode},
+			industry_home_category_id = #{industryHomeCategoryId},
+			industry_home_category_name = #{industryHomeCategoryName},
+			project_source = #{projectSource},
+			project_manager_name = #{projectManagerName},
+			project_manager_mobile = #{projectManagerMobile},
+			effect_time = #{effectTime},
+			dcheckdatedy = #{dcheckdatedy},
+			projectstate = #{projectstate},
+			last_modified_date_brown = #{lastModifiedDateBrown}
+		WHERE brown_code = #{brownCode}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM view_business_opportunity
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE view_business_opportunity SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ViewBusinessOpportunity" statementType="STATEMENT">
+		select * FROM view_business_opportunity  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

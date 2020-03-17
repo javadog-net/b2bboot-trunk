@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopevaluate.ShopMsgEvaluateMapper">
+    
+	<sql id="shopMsgEvaluateColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.nodestate AS "nodestate",
+		a.nodename AS "nodename",
+		a.description AS "description",
+		a.skill_grade AS "skillGrade",
+		a.attitude_grade AS "attitudeGrade",
+		a.subuser_id AS "subuserId",
+		a.subusername AS "subusername",
+		a.addtime AS "addtime",
+		a.feedbackdesc AS "feedbackdesc",
+		a.feedbackperson AS "feedbackperson",
+		a.feedbacktime AS "feedbacktime",
+		sm.company_name AS "companyName",
+		sm.org_id AS "orgId",
+		sm.org_name AS "orgName",
+		sm.connect_name AS "connectName",
+		sm.mobile AS "mobile",
+		sm.channel AS "channel"
+	</sql>
+
+	<sql id="shopMsgEvaluateJoins">
+		left join shop_msg sm on a.msgid = sm.id
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsgEvaluate" >
+		SELECT 
+			<include refid="shopMsgEvaluateColumns"/>
+		FROM shop_msg_evaluate a
+		<include refid="shopMsgEvaluateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgEvaluate" >
+		SELECT 
+			<include refid="shopMsgEvaluateColumns"/>
+		FROM shop_msg_evaluate a
+		<include refid="shopMsgEvaluateJoins"/>
+		<where>
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msgid = #{msgid}
+			</if>
+			<if test="nodestate != null and nodestate != ''">
+				AND a.nodestate = #{nodestate}
+			</if>
+			<if test="nodename != null and nodename != ''">
+				AND a.nodename = #{nodename}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="skillGrade != null and skillGrade != ''">
+				AND a.skill_grade = #{skillGrade}
+			</if>
+			<if test="attitudeGrade != null and attitudeGrade != ''">
+				AND a.attitude_grade = #{attitudeGrade}
+			</if>
+			<if test="subuserId != null and subuserId != ''">
+				AND a.subuser_id = #{subuserId}
+			</if>
+			<if test="subusername != null and subusername != ''">
+				AND a.subusername = #{subusername}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				AND a.addtime = #{addtime}
+			</if>
+			<if test="feedbackdesc != null and feedbackdesc != ''">
+				AND a.feedbackdesc = #{feedbackdesc}
+			</if>
+			<if test="feedbackperson != null and feedbackperson != ''">
+				AND a.feedbackperson = #{feedbackperson}
+			</if>
+			<if test="feedbacktime != null and feedbacktime != ''">
+				AND a.feedbacktime = #{feedbacktime}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND a.org_name = #{orgName}
+			</if>
+			<if test="connectName != null and connectName != ''">
+				AND a.connect_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{connectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{connectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{connectName},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListGroup" resultType="ShopMsgEvaluate" >
+
+		select
+		*
+		 from(
+		SELECT
+		msgid
+		FROM
+		shop_msg_evaluate
+		GROUP BY
+		msgid
+		) t
+		LEFT JOIN shop_msg sm ON t.msgid = sm.id
+		<where>
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND msgid = #{msgid}
+			</if>
+			<if test="nodestate != null and nodestate != ''">
+				AND nodestate = #{nodestate}
+			</if>
+			<if test="nodename != null and nodename != ''">
+				AND nodename = #{nodename}
+			</if>
+			<if test="description != null and description != ''">
+				AND description = #{description}
+			</if>
+			<if test="skillGrade != null and skillGrade != ''">
+				AND skill_grade = #{skillGrade}
+			</if>
+			<if test="attitudeGrade != null and attitudeGrade != ''">
+				AND attitude_grade = #{attitudeGrade}
+			</if>
+			<if test="subuserId != null and subuserId != ''">
+				AND subuser_id = #{subuserId}
+			</if>
+			<if test="subusername != null and subusername != ''">
+				AND subusername = #{subusername}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				AND addtime = #{addtime}
+			</if>
+			<if test="feedbackdesc != null and feedbackdesc != ''">
+				AND feedbackdesc = #{feedbackdesc}
+			</if>
+			<if test="feedbackperson != null and feedbackperson != ''">
+				AND feedbackperson = #{feedbackperson}
+			</if>
+			<if test="feedbacktime != null and feedbacktime != ''">
+				AND feedbacktime = #{feedbacktime}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND sm.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND sm.org_id = #{orgId}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND sm.org_name = #{orgName}
+			</if>
+			<if test="connectName != null and connectName != ''">
+				AND sm.connect_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{connectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{connectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{connectName},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND sm.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="channel != null and channel != ''">
+				AND sm.channel = #{channel}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+	<select id="findAllList" resultType="ShopMsgEvaluate" >
+		SELECT 
+			<include refid="shopMsgEvaluateColumns"/>
+		FROM shop_msg_evaluate a
+		<include refid="shopMsgEvaluateJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_evaluate(
+			id,
+			msgid,
+			nodestate,
+			nodename,
+			description,
+			skill_grade,
+			attitude_grade,
+			subuser_id,
+			subusername,
+			addtime,
+			feedbackdesc,
+			feedbackperson,
+			feedbacktime
+		) VALUES (
+			#{id},
+			#{msgid},
+			#{nodestate},
+			#{nodename},
+			#{description},
+			#{skillGrade},
+			#{attitudeGrade},
+			#{subuserId},
+			#{subusername},
+			#{addtime},
+			#{feedbackdesc},
+			#{feedbackperson},
+			#{feedbacktime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_evaluate SET 	
+			msgid = #{msgid},
+			nodestate = #{nodestate},
+			nodename = #{nodename},
+			description = #{description},
+			skill_grade = #{skillGrade},
+			attitude_grade = #{attitudeGrade},
+			subuser_id = #{subuserId},
+			subusername = #{subusername},
+			addtime = #{addtime},
+			feedbackdesc = #{feedbackdesc},
+			feedbackperson = #{feedbackperson},
+			feedbacktime = #{feedbacktime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_evaluate
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_evaluate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgEvaluate" statementType="STATEMENT">
+		select * FROM shop_msg_evaluate  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

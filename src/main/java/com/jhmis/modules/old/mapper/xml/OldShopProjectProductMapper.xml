@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopProjectProductMapper">
+    
+	<sql id="oldShopProjectProductColumns">
+		a.projectcode AS "projectcode",
+		a.name AS "name",
+		a.count AS "count",
+		a.money AS "money",
+		a.address AS "address",
+		a.code AS "code",
+		a.msgid AS "msgid"
+	</sql>
+	
+	<sql id="oldShopProjectProductJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopProjectProduct" >
+		SELECT 
+			<include refid="oldShopProjectProductColumns"/>
+		FROM old_shop_project_product a
+		<include refid="oldShopProjectProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopProjectProduct" >
+		SELECT 
+			<include refid="oldShopProjectProductColumns"/>
+		FROM old_shop_project_product a
+		<include refid="oldShopProjectProductJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="projectcode != null and projectcode != ''">
+				AND a.projectcode = #{projectcode}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="count != null and count != ''">
+				AND a.count = #{count}
+			</if>
+			<if test="money != null and money != ''">
+				AND a.money = #{money}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msgid = #{msgid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopProjectProduct" >
+		SELECT 
+			<include refid="oldShopProjectProductColumns"/>
+		FROM old_shop_project_product a
+		<include refid="oldShopProjectProductJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_project_product(
+			projectcode,
+			name,
+			count,
+			money,
+			address,
+			code,
+			msgid
+		) VALUES (
+			#{projectcode},
+			#{name},
+			#{count},
+			#{money},
+			#{address},
+			#{code},
+			#{msgid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_project_product SET 	
+			projectcode = #{projectcode},
+			name = #{name},
+			count = #{count},
+			money = #{money},
+			address = #{address},
+			code = #{code},
+			msgid = #{msgid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_project_product
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_project_product SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopProjectProduct" statementType="STATEMENT">
+		select * FROM old_shop_project_product  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

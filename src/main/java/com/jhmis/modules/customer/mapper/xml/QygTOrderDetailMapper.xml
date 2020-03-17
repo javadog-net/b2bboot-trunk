@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.QygTOrderDetailMapper">
+    
+	<sql id="qygTOrderDetailColumns">
+		a.order_info_id AS "orderInfoId",
+		a.order_no AS "orderNo",
+		a.order_type AS "orderType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.product_img AS "productImg",
+		a.product_model AS "productModel",
+		a.product_group AS "productGroup",
+		a.product_type AS "productType",
+		a.product_brand AS "productBrand",
+		a.series_code AS "seriesCode",
+		a.unit AS "unit",
+		a.far_weekly AS "farWeekly",
+		a.far_weekly_date AS "farWeeklyDate",
+		a.credit_model AS "creditModel",
+		a.transfer_version AS "transferVersion",
+		a.is_transfer_version AS "isTransferVersion",
+		a.price_type AS "priceType",
+		a.price_version AS "priceVersion",
+		a.price_source AS "priceSource",
+		a.supply_price AS "supplyPrice",
+		a.profit_price AS "profitPrice",
+		a.act_price AS "actPrice",
+		a.invoice_price AS "invoicePrice",
+		a.rebate_rate AS "rebateRate",
+		a.rebate_money AS "rebateMoney",
+		a.per_loss AS "perLoss",
+		a.difference AS "difference",
+		a.discount AS "discount",
+		a.rebate_policy AS "rebatePolicy",
+		a.is_bb AS "isBb",
+		a.recommend_sale_price AS "recommendSalePrice",
+		a.qty AS "qty",
+		a.amount AS "amount",
+		a.wh_code AS "whCode",
+		a.store_type AS "storeType",
+		a.sales_factory AS "salesFactory",
+		a.shares AS "shares",
+		a.budget_code AS "budgetCode",
+		a.machine_code AS "machineCode",
+		a.is_pop AS "isPop",
+		a.bigdata_batch_update AS "bigdataBatchUpdate",
+		a.created_time AS "createdTime",
+		a.created_by AS "createdBy",
+		a.update_time AS "updateTime",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag",
+		a.rowkey AS "rowkey",
+		a.sap_reorder_count AS "sapReorderCount",
+		a.sap_reorder_date AS "sapReorderDate",
+		a.sap_kbetr_zg01 AS "sapKbetrZg01",
+		a.sap_kbetr_zgk2 AS "sapKbetrZgk2",
+		a.sap_kwmeng AS "sapKwmeng",
+		a.sap_lgort AS "sapLgort",
+		a.sap_matnr AS "sapMatnr",
+		a.sap_posnr AS "sapPosnr",
+		a.sap_spart AS "sapSpart",
+		a.sap_zieme AS "sapZieme",
+		a.sap_zsdg_contract AS "sapZsdgContract",
+		a.sap_zsdg_priceeditio AS "sapZsdgPriceeditio",
+		a.update_time_sap AS "updateTimeSap",
+		a.update_time_binlog AS "updateTimeBinlog",
+		a.update_time_all AS "updateTimeAll",
+		a.bstnk AS "bstnk",
+		a.jshd_order_no AS "jshdOrderNo"
+	</sql>
+	
+	<sql id="qygTOrderDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="QygTOrderDetail" >
+		SELECT 
+			<include refid="qygTOrderDetailColumns"/>
+		FROM qyg_t_order_detail a
+		<include refid="qygTOrderDetailJoins"/>
+		WHERE a.rowkey = #{rowkey}
+	</select>
+	
+	<select id="findList" resultType="QygTOrderDetail" >
+		SELECT 
+			<include refid="qygTOrderDetailColumns"/>
+		FROM qyg_t_order_detail a
+		<include refid="qygTOrderDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="productGroup != null and productGroup != ''">
+				AND a.product_group = #{productGroup}
+			</if>
+			<if test="productType != null and productType != ''">
+				AND a.product_type = #{productType}
+			</if>
+			<if test="qty != null and qty != ''">
+				AND a.qty = #{qty}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QygTOrderDetail" >
+		SELECT 
+			<include refid="qygTOrderDetailColumns"/>
+		FROM qyg_t_order_detail a
+		<include refid="qygTOrderDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO qyg_t_order_detail(
+			order_info_id,
+			order_no,
+			order_type,
+			product_code,
+			product_name,
+			product_img,
+			product_model,
+			product_group,
+			product_type,
+			product_brand,
+			series_code,
+			unit,
+			far_weekly,
+			far_weekly_date,
+			credit_model,
+			transfer_version,
+			is_transfer_version,
+			price_type,
+			price_version,
+			price_source,
+			supply_price,
+			profit_price,
+			act_price,
+			invoice_price,
+			rebate_rate,
+			rebate_money,
+			per_loss,
+			difference,
+			discount,
+			rebate_policy,
+			is_bb,
+			recommend_sale_price,
+			qty,
+			amount,
+			wh_code,
+			store_type,
+			sales_factory,
+			shares,
+			budget_code,
+			machine_code,
+			is_pop,
+			bigdata_batch_update,
+			created_time,
+			created_by,
+			update_time,
+			update_by,
+			del_flag,
+			rowkey,
+			sap_reorder_count,
+			sap_reorder_date,
+			sap_kbetr_zg01,
+			sap_kbetr_zgk2,
+			sap_kwmeng,
+			sap_lgort,
+			sap_matnr,
+			sap_posnr,
+			sap_spart,
+			sap_zieme,
+			sap_zsdg_contract,
+			sap_zsdg_priceeditio,
+			update_time_sap,
+			update_time_binlog,
+			update_time_all,
+			bstnk,
+			jshd_order_no
+		) VALUES (
+			#{orderInfoId},
+			#{orderNo},
+			#{orderType},
+			#{productCode},
+			#{productName},
+			#{productImg},
+			#{productModel},
+			#{productGroup},
+			#{productType},
+			#{productBrand},
+			#{seriesCode},
+			#{unit},
+			#{farWeekly},
+			#{farWeeklyDate},
+			#{creditModel},
+			#{transferVersion},
+			#{isTransferVersion},
+			#{priceType},
+			#{priceVersion},
+			#{priceSource},
+			#{supplyPrice},
+			#{profitPrice},
+			#{actPrice},
+			#{invoicePrice},
+			#{rebateRate},
+			#{rebateMoney},
+			#{perLoss},
+			#{difference},
+			#{discount},
+			#{rebatePolicy},
+			#{isBb},
+			#{recommendSalePrice},
+			#{qty},
+			#{amount},
+			#{whCode},
+			#{storeType},
+			#{salesFactory},
+			#{shares},
+			#{budgetCode},
+			#{machineCode},
+			#{isPop},
+			#{bigdataBatchUpdate},
+			#{createdTime},
+			#{createdBy},
+			#{updateTime},
+			#{updateBy.id},
+			#{delFlag},
+			#{rowkey},
+			#{sapReorderCount},
+			#{sapReorderDate},
+			#{sapKbetrZg01},
+			#{sapKbetrZgk2},
+			#{sapKwmeng},
+			#{sapLgort},
+			#{sapMatnr},
+			#{sapPosnr},
+			#{sapSpart},
+			#{sapZieme},
+			#{sapZsdgContract},
+			#{sapZsdgPriceeditio},
+			#{updateTimeSap},
+			#{updateTimeBinlog},
+			#{updateTimeAll},
+			#{bstnk},
+			#{jshdOrderNo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE qyg_t_order_detail SET 	
+			order_info_id = #{orderInfoId},
+			order_no = #{orderNo},
+			order_type = #{orderType},
+			product_code = #{productCode},
+			product_name = #{productName},
+			product_img = #{productImg},
+			product_model = #{productModel},
+			product_group = #{productGroup},
+			product_type = #{productType},
+			product_brand = #{productBrand},
+			series_code = #{seriesCode},
+			unit = #{unit},
+			far_weekly = #{farWeekly},
+			far_weekly_date = #{farWeeklyDate},
+			credit_model = #{creditModel},
+			transfer_version = #{transferVersion},
+			is_transfer_version = #{isTransferVersion},
+			price_type = #{priceType},
+			price_version = #{priceVersion},
+			price_source = #{priceSource},
+			supply_price = #{supplyPrice},
+			profit_price = #{profitPrice},
+			act_price = #{actPrice},
+			invoice_price = #{invoicePrice},
+			rebate_rate = #{rebateRate},
+			rebate_money = #{rebateMoney},
+			per_loss = #{perLoss},
+			difference = #{difference},
+			discount = #{discount},
+			rebate_policy = #{rebatePolicy},
+			is_bb = #{isBb},
+			recommend_sale_price = #{recommendSalePrice},
+			qty = #{qty},
+			amount = #{amount},
+			wh_code = #{whCode},
+			store_type = #{storeType},
+			sales_factory = #{salesFactory},
+			shares = #{shares},
+			budget_code = #{budgetCode},
+			machine_code = #{machineCode},
+			is_pop = #{isPop},
+			bigdata_batch_update = #{bigdataBatchUpdate},
+			created_time = #{createdTime},
+			created_by = #{createdBy},
+			update_time = #{updateTime},
+			update_by = #{updateBy.id},
+			rowkey = #{rowkey},
+			sap_reorder_count = #{sapReorderCount},
+			sap_reorder_date = #{sapReorderDate},
+			sap_kbetr_zg01 = #{sapKbetrZg01},
+			sap_kbetr_zgk2 = #{sapKbetrZgk2},
+			sap_kwmeng = #{sapKwmeng},
+			sap_lgort = #{sapLgort},
+			sap_matnr = #{sapMatnr},
+			sap_posnr = #{sapPosnr},
+			sap_spart = #{sapSpart},
+			sap_zieme = #{sapZieme},
+			sap_zsdg_contract = #{sapZsdgContract},
+			sap_zsdg_priceeditio = #{sapZsdgPriceeditio},
+			update_time_sap = #{updateTimeSap},
+			update_time_binlog = #{updateTimeBinlog},
+			update_time_all = #{updateTimeAll},
+			bstnk = #{bstnk},
+			jshd_order_no = #{jshdOrderNo}
+		WHERE rowkey = #{rowkey}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM qyg_t_order_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE qyg_t_order_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="QygTOrderDetail" statementType="STATEMENT">
+		select * FROM qyg_t_order_detail  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

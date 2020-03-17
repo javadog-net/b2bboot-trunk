@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMemberMapper">
+    
+	<sql id="wxMemberColumns">
+		a.id AS "id",
+		a.avatarurl AS "avatarurl",
+		a.country AS "country",
+		a.gender AS "gender",
+		a.language AS "language",
+		a.nickname AS "nickname",
+		a.province AS "province",
+		a.city AS "city",
+		a.openid AS "openid",
+		a.login_last_time AS "loginLastTime",
+		a.login_times AS "loginTimes",
+		a.user_id AS "userId",
+		a.user_mobile AS "userMobile"
+	</sql>
+	
+	<sql id="wxMemberJoins">
+		
+		LEFT JOIN sys_user userId ON userId.id = a.user_id
+	</sql>
+	
+    
+	<select id="get" resultType="WxMember" >
+		SELECT 
+			<include refid="wxMemberColumns"/>
+		FROM wx_member a
+		<include refid="wxMemberJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMember" >
+		SELECT 
+			<include refid="wxMemberColumns"/>
+		FROM wx_member a
+		<include refid="wxMemberJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMember" >
+		SELECT 
+			<include refid="wxMemberColumns"/>
+		FROM wx_member a
+		<include refid="wxMemberJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_member(
+			id,
+			avatarurl,
+			country,
+			gender,
+			language,
+			nickname,
+			province,
+			city,
+			openid,
+			login_last_time,
+			login_times,
+			user_id,
+			user_mobile
+		) VALUES (
+			#{id},
+			#{avatarurl},
+			#{country},
+			#{gender},
+			#{language},
+			#{nickname},
+			#{province},
+			#{city},
+			#{openid},
+			#{loginLastTime},
+			#{loginTimes},
+			#{userId},
+			#{userMobile}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_member SET 	
+			avatarurl = #{avatarurl},
+			country = #{country},
+			gender = #{gender},
+			language = #{language},
+			nickname = #{nickname},
+			province = #{province},
+			city = #{city},
+			openid = #{openid},
+			login_last_time = #{loginLastTime},
+			login_times = #{loginTimes},
+			user_id = #{userId},
+			user_mobile = #{userMobile}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_member
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_member SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMember" statementType="STATEMENT">
+		select * FROM wx_member  where ${propertyName} = '${value}'
+	</select>
+ <select id="findbinding" resultType="WxMember">
+ 
+   select *from wx_member where user_id=#{id} and openid=#{openid} 
+ </select>
+ 
+	<!-- 根据userId，查询微信头像 -->
+	<select id="findAvatarurlByUserId" resultType="java.lang.String">
+		select avatarurl FROM wx_member  where user_id=#{userId}
+	</select>
+	
+	<!-- 根据userId，查询用户昵称 -->
+	<select id="findNicknameByUserId" resultType="java.lang.String">
+		select nickname FROM wx_member  where user_id=#{userId}
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.SkMvDetailsMapper">
+    
+	<sql id="skMvDetailsColumns">
+		a.id AS "id",
+		a.sk_mv_id AS "skMvId",
+		a.sk_mv_name AS "skMvName",
+		a.sk_mv_visits AS "skMvVisits",
+		a.sk_mv_like AS "skMvLike",
+		a.sk_mv_comment_count AS "skMvCommentCount"
+	</sql>
+	
+	<sql id="skMvDetailsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="SkMvDetails" >
+		SELECT 
+			<include refid="skMvDetailsColumns"/>
+		FROM sk_mv_details a
+		<include refid="skMvDetailsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getSkMvById" resultType="SkMvDetails" >
+		SELECT 
+			*
+		FROM sk_mv_details a
+	
+		WHERE a.sk_mv_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SkMvDetails" >
+		SELECT 
+			<include refid="skMvDetailsColumns"/>
+		FROM sk_mv_details a
+		<include refid="skMvDetailsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="skMvName != null and skMvName != ''">
+				AND a.sk_mv_name = #{skMvName}
+			</if>
+			<if test="skMvVisits != null and skMvVisits != ''">
+				AND a.sk_mv_visits = #{skMvVisits}
+			</if>
+			<if test="skMvLike != null and skMvLike != ''">
+				AND a.sk_mv_like = #{skMvLike}
+			</if>
+			<if test="skMvCommentCount != null and skMvCommentCount != ''">
+				AND a.sk_mv_comment_count = #{skMvCommentCount}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SkMvDetails" >
+		SELECT 
+			<include refid="skMvDetailsColumns"/>
+		FROM sk_mv_details a
+		<include refid="skMvDetailsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sk_mv_details(
+			id,
+			sk_mv_id,
+			sk_mv_name,
+			sk_mv_visits,
+			sk_mv_like,
+			sk_mv_comment_count
+		) VALUES (
+			#{id},
+			#{skMvId},
+			#{skMvName},
+			#{skMvVisits},
+			#{skMvLike},
+			#{skMvCommentCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sk_mv_details SET 	
+			sk_mv_id = #{skMvId},
+			sk_mv_name = #{skMvName},
+			sk_mv_visits = #{skMvVisits},
+			sk_mv_like = #{skMvLike},
+			sk_mv_comment_count = #{skMvCommentCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateVisits">
+		UPDATE sk_mv_details SET 	
+			sk_mv_visits = #{skMvVisits}
+			
+		WHERE id = #{id}
+	</update>
+	<update id="updateLike">
+		UPDATE sk_mv_details SET 	
+			sk_mv_like = #{skMvLike}
+			
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateComment">
+		UPDATE sk_mv_details SET 	
+			sk_mv_comment_count = #{skMvComment}
+			
+		WHERE id = #{id}
+	</update>
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sk_mv_details
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sk_mv_details SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="SkMvDetails" statementType="STATEMENT">
+		select * FROM sk_mv_details  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

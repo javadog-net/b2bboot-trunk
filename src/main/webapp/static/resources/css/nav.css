@@ -1,0 +1,134 @@
+/* 切换菜单 */
+#nav{
+	border-bottom: 2px solid #005AAA;
+}
+
+.tabbar{
+	height: 40px;
+	color: #000000;
+	position: relative;
+}
+
+.tabbar ul{
+	cursor: pointer;
+}
+
+.tabbar>ul>li{
+	line-height: 40px;
+	font-size: 19px;
+	float: left;
+	margin-right: 30px;
+}
+
+.tabbar>ul>li:hover{
+	color: #005AAA;
+}
+
+.tabbar>ul li.all-shop{
+	margin-right: 60px;
+	/*text-align: center;*/
+	padding: 0px 15px;
+	line-height: 40px;
+	width:184px;
+	height:40px;
+	color: #FFFFFF;
+	background-color: #0059A9;
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+.tabbar>ul li.all-shop>img{
+	display: inline-block;
+	margin-right: 25px;
+	text-align: left;
+	width:18px;
+	height:16px;
+	position: relative;
+	top: 2px;
+}
+
+.tabbar>ul li.phone{
+	margin-right: 20px;
+	float: right;
+	vertical-align: middle;
+}
+
+.tabbar>ul li.phone img:first-child{
+	width: 30px;
+	height: 30px;
+}
+
+.tabbar>ul li.phone img:last-child{
+	margin-left: 5px;
+	width: 156px;
+	height: 22px;
+}
+.tabbar>ul li.commercial-active,.tabbar>ul li.engineering-active{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+.tabbar>ul>li>.commercial-list,.tabbar>ul>li>.engineering-list{
+	display: none;
+	width: 100px;
+	text-align: center;
+	background-color: #FFFFFF;
+	position: absolute;
+	top: 40px;
+	z-index: 9999999;
+	color: #000000;
+}
+.tabbar>ul>li>.commercial-list dl{
+	display: none;
+	width: 100px;
+	text-align: center;
+	background-color: #FFFFFF;
+	position: absolute;
+	top: 0;
+	left: 100px;
+	z-index: 9999999;
+	color: #000000;
+}
+.tabbar>ul>li>.engineering-list>li:hover,.tabbar>ul>li>.commercial-list>li:hover{
+	color: #005AAA;
+}
+.tabbar>ul>li>.commercial-list dl dt:hover{
+	color: #005AAA;
+}
+
+.tabbar .menu-body-list{
+	/* background-color: rgb(255, 255, 255); */
+	 display: none;
+	height: 458px;
+	position: absolute;
+	top: 40px;
+	left: 0;
+	width: 214px;
+	z-index: 10000;
+	background-color: #0059A9;
+	opacity: 0.8;
+}
+.tabbar .menu-body-list>ul{
+	color: white;
+	
+}
+.tabbar .menu-body-list>ul>li{
+	height: calc(10% - 21px);
+	line-height: normal;
+	text-align: left;
+	padding: 5px 0px;
+	margin: 0px 10px;
+	border-bottom: 1px solid rgba(234,234,234,0.38);
+}
+.tabbar .menu-body-list>ul>li>h5{
+	font-size: 14px;
+	color: white;
+}
+.tabbar .menu-body-list>ul>li>p{
+	margin-top: 2px;
+	font-size: 12px;
+	color: white;
+}
+.tabbar .menu-body-list>ul>li>p>span:last-child{
+	margin-left: 5px;
+}

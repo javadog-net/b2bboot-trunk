@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopMsgCustcodeOrderMapper">
+    
+	<sql id="oldShopMsgCustcodeOrderColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.msgid AS "msgid",
+		a.product AS "product",
+		a.orgid AS "orgid",
+		a.orgname AS "orgname",
+		a.companyname AS "companyname",
+		a.fromsource AS "fromsource",
+		a.cancelfalg AS "cancelfalg",
+		a.canceler AS "canceler",
+		a.canceltime AS "canceltime",
+		a.cancelreason AS "cancelreason",
+		a.custname AS "custname",
+		a.custcode AS "custcode",
+		a.address AS "address",
+		a.undertake AS "undertake",
+		a.memo AS "memo",
+		a.totalcount AS "totalcount",
+		a.addtime AS "addtime",
+		a.isend AS "isend",
+		a.isbind AS "isbind",
+		a.timeoutflag AS "timeoutflag",
+		a.timeoutreason AS "timeoutreason",
+		a.bindtime AS "bindtime",
+		a.infcode AS "infcode",
+		a.isinstall AS "isinstall",
+		a.installpersion AS "installpersion",
+		a.installtime AS "installtime",
+		a.isdeliver AS "isdeliver",
+		a.delivernum AS "delivernum",
+		a.delivertime AS "delivertime",
+		a.issign AS "issign",
+		a.signurl AS "signurl",
+		a.signtime AS "signtime",
+		a.issunburn AS "issunburn",
+		a.isbackpass AS "isbackpass",
+		a.orderstatus AS "orderstatus"
+	</sql>
+	
+	<sql id="oldShopMsgCustcodeOrderJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="oldShopMsgCustcodeOrderColumns"/>
+		FROM old_shop_msg_custcode_order a
+		<include refid="oldShopMsgCustcodeOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="oldShopMsgCustcodeOrderColumns"/>
+		FROM old_shop_msg_custcode_order a
+		<include refid="oldShopMsgCustcodeOrderJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msgid = #{msgid}
+			</if>
+			<if test="product != null and product != ''">
+				AND a.product = #{product}
+			</if>
+			<if test="orgid != null and orgid != ''">
+				AND a.orgid = #{orgid}
+			</if>
+			<if test="orgname != null and orgname != ''">
+				AND a.orgname = #{orgname}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				AND a.companyname = #{companyname}
+			</if>
+			<if test="fromsource != null and fromsource != ''">
+				AND a.fromsource = #{fromsource}
+			</if>
+			<if test="cancelfalg != null and cancelfalg != ''">
+				AND a.cancelfalg = #{cancelfalg}
+			</if>
+			<if test="canceler != null and canceler != ''">
+				AND a.canceler = #{canceler}
+			</if>
+			<if test="canceltime != null and canceltime != ''">
+				AND a.canceltime = #{canceltime}
+			</if>
+			<if test="cancelreason != null and cancelreason != ''">
+				AND a.cancelreason = #{cancelreason}
+			</if>
+			<if test="custname != null and custname != ''">
+				AND a.custname = #{custname}
+			</if>
+			<if test="custcode != null and custcode != ''">
+				AND a.custcode = #{custcode}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="undertake != null and undertake != ''">
+				AND a.undertake = #{undertake}
+			</if>
+			<if test="memo != null and memo != ''">
+				AND a.memo = #{memo}
+			</if>
+			<if test="totalcount != null and totalcount != ''">
+				AND a.totalcount = #{totalcount}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				AND a.addtime = #{addtime}
+			</if>
+			<if test="isend != null and isend != ''">
+				AND a.isend = #{isend}
+			</if>
+			<if test="isbind != null and isbind != ''">
+				AND a.isbind = #{isbind}
+			</if>
+			<if test="timeoutflag != null and timeoutflag != ''">
+				AND a.timeoutflag = #{timeoutflag}
+			</if>
+			<if test="timeoutreason != null and timeoutreason != ''">
+				AND a.timeoutreason = #{timeoutreason}
+			</if>
+			<if test="bindtime != null and bindtime != ''">
+				AND a.bindtime = #{bindtime}
+			</if>
+			<if test="infcode != null and infcode != ''">
+				AND a.infcode = #{infcode}
+			</if>
+			<if test="isinstall != null and isinstall != ''">
+				AND a.isinstall = #{isinstall}
+			</if>
+			<if test="installpersion != null and installpersion != ''">
+				AND a.installpersion = #{installpersion}
+			</if>
+			<if test="installtime != null and installtime != ''">
+				AND a.installtime = #{installtime}
+			</if>
+			<if test="isdeliver != null and isdeliver != ''">
+				AND a.isdeliver = #{isdeliver}
+			</if>
+			<if test="delivernum != null and delivernum != ''">
+				AND a.delivernum = #{delivernum}
+			</if>
+			<if test="delivertime != null and delivertime != ''">
+				AND a.delivertime = #{delivertime}
+			</if>
+			<if test="issign != null and issign != ''">
+				AND a.issign = #{issign}
+			</if>
+			<if test="signurl != null and signurl != ''">
+				AND a.signurl = #{signurl}
+			</if>
+			<if test="signtime != null and signtime != ''">
+				AND a.signtime = #{signtime}
+			</if>
+			<if test="issunburn != null and issunburn != ''">
+				AND a.issunburn = #{issunburn}
+			</if>
+			<if test="isbackpass != null and isbackpass != ''">
+				AND a.isbackpass = #{isbackpass}
+			</if>
+			<if test="orderstatus != null and orderstatus != ''">
+				AND a.orderstatus = #{orderstatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopMsgCustcodeOrder" >
+		SELECT 
+			<include refid="oldShopMsgCustcodeOrderColumns"/>
+		FROM old_shop_msg_custcode_order a
+		<include refid="oldShopMsgCustcodeOrderJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_msg_custcode_order(
+			id,
+			code,
+			msgid,
+			product,
+			orgid,
+			orgname,
+			companyname,
+			fromsource,
+			cancelfalg,
+			canceler,
+			canceltime,
+			cancelreason,
+			custname,
+			custcode,
+			address,
+			undertake,
+			memo,
+			totalcount,
+			addtime,
+			isend,
+			timeoutflag,
+			timeoutreason,
+			bindtime,
+			infcode,
+			isinstall,
+			installpersion,
+			installtime,
+			isdeliver,
+			delivernum,
+			delivertime,
+			issign,
+			signurl,
+			signtime,
+			issunburn,
+			isbackpass,
+			orderstatus
+		) VALUES (
+			#{id},
+			#{code},
+			#{msgid},
+			#{product},
+			#{orgid},
+			#{orgname},
+			#{companyname},
+			#{fromsource},
+			#{cancelfalg},
+			#{canceler},
+			#{canceltime},
+			#{cancelreason},
+			#{custname},
+			#{custcode},
+			#{address},
+			#{undertake},
+			#{memo},
+			#{totalcount},
+			#{addtime},
+			#{isend},
+			#{timeoutflag},
+			#{timeoutreason},
+			#{bindtime},
+			#{infcode},
+			#{isinstall},
+			#{installpersion},
+			#{installtime},
+			#{isdeliver},
+			#{delivernum},
+			#{delivertime},
+			#{issign},
+			#{signurl},
+			#{signtime},
+			#{issunburn},
+			#{isbackpass},
+			#{orderstatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_msg_custcode_order SET 	
+			code = #{code},
+			msgid = #{msgid},
+			product = #{product},
+			orgid = #{orgid},
+			orgname = #{orgname},
+			companyname = #{companyname},
+			fromsource = #{fromsource},
+			cancelfalg = #{cancelfalg},
+			canceler = #{canceler},
+			canceltime = #{canceltime},
+			cancelreason = #{cancelreason},
+			custname = #{custname},
+			custcode = #{custcode},
+			address = #{address},
+			undertake = #{undertake},
+			memo = #{memo},
+			totalcount = #{totalcount},
+			addtime = #{addtime},
+			isend = #{isend},
+			isbind = #{isbind},
+			timeoutflag = #{timeoutflag},
+			timeoutreason = #{timeoutreason},
+			bindtime = #{bindtime},
+			infcode = #{infcode},
+			isinstall = #{isinstall},
+			installpersion = #{installpersion},
+			installtime = #{installtime},
+			isdeliver = #{isdeliver},
+			delivernum = #{delivernum},
+			delivertime = #{delivertime},
+			issign = #{issign},
+			signurl = #{signurl},
+			signtime = #{signtime},
+			issunburn = #{issunburn},
+			isbackpass = #{isbackpass},
+			orderstatus = #{orderstatus}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_msg_custcode_order
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_msg_custcode_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopMsgCustcodeOrder" statementType="STATEMENT">
+		select * FROM old_shop_msg_custcode_order  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

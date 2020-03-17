@@ -1,0 +1,283 @@
+@charset "utf-8";
+
+
+
+p {
+	margin: 0;
+}
+
+ul,
+li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+.background {
+	width: 100%;
+	height: 100%;
+	/* padding: 30px; */
+	/* background-color: aqua; */
+	/* background: url() */
+	background: url(../img/choujiang.png) no-repeat;
+	background-size: cover;
+	/* overflow: hidden; */
+	/* height: 550px; */
+
+}
+
+.backgroundlittle {
+	width: 1200px;
+	height: 550px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+
+
+
+.content {
+	height: 550px;
+	width: 1200px;
+	/* border: 1px solid #ccc; */
+	padding: 200px;
+	/* position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto; */
+	margin: auto;
+	/* overflow: hidden; */
+}
+
+.content>.left {
+	float: left;
+	width: 22%;
+	height: 100%;
+	/* background-color: #F2F2F2; */
+	border-radius: 5px;
+	text-align: center;
+	background: url(../img/zuobianbeijinng.png) no-repeat;
+	background-size: cover;
+}
+
+.content>.left p {
+	color: #ffe400;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.content>.left>.prize {
+	margin: 20px auto 20px;
+	height: 45px;
+	width: 140px;
+	font-size: 24px;
+	color: #ffe0c6;
+	text-align: center;
+	line-height: 45px;
+	background: url(../img/jiangpinbeijing.png) no-repeat;
+	background-size: cover;
+}
+
+.content>.left>.head {
+	margin: 0 auto;
+	width: 140px;
+	height: 140px;
+	border-radius: 5px;
+	background: url(../img/haier.jpg) no-repeat;
+	background-size: cover;
+	/* padding: 10px; */
+	font-size: 0;
+	overflow: hidden;
+}
+
+.content>.left>.head>ul {
+	height: 1500px;
+}
+
+.content>.left>.head>ul>li>img {
+	width: 140px;
+	height: 140px;
+
+}
+
+.content>.left button#start {
+	background-color: #982752;
+	height: 40px;
+	width: 140px;
+	border-radius: 4px;
+	color: #ffe400;
+	font-size: 18px;
+	border: none;
+	margin-top: 80px;
+}
+
+.content>.left button#end {
+	background-color: #982752;
+	height: 40px;
+	width: 140px;
+	border-radius: 4px;
+	color: #ffe400;
+	font-size: 18px;
+	border: none;
+	margin-top: 80px;
+	display: none;
+}
+
+.content>.left button#complete {
+	background-color: #982752;
+	height: 40px;
+	width: 140px;
+	border-radius: 4px;
+	color: #ffe400;
+	font-size: 18px;
+	border: none;
+	margin-top: 80px;
+	display: none;
+}
+
+.content>.right {
+	width: 70%;
+	height: 500px;
+	font-size: 30px;
+	/* padding: 20px 0px; */
+	float: left;
+	margin-left: 80px;
+}
+
+.right {
+	overflow: auto;
+}
+
+.content>.right>#in {
+	width: 900px !important;
+	height: 92px !important;
+	display: inline-block;
+	background: url(../img/neirongbeijing.png) no-repeat;
+	background-size: cover;
+}
+
+ul {
+	text-align: center;
+}
+
+#cnnt li {
+	width: 780px !important;
+	height: 50px !important;
+	display: inline-block;
+	background: url(../img/neirongbeijing.png) no-repeat;
+	background-size: 100% 100%;
+	line-height: 50px;
+	margin-top: 20px;
+	color: #ffe400;
+}
+
+ul li p {
+	float: left;
+	margin-left: 30px;
+	text-align: center;
+}
+
+ul li {
+	text-align: center !important;
+}
+
+#companyname {
+	float: right;
+	width: 370px;
+	text-align: left;
+	/* margin-right:30px; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#tel {
+	/* width: 150px; */
+	float: right;
+	margin-right: 30px;
+}
+
+.content>.right img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50% !important;
+	float: left;
+	margin-top: 5px;
+	margin-left: 10px;
+}
+
+.content>.right .text {
+	/* float: left; */
+	margin-left: 10px;
+	/*margin-right: 5px;*/
+	text-align: center;
+}
+
+.content>.right .text>p {
+	margin-bottom: 10px;
+}
+
+.mask {
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	margin: 0;
+	position: fixed;
+	overflow: auto;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+	display: none;
+}
+
+.popup {
+	position: absolute;
+	top: calc(50% - 100px);
+	left: calc(50% - 200px);
+	width: 400px;
+	height: 200px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.popup p {
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+	font-size: 18px;
+}
+
+.popup div {
+	width: 100%;
+	text-align: center;
+	height: 120px;
+	line-height: 120px;
+}
+
+.popup>div>button {
+	border: none;
+	height: 40px;
+	width: 40%;
+	border-radius: 10px;
+	color: white;
+}
+
+.popup>div>button.confirm {
+	border: 1px solid #169BD5;
+	background-color: #169BD5;
+}
+
+.popup>div>button.cancel {
+	border: 1px solid #ccc;
+}

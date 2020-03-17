@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.QygTOrderInfoMapper">
+    
+	<sql id="qygTOrderInfoColumns">
+		a.order_no AS "orderNo",
+		a.order_type AS "orderType",
+		a.order_type_name AS "orderTypeName",
+		a.order_type_no AS "orderTypeNo",
+		a.oms_order_type AS "omsOrderType",
+		a.order_flow_no AS "orderFlowNo",
+		a.grouping_flow_id AS "groupingFlowId",
+		a.grouping_no AS "groupingNo",
+		a.activity_id AS "activityId",
+		a.activity_name AS "activityName",
+		a.stock_no AS "stockNo",
+		a.stock_type AS "stockType",
+		a.plan_in_date AS "planInDate",
+		a.yuncang_code AS "yuncangCode",
+		a.tctp_confirm AS "tctpConfirm",
+		a.delivery_type AS "deliveryType",
+		a.delivery_addr AS "deliveryAddr",
+		a.delivery_code AS "deliveryCode",
+		a.delivery_yd AS "deliveryYd",
+		a.delivery_name AS "deliveryName",
+		a.saleto_code AS "saletoCode",
+		a.saleto_name AS "saletoName",
+		a.payto_code AS "paytoCode",
+		a.payto_name AS "paytoName",
+		a.payto_type AS "paytoType",
+		a.sync_scf_status AS "syncScfStatus",
+		a.sendto_code AS "sendtoCode",
+		a.sendto_name AS "sendtoName",
+		a.sendto_address AS "sendtoAddress",
+		a.manage_customer_code AS "manageCustomerCode",
+		a.manage_customer_name AS "manageCustomerName",
+		a.region_code AS "regionCode",
+		a.main_channel_code AS "mainChannelCode",
+		a.sub_channel_code AS "subChannelCode",
+		a.order_source AS "orderSource",
+		a.trade_code AS "tradeCode",
+		a.sale_org_code AS "saleOrgCode",
+		a.order_amount AS "orderAmount",
+		a.order_date AS "orderDate",
+		a.oms_order_no AS "omsOrderNo",
+		a.gvs_so_order_no AS "gvsSoOrderNo",
+		a.so1_order_no AS "so1OrderNo",
+		a.dn1_order_no AS "dn1OrderNo",
+		a.so5_order_no AS "so5OrderNo",
+		a.dn5_order_no AS "dn5OrderNo",
+		a.sync_dn_status AS "syncDnStatus",
+		a.gvs_order_type AS "gvsOrderType",
+		a.order_channel AS "orderChannel",
+		a.procurement_method AS "procurementMethod",
+		a.con_code AS "conCode",
+		a.bill_no AS "billNo",
+		a.bill_name AS "billName",
+		a.comment AS "comment",
+		a.order_status AS "orderStatus",
+		a.order_gvs_status AS "orderGvsStatus",
+		a.error_msg AS "errorMsg",
+		a.pay_time AS "payTime",
+		a.order_no_seq AS "orderNoSeq",
+		a.place_order_seq AS "placeOrderSeq",
+		a.bigdata_batch_update AS "bigdataBatchUpdate",
+		a.del_flag AS "delFlag",
+		a.created_time AS "createdTime",
+		a.created_by AS "createdBy",
+		a.update_time AS "updateTime",
+		a.update_by AS "updateBy.id",
+		a.rowkey AS "rowkey",
+		a.bstnk AS "bstnk",
+		a.sap_so AS "sapSo",
+		a.sap_dn AS "sapDn",
+		a.sap_dndate AS "sapDndate",
+		a.sap_so1 AS "sapSo1",
+		a.sap_so5 AS "sapSo5",
+		a.sap_dn1 AS "sapDn1",
+		a.sap_dn5 AS "sapDn5",
+		a.sap_dn1date AS "sapDn1date",
+		a.sap_dn5date AS "sapDn5date",
+		a.sap_tax_invoice_no AS "sapTaxInvoiceNo",
+		a.sap_tax_invoice_time AS "sapTaxInvoiceTime",
+		a.sap_sys_invoice_no AS "sapSysInvoiceNo",
+		a.sap_sys_invoice_time AS "sapSysInvoiceTime",
+		a.sap_center_recieve_date AS "sapCenterRecieveDate",
+		a.sap_ptd_send_date AS "sapPtdSendDate",
+		a.sap_judge_date AS "sapJudgeDate",
+		a.sap_judge_status AS "sapJudgeStatus",
+		a.sap_judge_reason AS "sapJudgeReason",
+		a.sap_reorder_date AS "sapReorderDate",
+		a.sap_send5_reason AS "sapSend5Reason",
+		a.sap_transout_date AS "sapTransoutDate",
+		a.sap_transin_date AS "sapTransinDate",
+		a.etl_source AS "etlSource",
+		a.product_code_all AS "productCodeAll",
+		a.product_group_all AS "productGroupAll",
+		a.product_brand_all AS "productBrandAll",
+		a.product_model_all AS "productModelAll",
+		a.price_type_all AS "priceTypeAll",
+		a.product_name_all AS "productNameAll",
+		a.far_weekly_all AS "farWeeklyAll",
+		a.credit_model_all AS "creditModelAll",
+		a.is_transfer_version_all AS "isTransferVersionAll",
+		a.transfer_version_all AS "transferVersionAll",
+		a.product_type_all AS "productTypeAll",
+		a.sap_sended1 AS "sapSended1",
+		a.sap_sended5 AS "sapSended5",
+		a.sap_judged AS "sapJudged",
+		a.sap_reorderd AS "sapReorderd",
+		a.sap_invoiced AS "sapInvoiced",
+		a.sap_ptded AS "sapPtded",
+		a.sap_center_recieved AS "sapCenterRecieved",
+		a.sap_erdat AS "sapErdat",
+		a.sap_erzet AS "sapErzet",
+		a.sap_vbeln AS "sapVbeln",
+		a.sap_posnr AS "sapPosnr",
+		a.sap_vkorg AS "sapVkorg",
+		a.sap_vkorg_type AS "sapVkorgType",
+		a.sap_zsdg_va_th AS "sapZsdgVaTh",
+		a.sap_auart AS "sapAuart",
+		a.sap_vbeln_vl AS "sapVbelnVl",
+		a.jshdz_ibl_korderno AS "jshdzIblKorderno",
+		a.jshdz_ibl_tdlnr AS "jshdzIblTdlnr",
+		a.jshdz_ibl_signi AS "jshdzIblSigni",
+		a.jshdz_ibl_exti1 AS "jshdzIblExti1",
+		a.jshdz_ibl_hbdh AS "jshdzIblHbdh",
+		a.update_time_sap AS "updateTimeSap",
+		a.update_time_binlog AS "updateTimeBinlog",
+		a.update_time_all AS "updateTimeAll"
+	</sql>
+	
+	<sql id="qygTOrderInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="QygTOrderInfo" >
+		SELECT 
+			<include refid="qygTOrderInfoColumns"/>
+		FROM qyg_t_order_info a
+		<include refid="qygTOrderInfoJoins"/>
+		WHERE a.rowkey = #{rowkey}
+	</select>
+	
+	<select id="findList" resultType="QygTOrderInfo" >
+		SELECT 
+			<include refid="qygTOrderInfoColumns"/>
+		FROM qyg_t_order_info a
+		<include refid="qygTOrderInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+			<if test="planInDate != null and planInDate != ''">
+				AND a.plan_in_date = #{planInDate}
+			</if>
+			<if test="orderDate != null and orderDate != ''">
+				AND a.order_date = #{orderDate}
+			</if>
+			<if test="createdTime != null and createdTime != ''">
+				AND a.created_time = #{createdTime}
+			</if>
+			<if test="sapDn1date != null and sapDn1date != ''">
+				AND a.sap_dn1date = #{sapDn1date}
+			</if>
+			<if test="sapDn5date != null and sapDn5date != ''">
+				AND a.sap_dn5date = #{sapDn5date}
+			</if>
+			<if test="sapCenterRecieveDate != null and sapCenterRecieveDate != ''">
+				AND a.sap_center_recieve_date = #{sapCenterRecieveDate}
+			</if>
+			<if test="sapPtdSendDate != null and sapPtdSendDate != ''">
+				AND a.sap_ptd_send_date = #{sapPtdSendDate}
+			</if>
+			<if test="sapJudgeDate != null and sapJudgeDate != ''">
+				AND a.sap_judge_date = #{sapJudgeDate}
+			</if>
+			<if test="sapJudgeStatus != null and sapJudgeStatus != ''">
+				AND a.sap_judge_status = #{sapJudgeStatus}
+			</if>
+			<if test="sapJudgeReason != null and sapJudgeReason != ''">
+				AND a.sap_judge_reason = #{sapJudgeReason}
+			</if>
+			<if test="sapReorderDate != null and sapReorderDate != ''">
+				AND a.sap_reorder_date = #{sapReorderDate}
+			</if>
+			<if test="sapSended1 != null and sapSended1 != ''">
+				AND a.sap_sended1 = #{sapSended1}
+			</if>
+			<if test="sapSended5 != null and sapSended5 != ''">
+				AND a.sap_sended5 = #{sapSended5}
+			</if>
+			<if test="sapJudged != null and sapJudged != ''">
+				AND a.sap_judged = #{sapJudged}
+			</if>
+			<if test="sapReorderd != null and sapReorderd != ''">
+				AND a.sap_reorderd = #{sapReorderd}
+			</if>
+			<if test="sapInvoiced != null and sapInvoiced != ''">
+				AND a.sap_invoiced = #{sapInvoiced}
+			</if>
+			<if test="sapPtded != null and sapPtded != ''">
+				AND a.sap_ptded = #{sapPtded}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QygTOrderInfo" >
+		SELECT 
+			<include refid="qygTOrderInfoColumns"/>
+		FROM qyg_t_order_info a
+		<include refid="qygTOrderInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO qyg_t_order_info(
+			order_no,
+			order_type,
+			order_type_name,
+			order_type_no,
+			oms_order_type,
+			order_flow_no,
+			grouping_flow_id,
+			grouping_no,
+			activity_id,
+			activity_name,
+			stock_no,
+			stock_type,
+			plan_in_date,
+			yuncang_code,
+			tctp_confirm,
+			delivery_type,
+			delivery_addr,
+			delivery_code,
+			delivery_yd,
+			delivery_name,
+			saleto_code,
+			saleto_name,
+			payto_code,
+			payto_name,
+			payto_type,
+			sync_scf_status,
+			sendto_code,
+			sendto_name,
+			sendto_address,
+			manage_customer_code,
+			manage_customer_name,
+			region_code,
+			main_channel_code,
+			sub_channel_code,
+			order_source,
+			trade_code,
+			sale_org_code,
+			order_amount,
+			order_date,
+			oms_order_no,
+			gvs_so_order_no,
+			so1_order_no,
+			dn1_order_no,
+			so5_order_no,
+			dn5_order_no,
+			sync_dn_status,
+			gvs_order_type,
+			order_channel,
+			procurement_method,
+			con_code,
+			bill_no,
+			bill_name,
+			comment,
+			order_status,
+			order_gvs_status,
+			error_msg,
+			pay_time,
+			order_no_seq,
+			place_order_seq,
+			bigdata_batch_update,
+			del_flag,
+			created_time,
+			created_by,
+			update_time,
+			update_by,
+			rowkey,
+			bstnk,
+			sap_so,
+			sap_dn,
+			sap_dndate,
+			sap_so1,
+			sap_so5,
+			sap_dn1,
+			sap_dn5,
+			sap_dn1date,
+			sap_dn5date,
+			sap_tax_invoice_no,
+			sap_tax_invoice_time,
+			sap_sys_invoice_no,
+			sap_sys_invoice_time,
+			sap_center_recieve_date,
+			sap_ptd_send_date,
+			sap_judge_date,
+			sap_judge_status,
+			sap_judge_reason,
+			sap_reorder_date,
+			sap_send5_reason,
+			sap_transout_date,
+			sap_transin_date,
+			etl_source,
+			product_code_all,
+			product_group_all,
+			product_brand_all,
+			product_model_all,
+			price_type_all,
+			product_name_all,
+			far_weekly_all,
+			credit_model_all,
+			is_transfer_version_all,
+			transfer_version_all,
+			product_type_all,
+			sap_sended1,
+			sap_sended5,
+			sap_judged,
+			sap_reorderd,
+			sap_invoiced,
+			sap_ptded,
+			sap_center_recieved,
+			sap_erdat,
+			sap_erzet,
+			sap_vbeln,
+			sap_posnr,
+			sap_vkorg,
+			sap_vkorg_type,
+			sap_zsdg_va_th,
+			sap_auart,
+			sap_vbeln_vl,
+			jshdz_ibl_korderno,
+			jshdz_ibl_tdlnr,
+			jshdz_ibl_signi,
+			jshdz_ibl_exti1,
+			jshdz_ibl_hbdh,
+			update_time_sap,
+			update_time_binlog,
+			update_time_all
+		) VALUES (
+			#{orderNo},
+			#{orderType},
+			#{orderTypeName},
+			#{orderTypeNo},
+			#{omsOrderType},
+			#{orderFlowNo},
+			#{groupingFlowId},
+			#{groupingNo},
+			#{activityId},
+			#{activityName},
+			#{stockNo},
+			#{stockType},
+			#{planInDate},
+			#{yuncangCode},
+			#{tctpConfirm},
+			#{deliveryType},
+			#{deliveryAddr},
+			#{deliveryCode},
+			#{deliveryYd},
+			#{deliveryName},
+			#{saletoCode},
+			#{saletoName},
+			#{paytoCode},
+			#{paytoName},
+			#{paytoType},
+			#{syncScfStatus},
+			#{sendtoCode},
+			#{sendtoName},
+			#{sendtoAddress},
+			#{manageCustomerCode},
+			#{manageCustomerName},
+			#{regionCode},
+			#{mainChannelCode},
+			#{subChannelCode},
+			#{orderSource},
+			#{tradeCode},
+			#{saleOrgCode},
+			#{orderAmount},
+			#{orderDate},
+			#{omsOrderNo},
+			#{gvsSoOrderNo},
+			#{so1OrderNo},
+			#{dn1OrderNo},
+			#{so5OrderNo},
+			#{dn5OrderNo},
+			#{syncDnStatus},
+			#{gvsOrderType},
+			#{orderChannel},
+			#{procurementMethod},
+			#{conCode},
+			#{billNo},
+			#{billName},
+			#{comment},
+			#{orderStatus},
+			#{orderGvsStatus},
+			#{errorMsg},
+			#{payTime},
+			#{orderNoSeq},
+			#{placeOrderSeq},
+			#{bigdataBatchUpdate},
+			#{delFlag},
+			#{createdTime},
+			#{createdBy},
+			#{updateTime},
+			#{updateBy.id},
+			#{rowkey},
+			#{bstnk},
+			#{sapSo},
+			#{sapDn},
+			#{sapDndate},
+			#{sapSo1},
+			#{sapSo5},
+			#{sapDn1},
+			#{sapDn5},
+			#{sapDn1date},
+			#{sapDn5date},
+			#{sapTaxInvoiceNo},
+			#{sapTaxInvoiceTime},
+			#{sapSysInvoiceNo},
+			#{sapSysInvoiceTime},
+			#{sapCenterRecieveDate},
+			#{sapPtdSendDate},
+			#{sapJudgeDate},
+			#{sapJudgeStatus},
+			#{sapJudgeReason},
+			#{sapReorderDate},
+			#{sapSend5Reason},
+			#{sapTransoutDate},
+			#{sapTransinDate},
+			#{etlSource},
+			#{productCodeAll},
+			#{productGroupAll},
+			#{productBrandAll},
+			#{productModelAll},
+			#{priceTypeAll},
+			#{productNameAll},
+			#{farWeeklyAll},
+			#{creditModelAll},
+			#{isTransferVersionAll},
+			#{transferVersionAll},
+			#{productTypeAll},
+			#{sapSended1},
+			#{sapSended5},
+			#{sapJudged},
+			#{sapReorderd},
+			#{sapInvoiced},
+			#{sapPtded},
+			#{sapCenterRecieved},
+			#{sapErdat},
+			#{sapErzet},
+			#{sapVbeln},
+			#{sapPosnr},
+			#{sapVkorg},
+			#{sapVkorgType},
+			#{sapZsdgVaTh},
+			#{sapAuart},
+			#{sapVbelnVl},
+			#{jshdzIblKorderno},
+			#{jshdzIblTdlnr},
+			#{jshdzIblSigni},
+			#{jshdzIblExti1},
+			#{jshdzIblHbdh},
+			#{updateTimeSap},
+			#{updateTimeBinlog},
+			#{updateTimeAll}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE qyg_t_order_info SET 	
+			order_no = #{orderNo},
+			order_type = #{orderType},
+			order_type_name = #{orderTypeName},
+			order_type_no = #{orderTypeNo},
+			oms_order_type = #{omsOrderType},
+			order_flow_no = #{orderFlowNo},
+			grouping_flow_id = #{groupingFlowId},
+			grouping_no = #{groupingNo},
+			activity_id = #{activityId},
+			activity_name = #{activityName},
+			stock_no = #{stockNo},
+			stock_type = #{stockType},
+			plan_in_date = #{planInDate},
+			yuncang_code = #{yuncangCode},
+			tctp_confirm = #{tctpConfirm},
+			delivery_type = #{deliveryType},
+			delivery_addr = #{deliveryAddr},
+			delivery_code = #{deliveryCode},
+			delivery_yd = #{deliveryYd},
+			delivery_name = #{deliveryName},
+			saleto_code = #{saletoCode},
+			saleto_name = #{saletoName},
+			payto_code = #{paytoCode},
+			payto_name = #{paytoName},
+			payto_type = #{paytoType},
+			sync_scf_status = #{syncScfStatus},
+			sendto_code = #{sendtoCode},
+			sendto_name = #{sendtoName},
+			sendto_address = #{sendtoAddress},
+			manage_customer_code = #{manageCustomerCode},
+			manage_customer_name = #{manageCustomerName},
+			region_code = #{regionCode},
+			main_channel_code = #{mainChannelCode},
+			sub_channel_code = #{subChannelCode},
+			order_source = #{orderSource},
+			trade_code = #{tradeCode},
+			sale_org_code = #{saleOrgCode},
+			order_amount = #{orderAmount},
+			order_date = #{orderDate},
+			oms_order_no = #{omsOrderNo},
+			gvs_so_order_no = #{gvsSoOrderNo},
+			so1_order_no = #{so1OrderNo},
+			dn1_order_no = #{dn1OrderNo},
+			so5_order_no = #{so5OrderNo},
+			dn5_order_no = #{dn5OrderNo},
+			sync_dn_status = #{syncDnStatus},
+			gvs_order_type = #{gvsOrderType},
+			order_channel = #{orderChannel},
+			procurement_method = #{procurementMethod},
+			con_code = #{conCode},
+			bill_no = #{billNo},
+			bill_name = #{billName},
+			comment = #{comment},
+			order_status = #{orderStatus},
+			order_gvs_status = #{orderGvsStatus},
+			error_msg = #{errorMsg},
+			pay_time = #{payTime},
+			order_no_seq = #{orderNoSeq},
+			place_order_seq = #{placeOrderSeq},
+			bigdata_batch_update = #{bigdataBatchUpdate},
+			created_time = #{createdTime},
+			created_by = #{createdBy},
+			update_time = #{updateTime},
+			update_by = #{updateBy.id},
+			rowkey = #{rowkey},
+			bstnk = #{bstnk},
+			sap_so = #{sapSo},
+			sap_dn = #{sapDn},
+			sap_dndate = #{sapDndate},
+			sap_so1 = #{sapSo1},
+			sap_so5 = #{sapSo5},
+			sap_dn1 = #{sapDn1},
+			sap_dn5 = #{sapDn5},
+			sap_dn1date = #{sapDn1date},
+			sap_dn5date = #{sapDn5date},
+			sap_tax_invoice_no = #{sapTaxInvoiceNo},
+			sap_tax_invoice_time = #{sapTaxInvoiceTime},
+			sap_sys_invoice_no = #{sapSysInvoiceNo},
+			sap_sys_invoice_time = #{sapSysInvoiceTime},
+			sap_center_recieve_date = #{sapCenterRecieveDate},
+			sap_ptd_send_date = #{sapPtdSendDate},
+			sap_judge_date = #{sapJudgeDate},
+			sap_judge_status = #{sapJudgeStatus},
+			sap_judge_reason = #{sapJudgeReason},
+			sap_reorder_date = #{sapReorderDate},
+			sap_send5_reason = #{sapSend5Reason},
+			sap_transout_date = #{sapTransoutDate},
+			sap_transin_date = #{sapTransinDate},
+			etl_source = #{etlSource},
+			product_code_all = #{productCodeAll},
+			product_group_all = #{productGroupAll},
+			product_brand_all = #{productBrandAll},
+			product_model_all = #{productModelAll},
+			price_type_all = #{priceTypeAll},
+			product_name_all = #{productNameAll},
+			far_weekly_all = #{farWeeklyAll},
+			credit_model_all = #{creditModelAll},
+			is_transfer_version_all = #{isTransferVersionAll},
+			transfer_version_all = #{transferVersionAll},
+			product_type_all = #{productTypeAll},
+			sap_sended1 = #{sapSended1},
+			sap_sended5 = #{sapSended5},
+			sap_judged = #{sapJudged},
+			sap_reorderd = #{sapReorderd},
+			sap_invoiced = #{sapInvoiced},
+			sap_ptded = #{sapPtded},
+			sap_center_recieved = #{sapCenterRecieved},
+			sap_erdat = #{sapErdat},
+			sap_erzet = #{sapErzet},
+			sap_vbeln = #{sapVbeln},
+			sap_posnr = #{sapPosnr},
+			sap_vkorg = #{sapVkorg},
+			sap_vkorg_type = #{sapVkorgType},
+			sap_zsdg_va_th = #{sapZsdgVaTh},
+			sap_auart = #{sapAuart},
+			sap_vbeln_vl = #{sapVbelnVl},
+			jshdz_ibl_korderno = #{jshdzIblKorderno},
+			jshdz_ibl_tdlnr = #{jshdzIblTdlnr},
+			jshdz_ibl_signi = #{jshdzIblSigni},
+			jshdz_ibl_exti1 = #{jshdzIblExti1},
+			jshdz_ibl_hbdh = #{jshdzIblHbdh},
+			update_time_sap = #{updateTimeSap},
+			update_time_binlog = #{updateTimeBinlog},
+			update_time_all = #{updateTimeAll}
+		WHERE rowkey = #{rowkey}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM qyg_t_order_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE qyg_t_order_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="QygTOrderInfo" statementType="STATEMENT">
+		select * FROM qyg_t_order_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

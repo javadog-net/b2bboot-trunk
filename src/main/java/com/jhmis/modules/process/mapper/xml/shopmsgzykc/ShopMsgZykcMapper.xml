@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopmsgzykc.ShopMsgZykcMapper">
+    
+	<sql id="shopMsgZykcColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.create_date AS "createDate",
+		a.company_name AS "companyName",
+		a.cancel_type AS "cancelType",
+		a.cancel_reson AS "cancelReson",
+		a.cancel_desc AS "cancelDesc",
+		a.cancle_date AS "cancleDate",
+		a.custcode AS "custcode",
+		a.trade_count AS "tradeCount",
+		a.is_check AS "isCheck",
+		a.checker AS "checker",
+		a.check_date AS "checkDate",
+		a.image_url AS "imageUrl",
+		a.is_closed AS "isClosed",
+		a.order_id AS "orderId",
+		smco.is_bind AS "isBind"
+	</sql>
+	
+	<sql id="shopMsgZykcJoins">
+		inner join shop_msg_custcode_order smco on a.order_id = smco.id
+	</sql>
+	
+	<select id="get" resultType="ShopMsgZykc" >
+		SELECT 
+			<include refid="shopMsgZykcColumns"/>
+		FROM shop_msg_zykc a
+		<include refid="shopMsgZykcJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgZykc" >
+		SELECT 
+			<include refid="shopMsgZykcColumns"/>
+		FROM shop_msg_zykc a
+		<include refid="shopMsgZykcJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="cancelType != null and cancelType != ''">
+				AND a.cancel_type = #{cancelType}
+			</if>
+			<if test="cancelReson != null and cancelReson != ''">
+				AND a.cancel_reson = #{cancelReson}
+			</if>
+			<if test="cancelDesc != null and cancelDesc != ''">
+				AND a.cancel_desc = #{cancelDesc}
+			</if>
+			<if test="cancleDate != null and cancleDate != ''">
+				AND a.cancle_date = #{cancleDate}
+			</if>
+			<if test="custcode != null and custcode != ''">
+				AND a.custcode LIKE
+				<if test="dbName == 'oracle'">'%'||#{custcode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{custcode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{custcode},'%')</if>
+			</if>
+			<if test="tradeCount != null and tradeCount != ''">
+				AND a.trade_count = #{tradeCount}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="checker != null and checker != ''">
+				AND a.checker = #{checker}
+			</if>
+			<if test="checkDate != null and checkDate != ''">
+				AND a.check_date = #{checkDate}
+			</if>
+			<if test="imageUrl != null and imageUrl != ''">
+				AND a.image_url = #{imageUrl}
+			</if>
+			<if test="isClosed != null and isClosed != ''">
+				AND a.is_closed = #{isClosed}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="isBind != null and isBind != ''">
+				AND smco.is_bind = #{isBind}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopMsgZykc" >
+		SELECT 
+			<include refid="shopMsgZykcColumns"/>
+		FROM shop_msg_zykc a
+		<include refid="shopMsgZykcJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_zykc(
+			id,
+			msg_id,
+			create_date,
+			company_name,
+			cancel_type,
+			cancel_reson,
+			cancel_desc,
+			cancle_date,
+			custcode,
+			trade_count,
+			is_check,
+			checker,
+			check_date,
+			image_url,
+			is_closed,
+			order_id
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{createDate},
+			#{companyName},
+			#{cancelType},
+			#{cancelReson},
+			#{cancelDesc},
+			#{cancleDate},
+			#{custcode},
+			#{tradeCount},
+			#{isCheck},
+			#{checker},
+			#{checkDate},
+			#{imageUrl},
+			#{isClosed},
+			#{orderId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_zykc SET 	
+			msg_id = #{msgId},
+			company_name = #{companyName},
+			cancel_type = #{cancelType},
+			cancel_reson = #{cancelReson},
+			cancel_desc = #{cancelDesc},
+			cancle_date = #{cancleDate},
+			custcode = #{custcode},
+			trade_count = #{tradeCount},
+			is_check = #{isCheck},
+			checker = #{checker},
+			check_date = #{checkDate},
+			image_url = #{imageUrl},
+			is_closed = #{isClosed},
+			order_id = #{orderId}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_zykc
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_zykc SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgZykc" statementType="STATEMENT">
+		select * FROM shop_msg_zykc  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

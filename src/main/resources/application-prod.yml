@@ -1,0 +1,74 @@
+# 生产环境配置
+spring:
+  profiles: prod
+  datasource:
+    primary:
+      url: jdbc:oracle:thin:@10.138.1.78:1521/haiermdm
+      username: hrgc
+      password: hrgc%123
+      driver-class-name: oracle.jdbc.OracleDriver
+    second:
+      url: jdbc:mysql://10.138.42.10:3306/Haier_HPS?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&connectTimeout=60000&socketTimeout=60000
+      username: HPS_QYG
+      password: HPS_QYG@2018
+      driver-class-name: com.mysql.jdbc.Driver     
+      max-idle: 10
+      max-wait: 10000
+      min-idle: 5
+      initial-size: 5
+      validation-query: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: true
+      time-between-eviction-runs-millis: 18800
+
+# Tomcat
+server:
+    context-path: /wholeprocess
+    port: 8091
+# 数据库连接
+jdbc:
+  # Mysql 数据库配置
+  type: mysql
+  driver: com.mysql.jdbc.Driver
+  #jdbc:mysql://localhost:3306/b2bboot?useSSL=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+  # 用于表情 将 &characterEncoding=utf8去掉
+  url: jdbc:mysql://localhost:3306/btwobboot?useSSL=true&useUnicode=true&zeroDateTimeBehavior=convertToNull
+  username: b2b
+  password: b2b,321@haieR
+  #username: root
+  #password: root
+  testSql: SELECT 1
+  dual: from dual
+
+#url使用
+UseUrl:
+  baseUrl: http://b2b.haier.com
+  urlone: http://b2b.haier.com/shop
+
+
+#企业购合约客户对接海尔客户中心生产环境相关配置
+Jsh.Client_Id: 3_UCrklATz2eX0rFew7ZAQ
+Jsh.Client_Secret: 34322e363339353434343737913a2f6fb1004ceeb75a6aedf6b40923199e1c98435a4b5fc2b8bca992d8aab5
+#通过code获取客户中心access_token接口地址
+Jsh.TokenUrl: https://c.jsh.com/open/oauth2/token
+#通过access_token获取客户中心客户信息接口地址
+Jsh.AccountUrl: https://c.jsh.com/open/api/v0/account
+#生产环境退出
+Jsh.Logout: https://c.jsh.com/logout?redirect_uri=http%3a%2f%2fb2b.haier.com
+
+cms:
+  templates:
+    path: /web/b2bboot/templates/
+  static:
+    path: /web/b2bboot/static/
+  index:
+    path: /web/b2bboot/index
+
+
+fundebug:
+  apikey: 682b72ccff065a7c4074ed138e319f3a0c12736a1dad60aea66f29f990e308d3
+  version: 企业购B2B生产
+
+
+

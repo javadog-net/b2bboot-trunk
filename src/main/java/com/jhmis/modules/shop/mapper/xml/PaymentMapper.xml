@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.PaymentMapper">
+    
+	<sql id="paymentColumns">
+		a.id AS "id",
+		a.pay_code AS "payCode",
+		a.pay_name AS "payName",
+		a.pay_config AS "payConfig",
+		a.paystate AS "paystate"
+	</sql>
+	
+	<sql id="paymentJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Payment" >
+		SELECT 
+			<include refid="paymentColumns"/>
+		FROM payment a
+		<include refid="paymentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Payment" >
+		SELECT 
+			<include refid="paymentColumns"/>
+		FROM payment a
+		<include refid="paymentJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="payCode != null and payCode != ''">
+				AND a.pay_code = #{payCode}
+			</if>
+			<if test="payName != null and payName != ''">
+				AND a.pay_name = #{payName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Payment" >
+		SELECT 
+			<include refid="paymentColumns"/>
+		FROM payment a
+		<include refid="paymentJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO payment(
+			id,
+			pay_code,
+			pay_name,
+			pay_config,
+			paystate
+		) VALUES (
+			#{id},
+			#{payCode},
+			#{payName},
+			#{payConfig},
+			#{paystate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE payment SET 	
+			pay_code = #{payCode},
+			pay_name = #{payName},
+			pay_config = #{payConfig},
+			paystate = #{paystate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM payment
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE payment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Payment" statementType="STATEMENT">
+		select * FROM payment  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

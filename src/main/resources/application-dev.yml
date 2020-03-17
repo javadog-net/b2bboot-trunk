@@ -1,0 +1,72 @@
+# 开发环境配置
+spring:
+  profiles: dev
+  datasource:
+    primary:
+      url: jdbc:oracle:thin:@10.138.1.78:1521/haiermdm
+      username: hrgc
+      password: hrgc%123
+      driver-class-name: oracle.jdbc.OracleDriver
+    second:
+      #url: jdbc:mysql://10.138.42.10:3306/Haier_HPS?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&connectTimeout=60000&socketTimeout=60000
+      url: jdbc:mysql://10.138.10.68:3306/Haier_HPS?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&connectTimeout=60000&socketTimeout=60000
+      username: HPS_QYG
+      password: HPS_QYG@2018
+      driver-class-name: com.mysql.jdbc.Driver
+      max-idle: 10
+      max-wait: 10000
+      min-idle: 5
+      initial-size: 5
+      validation-query: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: true
+      time-between-eviction-runs-millis: 18800
+server:
+    context-path: /shop
+    port: 8090
+    jsp-servlet:
+      init-parameters:
+        # 开启jsp开发环境自动编译
+        development: true
+# 数据库连接
+jdbc:
+
+  # Mysql 数据库配置
+  type: mysql
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/b2bboot?useSSL=false&useUnicode=true&zeroDateTimeBehavior=convertToNull
+  #url: jdbc:mysql://10.138.106.102:3306/b2bboot?useSSL=false&useUnicode=true&zeroDateTimeBehavior=convertToNull
+  username: root
+  password: root
+  testSql: SELECT 1
+  dual: from dual
+
+#url使用
+UseUrl:
+  baseUrl: http://localhost:8080
+  urlone: http://localhost:8080
+
+
+#海尔客户中心测试环境相关配置
+Jsh.Client_Id: 3_UCrklATz2eX0rFew7ZAQ
+Jsh.Client_Secret: 32382e38313532393535393601ed38c40f4d5a78b4e0c94f404dde4fda734787507712cdd1bfde36cc16deb3
+#通过code获取客户中心access_token接口地址
+Jsh.TokenUrl: https://c-beta.jsh.com/open/oauth2/token
+#通过access_token获取客户中心客户信息接口地址
+Jsh.AccountUrl: https://c-beta.jsh.com/open/api/v0/account
+
+cms:
+  templates:
+    path: d:/templates/
+  static:
+    path: d:/static
+  index:
+    path: d:/index
+
+userfiles:
+  basedir: d:/attachment
+
+fundebug:
+  apikey: 682b72ccff065a7c4074ed138e319f3a0c12736a1dad60aea66f29f990e308d3
+  version: 企业购B2B本地

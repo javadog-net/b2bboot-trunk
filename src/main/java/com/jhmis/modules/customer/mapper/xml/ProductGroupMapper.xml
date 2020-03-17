@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.ProductGroupMapper">
+    
+	<sql id="productGroupColumns">
+		a.product_group_code AS "productGroupCode",
+		a.product_group_name AS "productGroupName",
+		a.industrial_coding AS "industrialCoding",
+		a.industrial_name AS "industrialName",
+		a.industrial_account AS "industrialAccount",
+		a.transfer_system AS "transferSystem"
+	</sql>
+	
+	<sql id="productGroupJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ProductGroup" >
+		SELECT 
+			<include refid="productGroupColumns"/>
+		FROM product_group a
+		<include refid="productGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProductGroup" >
+		SELECT 
+			<include refid="productGroupColumns"/>
+		FROM product_group a
+		<include refid="productGroupJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code = #{productGroupCode}
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name = #{productGroupName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProductGroup" >
+		SELECT 
+			<include refid="productGroupColumns"/>
+		FROM product_group a
+		<include refid="productGroupJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO product_group(
+			product_group_code,
+			product_group_name,
+			industrial_coding,
+			industrial_name,
+			industrial_account,
+			transfer_system
+		) VALUES (
+			#{productGroupCode},
+			#{productGroupName},
+			#{industrialCoding},
+			#{industrialName},
+			#{industrialAccount},
+			#{transferSystem}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE product_group SET 	
+			product_group_code = #{productGroupCode},
+			product_group_name = #{productGroupName},
+			industrial_coding = #{industrialCoding},
+			industrial_name = #{industrialName},
+			industrial_account = #{industrialAccount},
+			transfer_system = #{transferSystem}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM product_group
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE product_group SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ProductGroup" statementType="STATEMENT">
+		select * FROM product_group  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

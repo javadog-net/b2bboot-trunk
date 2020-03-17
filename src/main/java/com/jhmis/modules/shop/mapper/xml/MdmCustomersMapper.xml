@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.MdmCustomersMapper">
+    
+	<sql id="mdmCustomersColumns">
+		a.id AS "id",
+		a.com_code AS "comCode",
+		a.cus_code AS "cusCode",
+		a.account_group AS "accountGroup",
+		a.market_area AS "marketArea",
+		a.com_name AS "comName",
+		a.cus_name AS "cusName",
+		a.cus_abb_name AS "cusAbbName",
+		a.old_cust_code AS "oldCustCode",
+		a.kind AS "kind",
+		a.kind_name AS "kindName",
+		a.address AS "address",
+		a.street AS "street",
+		a.post AS "post",
+		a.linkman AS "linkman",
+		a.tel AS "tel",
+		a.fax AS "fax",
+		a.e_mail AS "eMail",
+		a.bank_l AS "bankL",
+		a.bank_n AS "bankN",
+		a.bank_a AS "bankA",
+		a.org_id AS "orgId",
+		a.tax AS "tax",
+		a.enr_bankroll AS "enrBankroll",
+		a.credit_grade AS "creditGrade",
+		a.channel AS "channel",
+		a.area_name AS "areaName",
+		a.sys_trade AS "sysTrade",
+		a.create_by AS "createBy",
+		a.import_date AS "importDate",
+		a.sys_dates AS "sysDates",
+		a.alter_by AS "alterBy",
+		a.alter_date AS "alterDate",
+		a.active_flag AS "activeFlag",
+		a.lock_flag AS "lockFlag",
+		a.delete_flag AS "deleteFlag",
+		a.operate_status AS "operateStatus",
+		a.memo AS "memo"
+	</sql>
+	
+	<sql id="mdmCustomersJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="MdmCustomers" >
+		SELECT 
+			<include refid="mdmCustomersColumns"/>
+		FROM mdm_customers a
+		<include refid="mdmCustomersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MdmCustomers" >
+		SELECT 
+			<include refid="mdmCustomersColumns"/>
+		FROM mdm_customers a
+		<include refid="mdmCustomersJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MdmCustomers" >
+		SELECT 
+			<include refid="mdmCustomersColumns"/>
+		FROM mdm_customers a
+		<include refid="mdmCustomersJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO mdm_customers(
+			id,
+			com_code,
+			cus_code,
+			account_group,
+			market_area,
+			com_name,
+			cus_name,
+			cus_abb_name,
+			old_cust_code,
+			kind,
+			kind_name,
+			address,
+			street,
+			post,
+			linkman,
+			tel,
+			fax,
+			e_mail,
+			bank_l,
+			bank_n,
+			bank_a,
+			org_id,
+			tax,
+			enr_bankroll,
+			credit_grade,
+			channel,
+			area_name,
+			sys_trade,
+			create_by,
+			import_date,
+			sys_dates,
+			alter_by,
+			alter_date,
+			active_flag,
+			lock_flag,
+			delete_flag,
+			operate_status,
+			memo
+		) VALUES (
+			#{id},
+			#{comCode},
+			#{cusCode},
+			#{accountGroup},
+			#{marketArea},
+			#{comName},
+			#{cusName},
+			#{cusAbbName},
+			#{oldCustCode},
+			#{kind},
+			#{kindName},
+			#{address},
+			#{street},
+			#{post},
+			#{linkman},
+			#{tel},
+			#{fax},
+			#{eMail},
+			#{bankL},
+			#{bankN},
+			#{bankA},
+			#{orgId},
+			#{tax},
+			#{enrBankroll},
+			#{creditGrade},
+			#{channel},
+			#{areaName},
+			#{sysTrade},
+			#{createBy},
+			#{importDate},
+			#{sysDates},
+			#{alterBy},
+			#{alterDate},
+			#{activeFlag},
+			#{lockFlag},
+			#{deleteFlag},
+			#{operateStatus},
+			#{memo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE mdm_customers SET 	
+			com_code = #{comCode},
+			cus_code = #{cusCode},
+			account_group = #{accountGroup},
+			market_area = #{marketArea},
+			com_name = #{comName},
+			cus_name = #{cusName},
+			cus_abb_name = #{cusAbbName},
+			old_cust_code = #{oldCustCode},
+			kind = #{kind},
+			kind_name = #{kindName},
+			address = #{address},
+			street = #{street},
+			post = #{post},
+			linkman = #{linkman},
+			tel = #{tel},
+			fax = #{fax},
+			e_mail = #{eMail},
+			bank_l = #{bankL},
+			bank_n = #{bankN},
+			bank_a = #{bankA},
+			org_id = #{orgId},
+			tax = #{tax},
+			enr_bankroll = #{enrBankroll},
+			credit_grade = #{creditGrade},
+			channel = #{channel},
+			area_name = #{areaName},
+			sys_trade = #{sysTrade},
+			import_date = #{importDate},
+			sys_dates = #{sysDates},
+			alter_by = #{alterBy},
+			alter_date = #{alterDate},
+			active_flag = #{activeFlag},
+			lock_flag = #{lockFlag},
+			delete_flag = #{deleteFlag},
+			operate_status = #{operateStatus},
+			memo = #{memo}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM mdm_customers
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE mdm_customers SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="MdmCustomers" statementType="STATEMENT">
+		select * FROM mdm_customers  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

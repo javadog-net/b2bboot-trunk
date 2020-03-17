@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.AppVersionMapper">
+    
+	<sql id="appVersionColumns">
+		a.id AS "id",
+		a.version AS "version",
+		a.address AS "address",
+		a.type AS "type",
+		a.time AS "time",
+		a.content AS "content",
+		a.total_size AS "totalSize",
+		a.is_update AS "update",
+		a.update_time AS "updateTime",
+		a.must_update AS "mustUpdate"
+	</sql>
+	
+	<sql id="appVersionJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="AppVersion" >
+		SELECT 
+			<include refid="appVersionColumns"/>
+		FROM app_version a
+		<include refid="appVersionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppVersion" >
+		SELECT 
+			<include refid="appVersionColumns"/>
+		FROM app_version a
+		<include refid="appVersionJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="version != null and version != ''">
+				AND a.version = #{version}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="time != null and time != ''">
+				AND a.time = #{time}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>		
+			<if test="totalSize != null and totalSize != ''">
+				AND a.total_size = #{totalSize}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="update != null and update != ''">
+				AND a.is_update = #{update}
+			</if>
+			<if test="mustUpdate != null and mustUpdate != ''">
+				AND a.must_update = #{mustUpdate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppVersion" >
+		SELECT 
+			<include refid="appVersionColumns"/>
+		FROM app_version a
+		<include refid="appVersionJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO app_version(
+			id,
+			version,
+			address,
+			type,
+			time,
+			content,
+			total_size,
+			is_update,
+			update_time,
+			must_update
+		) VALUES (
+			#{id},
+			#{version},
+			#{address},
+			#{type},
+			#{time},
+			#{content},
+			#{totalSize},
+			#{update},
+			#{updateTime},
+			#{mustUpdate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE app_version SET 	
+			version = #{version},
+			address = #{address},
+			type = #{type},
+			time = #{time},
+			content = #{content},
+			total_size = #{totalSize},
+			is_update = #{update},
+			update_time = #{updateTime},
+			must_update = #{mustUpdate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM app_version
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE app_version SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="AppVersion" statementType="STATEMENT">
+		select * FROM app_version  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="getNewVersion" resultType="AppVersion">
+		select * FROM app_version where type=#{appVersion.type} and is_update=#{appVersion.update} and update_time&lt;#{nowTime} order by version desc limit 1
+	</select>
+	
+	
+</mapper>

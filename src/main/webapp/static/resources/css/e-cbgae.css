@@ -1,0 +1,76 @@
+.content{
+    font-size: 0px;
+}
+.active{
+    border-bottom:1px solid #3C3CD8;
+    color: #3C3CD8;
+}
+.content img{
+    width: 100%;
+    height: auto;
+}
+.rfe-content{
+    width: 100%;
+    height: 1479px;
+    background: url(../images/e-cbgae/e-cbgae-9.jpg) no-repeat 100% 100%;
+    background-size: 100% 100%;
+}
+.rfe-content .inner-tabbar>div{
+    display: inline-block;
+    width: 93px;
+    height:23px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #828282;
+    text-align: center;
+    border-right: 1px solid #ccc;
+}
+.rfe-content .inner-tabbar>div>span{
+    display: inline-block;
+    border-bottom: 1px solid #3C3CD8;
+    border-bottom: none;
+}
+.rfe-content .inner-tabbar>span:nth-child(4){
+    border: none;
+}
+.rfe-content .kt{
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    display: none;
+}
+.rfe-content .kt>div{
+    width: 285px;
+    height: 340px;
+    background-color: white;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #000000;
+    float: left;
+}
+.rfe-content .kt>div>img{
+    width: 260px;
+    height: 260px;
+}
+.rfe-content .kt>div>h5{
+    font-size: 14px;
+    line-height: 32px;
+}
+.rfe-content .kt>div>p{
+    color: #333333;
+    font-size: 12px;
+    line-height: 32px;
+}
+.think-tank{
+    text-align: center;
+    width:302px;
+    height:66px;
+    line-height: 66px;
+    border-radius: 33px;
+    background-color: #e5a83f;
+    color:  #ffffff;
+    font-size: 28px;
+    margin:-262px auto 0px;
+}

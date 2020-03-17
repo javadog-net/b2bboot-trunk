@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.sys.mapper.GmCityMapper">
+    
+	<sql id="gmCityColumns">
+		a.id AS "id",
+		a.city_id AS "cityId",
+		a.gm_id AS "gmId"
+	</sql>
+	
+	<sql id="gmCityJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="GmCity" >
+		SELECT 
+			<include refid="gmCityColumns"/>
+		FROM sys_gm_city a
+		<include refid="gmCityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GmCity" >
+		SELECT 
+			<include refid="gmCityColumns"/>
+		FROM sys_gm_city a
+		<include refid="gmCityJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="gmId != null and gmId != ''">
+				AND a.gm_id = #{gmId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GmCity" >
+		SELECT 
+			<include refid="gmCityColumns"/>
+		FROM sys_gm_city a
+		<include refid="gmCityJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_gm_city(
+			city_id,
+			gm_id
+		) VALUES (
+			#{cityId},
+			#{gmId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_gm_city SET 	
+			city_id = #{cityId},
+			gm_id = #{gmId}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sys_gm_city
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sys_gm_city SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GmCity" statementType="STATEMENT">
+		select * FROM sys_gm_city  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="findByCityId"  resultType="GmCity">
+		select
+		*
+		from sys_gm_city
+		where city_id = #{cityId}
+	</select>
+	
+</mapper>

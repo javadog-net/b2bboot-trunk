@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.DirectGoodsFavoritesMapper">
+    
+	<sql id="directGoodsFavoritesColumns">
+		a.id AS "id",
+		a.dealer_account_id AS "dealerAccountId",
+		a.store_goods_id AS "storeGoodsId",
+		a.fav_date AS "favDate",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.goods_main_pic AS "goodsMainPic",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.log_price AS "logPrice",
+		a.log_msg AS "logMsg",
+		a.remarks AS "remarks",
+		b.name as brandName
+	</sql>
+	
+	<sql id="directGoodsFavoritesJoins">
+		left join goods g on a.goods_code = g.code left join brand b on g.brand = b.id
+	</sql>
+	
+    
+	<select id="get" resultType="DirectGoodsFavorites" >
+		SELECT 
+			<include refid="directGoodsFavoritesColumns"/>
+		FROM direct_goods_favorites a
+		<include refid="directGoodsFavoritesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DirectGoodsFavorites" >
+		SELECT 
+			<include refid="directGoodsFavoritesColumns"/>
+		FROM direct_goods_favorites a
+		<include refid="directGoodsFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DirectGoodsFavorites" >
+		SELECT 
+			<include refid="directGoodsFavoritesColumns"/>
+		FROM direct_goods_favorites a
+		<include refid="directGoodsFavoritesJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO direct_goods_favorites(
+			id,
+			dealer_account_id,
+			store_goods_id,
+			fav_date,
+			store_id,
+			store_name,
+			goods_code,
+			goods_name,
+			goods_main_pic,
+			category_pid,
+			category_id,
+			log_price,
+			log_msg,
+			remarks
+		) VALUES (
+			#{id},
+			#{dealerAccountId},
+			#{storeGoodsId},
+			#{favDate},
+			#{storeId},
+			#{storeName},
+			#{goodsCode},
+			#{goodsName},
+			#{goodsMainPic},
+			#{categoryPid},
+			#{categoryId},
+			#{logPrice},
+			#{logMsg},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE direct_goods_favorites SET 	
+			dealer_account_id = #{dealerAccountId},
+			store_goods_id = #{storeGoodsId},
+			fav_date = #{favDate},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			goods_main_pic = #{goodsMainPic},
+			category_pid = #{categoryPid},
+			category_id = #{categoryId},
+			log_price = #{logPrice},
+			log_msg = #{logMsg},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM direct_goods_favorites
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE direct_goods_favorites SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DirectGoodsFavorites" statementType="STATEMENT">
+		select * FROM direct_goods_favorites  where ${propertyName} = '${value}'
+	</select>
+
+
+
+	<select id="checkAgain" parameterType="String" resultType="DirectGoodsFavorites">
+		select
+		<include refid="directGoodsFavoritesColumns"/>
+		FROM direct_goods_favorites a <include refid="directGoodsFavoritesJoins"/>
+		where a.store_goods_id = #{arg0} and a.dealer_account_id = #{arg1}
+	</select>
+
+	<delete id="cancel" parameterType="String">
+		delete from direct_goods_favorites where 
+		 store_goods_id = #{arg0} and dealer_account_id = #{arg1}
+	</delete>
+
+	<delete id="deleteById">
+		delete from direct_goods_favorites where id = #{arg0}
+	</delete>
+	
+	
+	
+</mapper>

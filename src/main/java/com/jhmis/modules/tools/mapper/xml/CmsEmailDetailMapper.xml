@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.tools.mapper.CmsEmailDetailMapper">
+    
+	<sql id="cmsEmailDetailColumns">
+		a.id AS "id",
+		a.mailinfoid AS "mailinfoid",
+		a.email AS "email",
+		a.sendtime AS "sendtime",
+		a.sender AS "sender",
+		a.result AS "result"
+	</sql>
+	
+	<sql id="cmsEmailDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsEmailDetail" >
+		SELECT 
+			<include refid="cmsEmailDetailColumns"/>
+		FROM cms_email_detail a
+		<include refid="cmsEmailDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsEmailDetail" >
+		SELECT 
+			<include refid="cmsEmailDetailColumns"/>
+		FROM cms_email_detail a
+		<include refid="cmsEmailDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsEmailDetail" >
+		SELECT 
+			<include refid="cmsEmailDetailColumns"/>
+		FROM cms_email_detail a
+		<include refid="cmsEmailDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_email_detail(
+			id,
+			mailinfoid,
+			email,
+			sendtime,
+			sender,
+			result
+		) VALUES (
+			#{id},
+			#{mailinfoid},
+			#{email},
+			#{sendtime},
+			#{sender},
+			#{result}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_email_detail SET 	
+			mailinfoid = #{mailinfoid},
+			email = #{email},
+			sendtime = #{sendtime},
+			sender = #{sender},
+			result = #{result}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_email_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_email_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsEmailDetail" statementType="STATEMENT">
+		select * FROM cms_email_detail  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

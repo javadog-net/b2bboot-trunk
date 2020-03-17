@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopMsgDispatcherMapper">
+    
+	<sql id="oldShopMsgDispatcherColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.dispaflag AS "dispaflag",
+		a.dispatime AS "dispatime",
+		a.dispauser AS "dispauser",
+		a.custcode AS "custcode",
+		a.dispadesc AS "dispadesc",
+		a.addtime AS "addtime",
+		a.source AS "source",
+		a.isclosed AS "isclosed",
+		a.closer AS "closer",
+		a.closetime AS "closetime",
+		a.closereason AS "closereason",
+		a.dispatype AS "dispatype"
+	</sql>
+	
+	<sql id="oldShopMsgDispatcherJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopMsgDispatcher" >
+		SELECT 
+			<include refid="oldShopMsgDispatcherColumns"/>
+		FROM old_shop_msg_dispatcher a
+		<include refid="oldShopMsgDispatcherJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopMsgDispatcher" >
+		SELECT 
+			<include refid="oldShopMsgDispatcherColumns"/>
+		FROM old_shop_msg_dispatcher a
+		<include refid="oldShopMsgDispatcherJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopMsgDispatcher" >
+		SELECT 
+			<include refid="oldShopMsgDispatcherColumns"/>
+		FROM old_shop_msg_dispatcher a
+		<include refid="oldShopMsgDispatcherJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_msg_dispatcher(
+			id,
+			msgid,
+			dispaflag,
+			dispatime,
+			dispauser,
+			custcode,
+			dispadesc,
+			addtime,
+			source,
+			isclosed,
+			closer,
+			closetime,
+			closereason,
+			dispatype
+		) VALUES (
+			#{id},
+			#{msgid},
+			#{dispaflag},
+			#{dispatime},
+			#{dispauser},
+			#{custcode},
+			#{dispadesc},
+			#{addtime},
+			#{source},
+			#{isclosed},
+			#{closer},
+			#{closetime},
+			#{closereason},
+			#{dispatype}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_msg_dispatcher SET 	
+			msgid = #{msgid},
+			dispaflag = #{dispaflag},
+			dispatime = #{dispatime},
+			dispauser = #{dispauser},
+			custcode = #{custcode},
+			dispadesc = #{dispadesc},
+			addtime = #{addtime},
+			source = #{source},
+			isclosed = #{isclosed},
+			closer = #{closer},
+			closetime = #{closetime},
+			closereason = #{closereason},
+			dispatype = #{dispatype}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_msg_dispatcher
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_msg_dispatcher SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopMsgDispatcher" statementType="STATEMENT">
+		select * FROM old_shop_msg_dispatcher  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.dealer.DealerMapper">
+
+	<sql id="dealerColumns">
+		a.id AS "id",
+		a.company_code AS "companyCode",
+		a.company_name AS "companyName",
+		a.company_num AS "companyNum",
+		a.contacts AS "contacts",
+		a.tel AS "tel",
+		a.mobile AS "mobile",
+		a.email AS "email",
+		a.zip_code AS "zipCode",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.district_id AS "districtId",
+		a.area_info AS "areaInfo",
+		a.detail_address AS "detailAddress",
+		a.channel_name AS "channelName",
+		a.tax_code AS "taxCode",
+		a.kjt_account AS "kjtAccount",
+		a.electronic_url AS "electronicUrl",
+		a.id_card_url AS "idCardUrl",
+		a.legal_person_name AS "legalPersonName",
+		a.legal_person_id_card AS "legalPersonIdCard",
+		a.company_tel AS "companyTel",
+		a.electronic_license AS "electronicLicense",
+		a.logo_url AS "logoUrl",
+		a.gm_id AS "gmId",
+		a.is_closed AS "isClosed",
+		a.is_store AS "isStore",
+		a.is_self AS "isSelf",
+		a.undertake_area AS "undertakeArea",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.audit_state AS "auditState",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_desc AS "auditDesc",
+		a.under_product_istotal AS "underProductIstotal",
+		a.instruct AS "instruct",
+		a.gm_name AS "gmName",
+		a.score AS "score",
+		a.allow_pop AS "allowPop",
+		a.allow_dispatch AS "allowDispatch",
+		a.allow_demand AS "allowDemand",
+		a.dealer_type AS "dealerType",
+		a.under_product AS "underProduct",
+		a.customer_category AS "customerCategory",
+		a.industry_class AS "industryClass",
+		a.mdm_province AS "mdmProvince", 
+		a.mdm_city AS "mdmCity",
+		a.mdm_area AS "mdmArea",
+		a.wgname AS "wgname",
+		a.wgcode AS "wgcode"
+	</sql>
+
+	<sql id="dealerJoins">
+	</sql>
+
+		<select id="selectFranchiserByOrgid" resultType="Dealer">
+		  select 
+		<include refid="dealerColumns" />
+				FROM dealer a where gm_id=#{orgid}
+		</select>
+
+	<select id="get" resultType="Dealer">
+		SELECT
+		<include refid="dealerColumns" />
+		FROM dealer a
+		<include refid="dealerJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Dealer">
+		SELECT
+		<include refid="dealerColumns" />
+		FROM dealer a
+		<include refid="dealerJoins" />
+		<where>
+
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="companyCode != null and companyCode != ''">
+				AND a.company_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyCode},'%')</if>
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="companyNum != null and companyNum != ''">
+				AND a.company_num = #{companyNum}
+			</if>
+			<if test="contacts != null and contacts != ''">
+				AND a.contacts LIKE
+				<if test="dbName == 'oracle'">'%'||#{contacts}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contacts}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contacts},'%')</if>
+			</if>
+			<if test="tel != null and tel != ''">
+				AND a.tel LIKE
+				<if test="dbName == 'oracle'">'%'||#{tel}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{tel}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{tel},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{email},'%')</if>
+			</if>
+			<if test="zipCode != null and zipCode != ''">
+				AND a.zip_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{zipCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{zipCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{zipCode},'%')</if>
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="areaInfo != null and areaInfo != ''">
+				AND a.area_info = #{areaInfo}
+			</if>
+			<if test="detailAddress != null and detailAddress != ''">
+				AND a.detail_address = #{detailAddress}
+			</if>
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name = #{channelName}
+			</if>
+			<if test="taxCode != null and taxCode != ''">
+				AND a.tax_code = #{taxCode}
+			</if>
+			<if test="kjtAccount != null and kjtAccount != ''">
+				AND a.kjt_account = #{kjtAccount}
+			</if>
+			<if test="electronicUrl != null and electronicUrl != ''">
+				AND a.electronic_url = #{electronicUrl}
+			</if>
+			<if test="idCardUrl != null and idCardUrl != ''">
+				AND a.id_card_url = #{idCardUrl}
+			</if>
+			<if test="legalPersonName != null and legalPersonName != ''">
+				AND a.legal_person_name = #{legalPersonName}
+			</if>
+			<if test="legalPersonIdCard != null and legalPersonIdCard != ''">
+				AND a.legal_person_id_card = #{legalPersonIdCard}
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND a.company_tel = #{companyTel}
+			</if>
+			<if test="electronicLicense != null and electronicLicense != ''">
+				AND a.electronic_license = #{electronicLicense}
+			</if>
+			<if test="logoUrl != null and logoUrl != ''">
+				AND a.logo_url = #{logoUrl}
+			</if>
+			<if test="gmId != null and gmId != ''">
+				AND a.gm_id = #{gmId}
+			</if>
+			<if test="isClosed != null and isClosed != ''">
+				AND a.is_closed = #{isClosed}
+			</if>
+			<if test="isStore != null and isStore != ''">
+				AND a.is_store = #{isStore}
+			</if>
+			<if test="isSelf != null and isSelf != ''">
+				AND a.is_self = #{isSelf}
+			</if>
+			<if test="undertakeArea != null and undertakeArea != ''">
+				AND a.undertake_area LIKE
+				<if test="dbName == 'oracle'">'%'||#{undertakeArea}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{undertakeArea}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{undertakeArea},'%')</if>
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+			<if test="auditTime != null and auditTime != ''">
+				AND a.audit_time = #{auditTime}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="auditDesc != null and auditDesc != ''">
+				AND a.audit_desc = #{auditDesc}
+			</if>
+			<if test="underProductIstotal != null and underProductIstotal != ''">
+				AND a.under_product_istotal = #{underProductIstotal}
+			</if>
+			<if test="instruct != null and instruct != ''">
+				AND a.instruct = #{instruct}
+			</if>
+			<if test="gmName != null and gmName != ''">
+				AND a.gm_name = #{gmName}
+			</if>
+			<if test="score != null and score != ''">
+				AND a.score = #{score}
+			</if>
+			<if test="allowPop != null and allowPop != ''">
+				AND a.allow_pop = #{allowPop}
+			</if>
+			<if test="allowDispatch != null and allowDispatch != ''">
+				AND a.allow_dispatch = #{allowDispatch}
+			</if>
+			<if test="allowDemand != null and allowDemand != ''">
+				AND a.allow_demand = #{allowDemand}
+			</if>
+			<if test="dealerType != null and dealerType != ''">
+				AND a.dealer_type = #{dealerType}
+			</if>
+			<if test="underProduct != null and underProduct != ''">
+				<foreach item="item" index="index" collection="underProduct.split(';')"  open="" separator="" close="">
+					AND a.under_product LIKE
+					concat('%','${item}','%')
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListAllOrArea" resultType="Dealer">
+		select * from dealer a
+		<where>
+
+			${dataScope}
+
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{email},'%')</if>
+			</if>
+			<if test="areaInfo != null and areaInfo != ''">
+				AND a.area_info LIKE
+				<if test="dbName == 'oracle'">'%'||#{areaInfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{areaInfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{areaInfo},'%')</if>
+			</if>
+
+
+		</where>
+
+
+	</select>
+
+	<select id="findAllList" resultType="Dealer">
+		SELECT
+		<include refid="dealerColumns" />
+		FROM dealer a
+		<include refid="dealerJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO dealer(
+		id,
+		company_code,
+		company_name,
+		company_num,
+		contacts,
+		tel,
+		mobile,
+		email,
+		zip_code,
+		province_id,
+		city_id,
+		district_id,
+		area_info,
+		detail_address,
+		channel_name,
+		tax_code,
+		kjt_account,
+		electronic_url,
+		id_card_url,
+		legal_person_name,
+		legal_person_id_card,
+		company_tel,
+		electronic_license,
+		logo_url,
+		gm_id,
+		is_closed,
+		is_store,
+		is_self,
+		undertake_area,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		audit_state,
+		audit_time,
+		auditor,
+		audit_desc,
+		under_product_istotal,
+		instruct,
+		gm_name,
+		score,
+		allow_pop,
+		allow_dispatch,
+		allow_demand,
+		dealer_type,
+		under_product,
+		customer_category,
+		industry_class,
+		mdm_province,
+		mdm_city,
+		mdm_area,
+		wgname,
+		wgcode
+		) VALUES (
+		#{id},
+		#{companyCode},
+		#{companyName},
+		#{companyNum},
+		#{contacts},
+		#{tel},
+		#{mobile},
+		#{email},
+		#{zipCode},
+		#{provinceId},
+		#{cityId},
+		#{districtId},
+		#{areaInfo},
+		#{detailAddress},
+		#{channelName},
+		#{taxCode},
+		#{kjtAccount},
+		#{electronicUrl},
+		#{idCardUrl},
+		#{legalPersonName},
+		#{legalPersonIdCard},
+		#{companyTel},
+		#{electronicLicense},
+		#{logoUrl},
+		#{gmId},
+		#{isClosed},
+		#{isStore},
+		#{isSelf},
+		#{undertakeArea},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{auditState},
+		#{auditTime},
+		#{auditor},
+		#{auditDesc},
+		#{underProductIstotal},
+		#{instruct},
+		#{gmName},
+		#{score},
+		#{allowPop},
+		#{allowDispatch},
+		#{allowDemand},
+		#{dealerType},
+		#{underProduct},
+		#{customerCategory},
+		#{industryClass},
+		#{mdmProvince},
+		#{mdmCity},
+		#{mdmArea},
+		#{wgname},
+		#{wgcode}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE dealer SET
+		company_code = #{companyCode},
+		company_name = #{companyName},
+		company_num = #{companyNum},
+		contacts = #{contacts},
+		tel = #{tel},
+		mobile = #{mobile},
+		email = #{email},
+		zip_code = #{zipCode},
+		province_id = #{provinceId},
+		city_id = #{cityId},
+		district_id = #{districtId},
+		area_info = #{areaInfo},
+		detail_address = #{detailAddress},
+		channel_name = #{channelName},
+		tax_code = #{taxCode},
+		kjt_account = #{kjtAccount},
+		electronic_url = #{electronicUrl},
+		id_card_url = #{idCardUrl},
+		legal_person_name = #{legalPersonName},
+		legal_person_id_card = #{legalPersonIdCard},
+		company_tel = #{companyTel},
+		electronic_license = #{electronicLicense},
+		logo_url = #{logoUrl},
+		gm_id = #{gmId},
+		is_closed = #{isClosed},
+		is_store = #{isStore},
+		is_self = #{isSelf},
+		undertake_area = #{undertakeArea},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks},
+		audit_state = #{auditState},
+		audit_time = #{auditTime},
+		auditor = #{auditor},
+		audit_desc = #{auditDesc},
+		under_product_istotal = #{underProductIstotal},
+		instruct = #{instruct},
+		gm_name = #{gmName},
+		score = #{score},
+		allow_pop = #{allowPop},
+		allow_dispatch = #{allowDispatch},
+		allow_demand = #{allowDemand},
+		dealer_type = #{dealerType},
+		under_product = #{underProduct},
+		customer_category = #{customerCategory},
+		industry_class = #{industryClass},
+		mdm_province = #{mdmProvince},
+		mdm_city = #{mdmCity},
+		mdm_area = #{mdmArea},
+		wgname = #{wgname},
+		wgcode = #{wgcode}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM dealer
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE dealer SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Dealer"
+		statementType="STATEMENT">
+		select * FROM dealer where ${propertyName} = '${value}'
+	</select>
+
+	<update id="updateAuditState" parameterType="Dealer">
+		update dealer set
+		audit_state = #{auditState},
+		audit_desc = #{auditDesc},
+		auditor = #{auditor},
+		audit_time = #{auditTime}
+		where id= #{id}
+	</update>
+
+	<!--删除子账号 -->
+	<update id="deleteAccount">
+		DELETE FROM dealer_account
+		WHERE dealer_id = #{dealerId}
+	</update>
+	<update id="logicDeleteAccount">
+		UPDATE dealer_account SET del_flag = '1' WHERE
+		dealer_id = #{id}
+	</update>
+	<select id="findUndertake" resultType="Dealer">
+		select *from dealer where audit_state=#{state} and undertake_area like
+		<if test="dbName == 'mysql'">concat('%',#{cityName},'%')</if>
+		and under_product like
+		<if test="dbName == 'mysql'">concat('%',#{proGroup},'%')</if>
+	</select>
+	
+	<select id="findCompanyCode" resultType="java.lang.String">
+		select company_code from dealer
+	</select>
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.CmsPrizeMapper">
+    
+	<sql id="cmsPrizeColumns">
+		a.id AS "id",
+		a.actv_id AS "actvId",
+		a.meeting_id AS "meetingId",
+		a.prize_type AS "prizeType",
+		a.prize_name AS "prizeName",
+		a.prize_num AS "prizeNum",
+		a.prize_tab AS "prizeTab",
+		a.add_time AS "addTime"
+	</sql>
+	
+	<sql id="cmsPrizeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsPrize" >
+		SELECT 
+			<include refid="cmsPrizeColumns"/>
+		FROM cms_prize a
+		<include refid="cmsPrizeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsPrize" >
+		SELECT 
+			<include refid="cmsPrizeColumns"/>
+		FROM cms_prize a
+		<include refid="cmsPrizeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="actvId != null and actvId != ''">
+				AND a.actv_id = #{actvId}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+			<if test="prizeName != null and prizeName != ''">
+				AND a.prize_name = #{prizeName}
+			</if>
+			<if test="prizeNum != null and prizeNum != ''">
+				AND a.prize_num = #{prizeNum}
+			</if>
+			<if test="prizeTab != null and prizeTab != ''">
+				AND a.prize_tab = #{prizeTab}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	 order by a.add_time asc
+	</select>
+	
+	<select id="findAllList" resultType="CmsPrize" >
+		SELECT 
+			<include refid="cmsPrizeColumns"/>
+		FROM cms_prize a
+		<include refid="cmsPrizeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_prize(
+			id,
+			actv_id,
+			meeting_id,
+			prize_type,
+			prize_name,
+			prize_num,
+			prize_tab,
+			add_time
+		) VALUES (
+			#{id},
+			#{actvId},
+			#{meetingId},
+			#{prizeType},
+			#{prizeName},
+			#{prizeNum},
+			#{prizeTab},
+			#{addTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_prize SET 	
+			actv_id = #{actvId},
+			meeting_id = #{meetingId},
+			prize_type=#{prizeType},
+			prize_name = #{prizeName},
+			prize_num = #{prizeNum},
+			prize_tab = #{prizeTab},
+			add_time = #{addTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_prize
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_prize SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsPrize" statementType="STATEMENT">
+		select * FROM cms_prize  where ${propertyName} = '${value}'
+	</select>
+	
+	<update id="updatePrizeStatus">
+	UPDATE cms_prize SET 
+			prize_tab = #{tab}
+		WHERE id = #{prizeId}
+	</update>
+	
+</mapper>

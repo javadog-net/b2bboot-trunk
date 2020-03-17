@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.OrdersMapper">
+
+	<sql id="ordersColumns">
+		a.id AS "id",
+		a.order_sn AS "orderSn",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.dealer_id AS "dealerId",
+		a.kjt_account AS "kjtAccount",
+		a.pay_sn AS "paySn",
+		a.purchaser_id AS "purchaserId",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.purchaser_phone AS "purchaserPhone",
+		a.create_date AS "createDate",
+		a.payment_code AS "paymentCode",
+		a.payment_date AS "paymentDate",
+		a.goods_amount AS "goodsAmount",
+		a.order_amount AS "orderAmount",
+		a.evaluation_state AS "evaluationState",
+		a.evaluation_again_state AS "evaluationAgainState",
+		a.order_state AS "orderState",
+		a.cancel_time AS "cancelTime",
+		a.canceler AS "canceler",
+		a.refund_state AS "refundState",
+		a.refund_amount AS "refundAmount",
+		a.del_flag AS "delFlag",
+		a.order_from AS "orderFrom",
+		a.api_pay_date AS "apiPayDate",
+		a.api_pay_state AS "apiPayState",
+		a.royalty_date AS "royaltyDate",
+		a.royalty_state AS "royaltyState",
+		a.trade_no AS "tradeNo",
+		a.address_info AS "addressInfo",
+		a.shipping_info AS "shippingInfo",
+		a.send_out_time AS "sendOutTime",
+		a.send_outer AS "sendOuter",
+		a.expresse_name AS "expresseName",
+		a.invoice_info AS "invoiceInfo",
+		a.is_apply_invoice AS "isApplyInvoice",
+		a.is_invoice_finished AS "isInvoiceFinished",
+		a.order_lock AS "orderLock",
+		a.delivery_time AS "deliveryTime",
+		a.dealer_name AS "dealerName",
+		a.purchaser_name AS "purchaserName",
+		a.purchaser_login_name AS "purchaserLoginName",
+		a.kjt_fee AS "kjtFee",
+		a.invoice_amount AS "invoiceAmount"
+	</sql>
+	<sql id="ordersJoins">
+
+	</sql>
+
+
+	<select id="get" resultType="Orders" >
+		SELECT
+			<include refid="ordersColumns"/>
+		FROM orders a
+		<include refid="ordersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Orders" >
+		SELECT
+			<include refid="ordersColumns"/>
+		FROM orders a
+		<include refid="ordersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn = #{orderSn}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE
+					<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id = #{dealerId}
+			</if>
+			<if test="paySn != null and paySn != ''">
+				AND a.pay_sn = #{paySn}
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="paymentCode != null and paymentCode != ''">
+				AND a.payment_code = #{paymentCode}
+			</if>
+			<if test="evaluationState != null and evaluationState != ''">
+				AND a.evaluation_state = #{evaluationState}
+			</if>
+			<if test="evaluationAgainState != null and evaluationAgainState != ''">
+				AND a.evaluation_again_state = #{evaluationAgainState}
+			</if>
+			<if test="orderState != null">
+				AND a.order_state = #{orderState}
+			</if>
+			<if test="refundState != null and refundState != ''">
+				AND a.refund_state = #{refundState}
+			</if>
+			<if test="orderFrom != null and orderFrom != ''">
+				AND a.order_from = #{orderFrom}
+			</if>
+			<if test="tradeNo != null and tradeNo != ''">
+				AND a.trade_no = #{tradeNo}
+			</if>
+			<if test="shippingInfo != null and shippingInfo != ''">
+				AND a.shipping_info LIKE
+					<if test="dbName == 'oracle'">'%'||#{shippingInfo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{shippingInfo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{shippingInfo},'%')</if>
+			</if>
+			<if test="invoiceInfo != null and invoiceInfo != ''">
+				AND a.invoice_info = #{invoiceInfo}
+			</if>
+			<if test="isInvoiceFinished != null and isInvoiceFinished != ''">
+				AND a.is_invoice_finished = #{isInvoiceFinished}
+			</if>
+			<if test="orderLock != null and orderLock != ''">
+				AND a.order_lock = #{orderLock}
+			</if>
+			<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+				and a.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Orders" >
+		SELECT
+			<include refid="ordersColumns"/>
+		FROM orders a
+		<include refid="ordersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO orders(
+			id,
+			order_sn,
+			store_id,
+			store_name,
+			dealer_id,
+			kjt_account,
+			pay_sn,
+			purchaser_id,
+			purchaser_account_id,
+			purchaser_phone,
+			create_date,
+			payment_code,
+			payment_date,
+			goods_amount,
+			order_amount,
+			evaluation_state,
+			evaluation_again_state,
+			order_state,
+			refund_state,
+			refund_amount,
+			del_flag,
+			order_from,
+			api_pay_date,
+			trade_no,
+			address_info,
+			shipping_info,
+			send_out_time,
+			send_outer,
+			expresse_name,
+			invoice_info,
+			is_apply_invoice,
+			is_invoice_finished,
+			order_lock,
+			delivery_time,
+			dealer_name,
+			purchaser_name,
+			purchaser_login_name
+		) VALUES (
+			#{id},
+			#{orderSn},
+			#{storeId},
+			#{storeName},
+			#{dealerId},
+			#{kjtAccount},
+			#{paySn},
+			#{purchaserId},
+			#{purchaserAccountId},
+			#{purchaserPhone},
+			#{createDate},
+			#{paymentCode},
+			#{paymentDate},
+			#{goodsAmount},
+			#{orderAmount},
+			#{evaluationState},
+			#{evaluationAgainState},
+			#{orderState},
+			#{refundState},
+			#{refundAmount},
+			#{delFlag},
+			#{orderFrom},
+			#{apiPayDate},
+			#{tradeNo},
+			#{addressInfo},
+			#{shippingInfo},
+			#{sendOutTime},
+			#{sendOuter},
+			#{expresseName},
+			#{invoiceInfo},
+			#{isApplyInvoice},
+			#{isInvoiceFinished},
+			#{orderLock},
+			#{deliveryTime},
+			#{dealerName},
+			#{purchaserName},
+			#{purchaserLoginName}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE orders SET
+			order_sn = #{orderSn},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			dealer_id = #{dealerId},
+			kjt_account = #{kjtAccount},
+			pay_sn = #{paySn},
+			purchaser_id = #{purchaserId},
+			purchaser_account_id = #{purchaserAccountId},
+			purchaser_phone = #{purchaserPhone},
+			payment_code = #{paymentCode},
+			payment_date = #{paymentDate},
+			goods_amount = #{goodsAmount},
+			order_amount = #{orderAmount},
+			evaluation_state = #{evaluationState},
+			evaluation_again_state = #{evaluationAgainState},
+			order_state = #{orderState},
+			refund_state = #{refundState},
+			refund_amount = #{refundAmount},
+			order_from = #{orderFrom},
+			api_pay_date = #{apiPayDate},
+			trade_no = #{tradeNo},
+			address_info = #{addressInfo},
+			shipping_info = #{shippingInfo},
+			send_out_time = #{sendOutTime},
+			send_outer = #{sendOuter},
+			expresse_name = #{expresseName},
+			invoice_info = #{invoiceInfo},
+			is_apply_invoice = #{isApplyInvoice},
+			is_invoice_finished = #{isInvoiceFinished},
+			order_lock = #{orderLock},
+			delivery_time = #{deliveryTime},
+			dealer_name = #{dealerName},
+			purchaser_name = #{purchaserName},
+			purchaser_login_name = #{purchaserLoginName}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM orders
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE orders SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Orders" statementType="STATEMENT">
+		select * FROM orders  where ${propertyName} = '${value}'
+	</select>
+
+	<update id="updateOrdersState">
+		UPDATE orders set
+			order_state=#{orderState}
+			<if test="cancelTime != null">
+				,cancel_time = #{cancelTime}
+			</if>
+			<if test="canceler != '' and canceler !=null">
+				,canceler = #{canceler}
+			</if>
+			<if test="apiPayDate != null">
+				,api_pay_date = #{apiPayDate}
+			</if>
+			<if test="apiPayState != '' and apiPayState != null">
+				,api_pay_state = #{apiPayState}
+			</if>
+			<if test="tradeNo != '' and tradeNo != null">
+				,trade_no = #{tradeNo}
+			</if>
+			<if test="confirmReceiver != '' and confirmReceiver != null">
+				,confirm_receiver = #{confirmReceiver}
+			</if>
+			<if test="deliveryTime != null">
+				,delivery_time = #{deliveryTime}
+			</if>
+			<if test="royaltyDate != null">
+				,royalty_date = #{royaltyDate}
+			</if>
+			<if test="royaltyState != '' and royaltyState != null">
+				,royalty_state = #{royaltyState}
+			</if>
+			<if test=" sendOutTime != null">
+				,send_out_time = #{sendOutTime}
+			</if>
+			<if test="sendOuter != '' and sendOuter != null">
+				,send_outer = #{sendOuter}
+			</if>
+		where id=#{id}
+	</update>
+	<select id="selectUnPaid" resultType="Orders">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		WHERE order_state='10'
+		AND a.create_date is NOT NULL
+		AND a.create_date <![CDATA[ <]]> DATE_ADD(NOW(), INTERVAL-#{interval} HOUR)
+	</select>
+	<select id="findConfirmOrders" resultType="Orders">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		WHERE order_state='30'
+		AND a.send_out_time is NOT NULL
+		AND a.send_out_time <![CDATA[ <]]> DATE_ADD(NOW(), INTERVAL-#{interval} HOUR)
+	</select>
+
+	<select id="findByOrderState" resultType="Integer">
+		SELECT count(id) FROM orders
+		WHERE  order_state=#{orderState}
+		<if test="purchaserId != null and purchaserId!=''">
+			and purchaser_id=#{purchaserId}
+		</if>
+		<if test="dealerId != null and dealerId!=''">
+			and dealer_id=#{dealerId}
+		</if>
+	</select>
+
+	<select id="countDistinctPaySn" resultType="int">
+		select count(DISTINCT o.pay_sn) from orders o
+		WHERE o.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="orderState != null">
+			AND o.order_state = #{orderState}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND o.order_sn = #{orderSn}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND o.store_id = #{storeId}
+		</if>
+		<if test="dealerId != null and dealerId != ''">
+			AND o.dealer_id = #{dealerId}
+		</if>
+		<if test="paySn != null and paySn != ''">
+			AND o.pay_sn = #{paySn}
+		</if>
+		<if test="purchaserId != null and purchaserId != ''">
+			AND o.purchaser_id = #{purchaserId}
+		</if>
+		<if test="purchaserAccountId != null and purchaserAccountId != ''">
+			AND o.purchaser_account_id = #{purchaserAccountId}
+		</if>
+		<if test="evaluationState != null and evaluationState != ''">
+			AND o.evaluation_state = #{evaluationState}
+		</if>
+		<if test="evaluationAgainState != null and evaluationAgainState != ''">
+			AND o.evaluation_again_state = #{evaluationAgainState}
+		</if>
+		<!--<if test="shippingInfo != null and shippingInfo != ''">-->
+		<!--AND a.shipping_info LIKE-->
+		<!--<if test="dbName == 'oracle'">'%'||#{shippingInfo}||'%'</if>-->
+		<!--<if test="dbName == 'mssql'">'%'+#{shippingInfo}+'%'</if>-->
+		<!--<if test="dbName == 'mysql'">concat('%',#{shippingInfo},'%')</if>-->
+		<!--</if>-->
+		<!--<if test="invoiceInfo != null and invoiceInfo != ''">-->
+		<!--AND a.invoice_info = #{invoiceInfo}-->
+		<!--</if>-->
+		<if test="isInvoiceFinished != null and isInvoiceFinished != ''">
+			AND o.is_invoice_finished = #{isInvoiceFinished}
+		</if>
+		<if test="orderLock != null and orderLock != ''">
+			AND o.order_lock = #{orderLock}
+		</if>
+		<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+			and o.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+		</if>
+	</select>
+
+	<resultMap id="ordersMaps" type="Orders">
+			<result column="id" property="id"></result>
+			<result column="order_sn" property="orderSn"></result>
+			<result column="store_id" property="storeId"></result>
+			<result column="store_name" property="storeName"></result>
+			<result column="pay_sn" property="paySn"></result>
+			<result column="dealer_id" property="dealerId"></result>
+			<result column="kjt_account" property="kjtAccount"></result>
+			<result column="purchaser_id" property="purchaserId"></result>
+			<result column="purchaser_account_id" property="purchaserAccountId"></result>
+			<result column="purchaser_phone" property="purchaserPhone"></result>
+			<result column="create_date" property="createDate"></result>
+			<result column="payment_date" property="paymentDate"></result>
+			<result column="goods_amount" property="goodsAmount"></result>
+			<result column="order_amount" property="orderAmount"></result>
+			<result column="evaluation_state" property="evaluationState"></result>
+			<result column="evaluation_again_state" property="evaluationAgainState"></result>
+			<result column="order_state" property="orderState"></result>
+			<result column="cancel_time" property="cancelTime"></result>
+			<result column="canceler" property="canceler"></result>
+			<result column="del_flag" property="delFlag"></result>
+			<result column="oapi_pay_state" property="apiPayState"></result>
+			<result column="trade_no" property="tradeNo"></result>
+			<result column="address_info" property="addressInfo"></result>
+			<result column="shipping_info" property="shippingInfo"></result>
+			<result column="send_out_time" property="sendOutTime"></result>
+			<result column="send_outer" property="sendOuter"></result>
+			<result column="shipping_info" property="shippingInfo"></result>
+			<result column="expresse_name" property="expresseName"></result>
+			<result column="invoice_info" property="shippingInfo"></result>
+			<result column="shipping_info" property="isApplyInvoice"></result>
+			<result column="is_invoice_finished" property="isInvoiceFinished"></result>
+			<result column="order_lock" property="orderLock"></result>
+			<result column="delivery_time" property="deliveryTime"></result>
+			<result column="dealer_name" property="dealerName"></result>
+			<result column="purchaser_name" property="purchaserName"></result>
+			<result column="purchaser_login_name" property="purchaserLoginName"></result>
+			<result column="kjt_fee" property="kjtFee"></result>
+			<result column="invoice_amount" property="invoiceAmount"></result>
+			<collection property="ordersGoodsList" javaType="ArrayList" ofType="com.jhmis.modules.shop.entity.OrderGoods">
+				<result column="gid" property="id"></result>
+				<result column="order_id" property="orderId"></result>
+				<result column="goods_code" property="goodsCode"></result>
+				<result column="goods_name" property="goodsName"></result>
+				<result column="goods_type" property="goodsType"></result>
+				<result column="price" property="price"></result>
+				<result column="num" property="num"></result>
+				<result column="main_pic_url" property="mainPicUrl"></result>
+				<result column="pay_price" property="payPrice"></result>
+				<result column="supply_price" property="supplyPrice"></result>
+				<result column="purchaser_id" property="purchaserId"></result>
+				<result column="category_id" property="categoryId"></result>
+				<result column="is_exchange" property="isExchange"></result>
+				<result column="create_date" property="createDate"></result>
+				<result column="store_goods_id" property="storeGoodsId"></result>
+				<result column="evaluate_status" property="evaluateStatus"></result>
+				<result column="del_flag" property="delFlag"></result>
+			</collection>
+	</resultMap>
+
+	<select id="getOrdersList" parameterType="com.jhmis.modules.shop.entity.Orders" resultMap="ordersMaps">
+		SELECT
+		o.id AS "id",
+		o.order_sn,
+		o.store_id ,
+		o.store_name ,
+		o.dealer_id ,
+		o.kjt_account ,
+		o.purchaser_id ,
+		o.purchaser_account_id ,
+		o.purchaser_phone,
+		o.create_date ,
+		o.payment_code,
+		o.payment_date,
+		o.goods_amount ,
+		o.order_amount,
+		o.evaluation_state ,
+		o.evaluation_again_state ,
+		o.order_state ,
+		o.cancel_time ,
+		o.canceler ,
+		o.refund_state ,
+		o.refund_amount ,
+		o.del_flag ,
+		o.order_from ,
+		o.api_pay_date ,
+		o.api_pay_state AS "oapi_pay_state" ,
+		o.royalty_date ,
+		o.royalty_state ,
+		o.trade_no,
+		o.address_info,
+		o.shipping_info ,
+		o.send_out_time ,
+		o.send_outer,
+		o.expresse_name ,
+		o.invoice_info ,
+		o.is_apply_invoice ,
+		o.is_invoice_finished ,
+		o.order_lock ,
+		o.delivery_time,
+		o.dealer_name ,
+		o.purchaser_name ,
+		o.purchaser_login_name ,
+		o.kjt_fee,
+		o.invoice_amount,
+		g.id as gid ,
+		g.order_id,
+		g.goods_code,
+		g.goods_name ,
+		g.goods_type ,
+		g.price ,
+		g.num ,
+		g.main_pic_url ,
+		g.pay_price,
+		g.supply_price ,
+		g.category_id,
+		g.is_exchange,
+		g.store_goods_id ,
+		g.evaluate_status
+
+		FROM orders o,order_goods g where  g.order_id=o.id
+		and o.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="orderState != null">
+			AND o.order_state = #{orderState}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND o.order_sn = #{orderSn}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND o.store_id = #{storeId}
+		</if>
+		<if test="dealerId != null and dealerId != ''">
+			AND o.dealer_id = #{dealerId}
+		</if>
+		<if test="paySn != null and paySn != ''">
+			AND o.pay_sn = #{paySn}
+		</if>
+		<if test="purchaserId != null and purchaserId != ''">
+			AND o.purchaser_id = #{purchaserId}
+		</if>
+		<if test="purchaserAccountId != null and purchaserAccountId != ''">
+			AND o.purchaser_account_id = #{purchaserAccountId}
+		</if>
+		<if test="evaluationState != null and evaluationState != ''">
+			AND o.evaluation_state = #{evaluationState}
+		</if>
+		<if test="evaluationAgainState != null and evaluationAgainState != ''">
+			AND o.evaluation_again_state = #{evaluationAgainState}
+		</if>
+		<!--<if test="shippingInfo != null and shippingInfo != ''">-->
+		<!--AND a.shipping_info LIKE-->
+		<!--<if test="dbName == 'oracle'">'%'||#{shippingInfo}||'%'</if>-->
+		<!--<if test="dbName == 'mssql'">'%'+#{shippingInfo}+'%'</if>-->
+		<!--<if test="dbName == 'mysql'">concat('%',#{shippingInfo},'%')</if>-->
+		<!--</if>-->
+		<!--<if test="invoiceInfo != null and invoiceInfo != ''">-->
+		<!--AND a.invoice_info = #{invoiceInfo}-->
+		<!--</if>-->
+		<if test="isInvoiceFinished != null and isInvoiceFinished != ''">
+			AND o.is_invoice_finished = #{isInvoiceFinished}
+		</if>
+		<if test="orderLock != null and orderLock != ''">
+			AND o.order_lock = #{orderLock}
+		</if>
+		<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+			and o.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findRoyaltyList" resultType="Orders" >
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		<include refid="ordersJoins"/>
+		<where>
+			a.del_flag = 0
+			AND a.order_state = 40
+			AND a.royalty_state !=1
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn = #{orderSn}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id = #{dealerId}
+			</if>
+			<if test="paySn != null and paySn != ''">
+				AND a.pay_sn = #{paySn}
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+				and a.create_date BETWEEN #{createDateStart} AND #{createDateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>

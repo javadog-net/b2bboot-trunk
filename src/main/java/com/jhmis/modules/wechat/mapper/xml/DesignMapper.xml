@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.DesignMapper">
+    
+	<sql id="designColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.phone AS "phone",
+		a.time AS "time",
+		a.source AS "source",
+		a.reply_person AS "replyPerson",
+		a.reply_time AS "replyTime",
+		a.result AS "result"
+	</sql>
+	
+	<sql id="designJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Design" >
+		SELECT 
+			<include refid="designColumns"/>
+		FROM design a
+		<include refid="designJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Design" >
+		SELECT 
+			<include refid="designColumns"/>
+		FROM design a
+		<include refid="designJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
+			</if>
+			<if test="time != null and time != ''">
+				AND a.time LIKE 
+					<if test="dbName == 'oracle'">'%'||#{time}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{time}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{time},'%')</if>
+			</if>
+			<if test="source != null and source != ''">
+				AND a.source LIKE 
+					<if test="dbName == 'oracle'">'%'||#{source}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{source}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{source},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Design" >
+		SELECT 
+			<include refid="designColumns"/>
+		FROM design a
+		<include refid="designJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO design(
+			id,
+			name,
+			phone,
+			time,
+			source,
+			reply_person,
+			reply_time,
+			result
+		) VALUES (
+			#{id},
+			#{name},
+			#{phone},
+			#{time},
+			#{source},
+			#{replyPerson},
+			#{replyTime},
+			#{result}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE design SET 	
+			name = #{name},
+			phone = #{phone},
+			time = #{time},
+			source = #{source},
+			reply_person = #{replyPerson},
+			reply_time = #{replyTime},
+			result = #{result}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM design
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE design SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Design" statementType="STATEMENT">
+		select * FROM design  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

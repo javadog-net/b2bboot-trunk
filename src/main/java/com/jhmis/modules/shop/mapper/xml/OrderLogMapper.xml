@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.OrderLogMapper">
+    
+	<sql id="orderLogColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.log_msg AS "logMsg",
+		a.log_time AS "logTime",
+		a.log_role AS "logRole",
+		a.log_user AS "logUser",
+		a.log_orderstate AS "logOrderstate"
+	</sql>
+	
+	<sql id="orderLogJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OrderLog" >
+		SELECT 
+			<include refid="orderLogColumns"/>
+		FROM order_log a
+		<include refid="orderLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderLog" >
+		SELECT 
+			<include refid="orderLogColumns"/>
+		FROM order_log a
+		<include refid="orderLogJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="logMsg != null and logMsg != ''">
+				AND a.log_msg = #{logMsg}
+			</if>
+			<if test="logTime != null and logTime != ''">
+				AND a.log_time = #{logTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderLog" >
+		SELECT 
+			<include refid="orderLogColumns"/>
+		FROM order_log a
+		<include refid="orderLogJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_log(
+			id,
+			order_id,
+			log_msg,
+			log_time,
+			log_role,
+			log_user,
+			log_orderstate
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{logMsg},
+			#{logTime},
+			#{logRole},
+			#{logUser},
+			#{logOrderstate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_log SET 	
+			order_id = #{orderId},
+			log_msg = #{logMsg},
+			log_time = #{logTime},
+			log_role = #{logRole},
+			log_user = #{logUser},
+			log_orderstate = #{logOrderstate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM order_log
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE order_log SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OrderLog" statementType="STATEMENT">
+		select * FROM order_log  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

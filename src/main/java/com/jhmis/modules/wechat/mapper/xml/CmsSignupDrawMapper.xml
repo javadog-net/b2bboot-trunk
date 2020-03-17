@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.CmsSignupDrawMapper">
+    
+	<sql id="cmsSignupDrawColumns">
+		a.id AS "id",
+		a.actv_id AS "actvId",
+		a.meeting_id AS "meetingId",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.user_phone AS "userPhone",
+		a.company_name AS "companyName",
+		a.remark AS "remark",
+		a.add_time AS "addTime",
+		a.avatar AS "avatar",
+		a.prize_id_tab AS "prizeIdTab"
+	</sql>
+	
+	<sql id="cmsSignupDrawJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsSignupDraw" >
+		SELECT 
+			<include refid="cmsSignupDrawColumns"/>
+		FROM cms_signup_draw a
+		<include refid="cmsSignupDrawJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsSignupDraw" >
+		SELECT 
+			<include refid="cmsSignupDrawColumns"/>
+		FROM cms_signup_draw a
+		<include refid="cmsSignupDrawJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="actvId != null and actvId != ''">
+				AND a.actv_id = #{actvId}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND a.user_phone = #{userPhone}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name like CONCAT("%",#{companyName},"%")
+				
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsSignupDraw" >
+		SELECT 
+			<include refid="cmsSignupDrawColumns"/>
+		FROM cms_signup_draw a
+		<include refid="cmsSignupDrawJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_signup_draw(
+			id,
+			actv_id,
+			meeting_id,
+			user_id,
+			user_name,
+			user_phone,
+			company_name,
+			remark,
+			add_time,
+			avatar,
+			prize_id_tab
+		) VALUES (
+			#{id},
+			#{actvId},
+			#{meetingId},
+			#{userId},
+			#{userName},
+			#{userPhone},
+			#{companyName},
+			#{remark},
+			#{addTime},
+			#{avatar},
+			#{prizeIdTab}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_signup_draw SET 	
+			actv_id = #{actvId},
+			meeting_id = #{meetingId},
+			user_id = #{userId},
+			user_name = #{userName},
+			user_phone = #{userPhone},
+			company_name = #{companyName},
+			remark = #{remark},
+			add_time = #{addTime},
+			prize_id_tab=#{prizeIdTab}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_signup_draw
+		WHERE id = #{id}
+		
+	</update>
+	
+	<delete id="deletebyuserid">
+	DELETE FROM cms_signup_draw
+		WHERE user_id = #{id}
+		</delete>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_signup_draw SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsSignupDraw" statementType="STATEMENT">
+		select * FROM cms_signup_draw  where ${propertyName} = '${value}'
+	</select>
+<!-- 	
+	<select id="findalllist" resultType="CmsSignupDraw">
+	select * from cms_signup_draw where 
+	</select> -->
+	
+	<select id="findReapte" resultType="CmsSignupDraw" >
+		select * FROM cms_signup_draw  where user_id = #{userid} and actv_id = #{actvid}
+	</select>
+</mapper>

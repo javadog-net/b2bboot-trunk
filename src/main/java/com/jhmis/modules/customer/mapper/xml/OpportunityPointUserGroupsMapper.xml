@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.OpportunityPointUserGroupsMapper">
+    
+	<sql id="opportunityPointUserGroupsColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.father_code AS "fatherCode",
+		a.type AS "type",
+		a.type_name AS "typeName"
+	</sql>
+	
+	<sql id="opportunityPointUserGroupsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OpportunityPointUserGroups" >
+		SELECT 
+			<include refid="opportunityPointUserGroupsColumns"/>
+		FROM opportunity_point_user_groups a
+		<include refid="opportunityPointUserGroupsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OpportunityPointUserGroups" >
+		SELECT 
+			<include refid="opportunityPointUserGroupsColumns"/>
+		FROM opportunity_point_user_groups a
+		<include refid="opportunityPointUserGroupsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="fatherCode != null and fatherCode != ''">
+				AND a.father_code = #{fatherCode}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="typeName != null and typeName != ''">
+				AND a.type_name = #{typeName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OpportunityPointUserGroups" >
+		SELECT 
+			<include refid="opportunityPointUserGroupsColumns"/>
+		FROM opportunity_point_user_groups a
+		<include refid="opportunityPointUserGroupsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO opportunity_point_user_groups(
+			id,
+			code,
+			name,
+			father_code,
+			type,
+			type_name
+		) VALUES (
+			#{id},
+			#{code},
+			#{name},
+			#{fatherCode},
+			#{type},
+			#{typeName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE opportunity_point_user_groups SET 	
+			code = #{code},
+			name = #{name},
+			father_code = #{fatherCode},
+			type = #{type},
+			type_name = #{typeName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM opportunity_point_user_groups
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE opportunity_point_user_groups SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OpportunityPointUserGroups" statementType="STATEMENT">
+		select * FROM opportunity_point_user_groups  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

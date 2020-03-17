@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.purchaser.PurchaserMenuMapper">
+
+    <resultMap id="purchaserMenuResult" type="PurchaserMenu">
+   		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="sort" column="sort" />
+		<result property="parentIds" column="parentIds" />
+		<result property="href" column="href" />
+		<result property="target" column="target" />
+		<result property="icon" column="icon" />
+		<result property="isShow" column="isShow" />
+		<result property="permission" column="permission" />
+		<result property="menuType" column="menuType" />
+		<association property="hasChildren" column="id" select="hasChildren" />
+    </resultMap>
+    
+	<sql id="purchaserMenuColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.href AS "href",
+		a.target AS "target",
+		a.icon AS "icon",
+		a.is_show AS "isShow",
+		a.permission AS "permission",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.menu_type AS "menuType"
+	</sql>
+	
+
+	
+
+	<sql id="purchaserMenuJoins">
+		
+	</sql>
+	
+
+    
+	<select id="get" resultType="PurchaserMenu">
+		SELECT 
+			<include refid="purchaserMenuColumns"/>
+		FROM purchaser_menu a
+		<include refid="purchaserMenuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserMenu">
+		SELECT 
+			<include refid="purchaserMenuColumns"/>
+		FROM purchaser_menu a
+		<include refid="purchaserMenuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				AND a.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="menuType != null and menuType != ''">
+				AND a.menu_type = #{menuType}
+			</if>
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserMenu">
+		SELECT 
+			<include refid="purchaserMenuColumns"/>
+		FROM purchaser_menu a
+		<include refid="purchaserMenuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+
+    <select id="findByAccountId"  resultMap="purchaserMenuResult">
+        SELECT DISTINCT
+        <include refid="purchaserMenuColumns"/>
+        FROM purchaser_menu a
+        LEFT JOIN purchaser_menu p ON p.id = a.parent_id
+        JOIN purchaser_role_menu rm ON rm.menu_id = a.id
+        JOIN purchaser_role r ON r.id = rm.role_id AND r.useable='1'
+        JOIN purchaser_account_role ur ON ur.role_id = r.id
+        JOIN purchaser_account u ON u.id = ur.account_id AND r.purchaser_id = u.purchaser_id AND u.id = #{accountId}
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.is_show ='1' AND r.del_flag = #{DEL_FLAG_NORMAL} AND u.is_closed = #{DEL_FLAG_NORMAL}
+        ORDER BY a.sort
+    </select>
+    
+	<select id="getChildren" parameterType="String" resultMap="purchaserMenuResult">  
+        select * from purchaser_menu where parent_id = #{id} ORDER BY sort 
+    </select> 
+     
+    <select id="hasChildren" parameterType="String" resultType="Boolean">
+        select case when exists(select 1 from purchaser_menu where parent_id = #{id}) then 1 else 0 end ${dual}
+    </select>
+    
+	<select id="findByParentIdsLike" resultType="PurchaserMenu">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM purchaser_menu a
+		<include refid="purchaserMenuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.parent_ids LIKE #{parentIds}
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_menu(
+			id,
+			parent_id,
+			parent_ids,
+			name,
+			sort,
+			href,
+			target,
+			icon,
+			is_show,
+			permission,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			menu_type
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{name},
+			#{sort},
+			#{href},
+			#{target},
+			#{icon},
+			#{isShow},
+			#{permission},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{menuType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_menu SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			name = #{name},
+			sort = #{sort},
+			href = #{href},
+			target = #{target},
+			icon = #{icon},
+			is_show = #{isShow},
+			permission = #{permission},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			menu_type = #{menuType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE purchaser_menu SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+    <update id="updateSort">
+        UPDATE purchaser_menu SET
+        sort = #{sort}
+        WHERE id = #{id}
+    </update>
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_menu
+		WHERE id = #{id} OR parent_ids LIKE 
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_menu SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE 
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+
+    <!--删除权限中的菜单-->
+    <update id="deleteMenuRole">
+        Delete from purchaser_role_menu where menu_id = #{menu_id}
+    </update>
+</mapper>

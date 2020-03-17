@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.HpsMessageReminderMapper">
+    
+	<sql id="hpsMessageReminderColumns">
+		a.id AS "id",
+		a.code88 AS "code88",
+		a.type AS "type",
+		a.content AS "content",
+		a.project_code AS "projectCode",
+		a.brown_code AS "brownCode",
+		a.create_time AS "createTime",
+		a.is_read AS "isRead"
+	</sql>
+	
+	<sql id="hpsMessageReminderJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="HpsMessageReminder" >
+		SELECT 
+			<include refid="hpsMessageReminderColumns"/>
+		FROM hps_message_reminder a
+		<include refid="hpsMessageReminderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HpsMessageReminder" >
+		SELECT 
+			<include refid="hpsMessageReminderColumns"/>
+		FROM hps_message_reminder a
+		<include refid="hpsMessageReminderJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="code88 != null and code88 != ''">
+				AND a.code88 LIKE 
+					<if test="dbName == 'oracle'">'%'||#{code88}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{code88}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{code88},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content LIKE 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{brownCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{brownCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{brownCode},'%')</if>
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="isRead != null and isRead != ''">
+				AND a.is_read = #{isRead}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HpsMessageReminder" >
+		SELECT 
+			<include refid="hpsMessageReminderColumns"/>
+		FROM hps_message_reminder a
+		<include refid="hpsMessageReminderJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hps_message_reminder(
+			id,
+			code88,
+			type,
+			content,
+			project_code,
+			brown_code,
+			create_time,
+			is_read
+		) VALUES (
+			#{id},
+			#{code88},
+			#{type},
+			#{content},
+			#{projectCode},
+			#{brownCode},
+			#{createTime},
+			#{isRead}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hps_message_reminder SET 	
+			code88 = #{code88},
+			type = #{type},
+			content = #{content},
+			project_code = #{projectCode},
+			brown_code = #{brownCode},
+			create_time = #{createTime},
+			is_read = #{isRead}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM hps_message_reminder
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE hps_message_reminder SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="HpsMessageReminder" statementType="STATEMENT">
+		select * FROM hps_message_reminder  where ${propertyName} = '${value}'
+	</select>
+	
+	<!-- 根据88码获取所有未读消息 -->
+	<select id="findMessageByCode88" resultType="HpsMessageReminder">
+		select * FROM hps_message_reminder  where code88=#{code88} and is_read=0 order by create_time desc
+	</select>
+	
+	<!-- 根据88码获取未读消息总条数 -->
+	<select id="findMessageNumber" resultType="Integer">
+		select count(id) FROM hps_message_reminder  where code88=#{code88} and is_read=0
+	</select>
+	
+	<!--根据id，标记消息为已读-->
+	<update id="setIsRead">
+		UPDATE hps_message_reminder SET 
+			is_read = 1
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

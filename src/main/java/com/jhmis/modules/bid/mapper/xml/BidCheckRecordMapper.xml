@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.bid.mapper.BidCheckRecordMapper">
+    
+	<sql id="bidCheckRecordColumns">
+		a.id AS "id",
+		a.bid_info_id AS "bidInfoId",
+		a.check_status AS "checkStatus",
+		a.check_user AS "checkUser",
+		a.check_time AS "checkTime",
+		a.check_remark AS "checkRemark",
+		a.sub_time AS "subTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="bidCheckRecordJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="BidCheckRecord" >
+		SELECT 
+			<include refid="bidCheckRecordColumns"/>
+		FROM bid_check_record a
+		<include refid="bidCheckRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BidCheckRecord" >
+		SELECT 
+			<include refid="bidCheckRecordColumns"/>
+		FROM bid_check_record a
+		<include refid="bidCheckRecordJoins"/>
+		<where>
+			${dataScope}
+			<if test="bidInfoId != null and bidInfoId != ''">
+				AND a.bid_info_id = #{bidInfoId}
+			</if>
+		</where>
+		ORDER BY a.check_time desc
+		<!-- <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<select id="findAllList" resultType="BidCheckRecord" >
+		SELECT 
+			<include refid="bidCheckRecordColumns"/>
+		FROM bid_check_record a
+		<include refid="bidCheckRecordJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bid_check_record(
+			id,
+			bid_info_id,
+			check_status,
+			check_user,
+			<!-- check_time ,-->
+			check_remark,
+			sub_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{bidInfoId},
+			#{checkStatus},
+			#{checkUser},
+			<!-- #{checkTime},-->
+			#{checkRemark},
+			#{subTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bid_check_record SET 	
+			bid_info_id = #{bidInfoId},
+			check_status = #{checkStatus},
+			check_user = #{checkUser},
+			<!-- check_time = #{checkTime},-->
+			check_remark = #{checkRemark},
+			sub_time = #{subTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateInfo">
+		UPDATE bid_info SET 	
+		status = #{checkStatus}
+		WHERE id = #{bidInfoId}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bid_check_record
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bid_check_record SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BidCheckRecord" statementType="STATEMENT">
+		select * FROM bid_check_record  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerCommentMapper">
+    
+	<sql id="customerCommentColumns">
+		a.id AS "id",
+		a.comment_user AS "commentUser",
+		a.comment_mobile AS "commentMobile",
+		a.comment_type AS "commentType",
+		a.comment_content AS "commentContent",
+		a.comment_degree_score AS "commentDegreeScore",
+		a.comment_beautiful_score AS "commentBeautifulScore",
+		a.comment_humanity_score AS "commentHumanityScore",
+		a.comment_date AS "commentDate"
+	</sql>
+	
+	<sql id="customerCommentJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CustomerComment" >
+		SELECT 
+			<include refid="customerCommentColumns"/>
+		FROM customer_comment a
+		<include refid="customerCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CustomerComment" >
+		SELECT 
+			<include refid="customerCommentColumns"/>
+		FROM customer_comment a
+		<include refid="customerCommentJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="commentUser != null and commentUser != ''">
+				AND a.comment_user = #{commentUser}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY comment_date desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerComment" >
+		SELECT 
+			<include refid="customerCommentColumns"/>
+		FROM customer_comment a
+		<include refid="customerCommentJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_comment(
+			id,
+			comment_user,
+			comment_mobile,
+			comment_type,
+			comment_content,
+			comment_degree_score,
+			comment_beautiful_score,
+			comment_humanity_score,
+			comment_date
+		) VALUES (
+			#{id},
+			#{commentUser},
+			#{commentMobile},
+			#{commentType},
+			#{commentContent},
+			#{commentDegreeScore},
+			#{commentBeautifulScore},
+			#{commentHumanityScore},
+			#{commentDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_comment SET 	
+			comment_user = #{commentUser},
+			comment_mobile = #{commentMobile},
+			comment_type = #{commentType},
+			comment_content = #{commentContent},
+			comment_degree_score = #{commentDegreeScore},
+			comment_beautiful_score = #{commentBeautifulScore},
+			comment_humanity_score = #{commentHumanityScore},
+			comment_date = #{commentDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_comment
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_comment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerComment" statementType="STATEMENT">
+		select * FROM customer_comment  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerMsgProductMapper">
+    
+	<sql id="customerMsgProductColumns">
+		a.id AS "id",
+		a.customer_msg_id AS "customerMsgId",
+		a.product_group AS "productGroup",
+		a.brand AS "brand",
+		a.be_wisdom AS "beWisdom",
+		a.estimated_quantity AS "estimatedQuantity",
+		a.purchase_budget AS "purchaseBudget"
+	</sql>
+	
+	<sql id="customerMsgProductJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CustomerMsgProduct" >
+		SELECT 
+			<include refid="customerMsgProductColumns"/>
+		FROM customer_msg_product a
+		<include refid="customerMsgProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CustomerMsgProduct" >
+		SELECT 
+			<include refid="customerMsgProductColumns"/>
+		FROM customer_msg_product a
+		<include refid="customerMsgProductJoins"/>
+		<where>
+			${dataScope}
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+		</where>
+
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerMsgProduct" >
+		SELECT 
+			<include refid="customerMsgProductColumns"/>
+		FROM customer_msg_product a
+		<include refid="customerMsgProductJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_msg_product(
+			id,
+			customer_msg_id,
+			product_group,
+			brand,
+			be_wisdom,
+			estimated_quantity,
+			purchase_budget
+		) VALUES (
+			#{id},
+			#{customerMsgId},
+			#{productGroup},
+			#{brand},
+			#{beWisdom},
+			#{estimatedQuantity},
+			#{purchaseBudget}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_msg_product SET 	
+			customer_msg_id = #{customerMsgId},
+			product_group = #{productGroup},
+			brand = #{brand},
+			be_wisdom = #{beWisdom},
+			estimated_quantity = #{estimatedQuantity},
+			purchase_budget = #{purchaseBudget}
+		WHERE id = #{id}
+	</update>
+	
+	<!--根据msgId删除-->
+	<delete id="deleteByMsgid">
+		DELETE FROM customer_msg_product
+		WHERE customer_msg_id = #{customerMsgId}
+	</delete>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_msg_product
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_msg_product SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerMsgProduct" statementType="STATEMENT">
+		select * FROM customer_msg_product  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

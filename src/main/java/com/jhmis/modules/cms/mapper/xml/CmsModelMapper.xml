@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CmsModelMapper">
+    
+	<sql id="cmsModelColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.table_name AS "tableName",
+		a.remarks AS "remarks",
+		a.disabled AS "disabled",
+		a.category_template AS "categoryTemplate",
+		a.list_template AS "listTemplate",
+		a.content_template AS "contentTemplate",
+		a.mcategory_template AS "mcategoryTemplate",
+		a.mlist_template AS "mlistTemplate",
+		a.mcontent_template AS "mcontentTemplate",
+		a.is_install AS "isInstall",
+		a.sort AS "sort",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="cmsModelJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsModel" >
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsModel" >
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsModel" >
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_model(
+			id,
+			name,
+			table_name,
+			remarks,
+			disabled,
+			category_template,
+			list_template,
+			content_template,
+			mcategory_template,
+			mlist_template,
+			mcontent_template,
+			is_install,
+			sort,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{tableName},
+			#{remarks},
+			#{disabled},
+			#{categoryTemplate},
+			#{listTemplate},
+			#{contentTemplate},
+			#{mcategoryTemplate},
+			#{mlistTemplate},
+			#{mcontentTemplate},
+			#{isInstall},
+			#{sort},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_model SET 	
+			name = #{name},
+			table_name = #{tableName},
+			remarks = #{remarks},
+			disabled = #{disabled},
+			category_template = #{categoryTemplate},
+			list_template = #{listTemplate},
+			content_template = #{contentTemplate},
+			mcategory_template = #{mcategoryTemplate},
+			mlist_template = #{mlistTemplate},
+			mcontent_template = #{mcontentTemplate},
+			is_install = #{isInstall},
+			sort = #{sort},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_model
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_model SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsModel" statementType="STATEMENT">
+		select * FROM cms_model  where ${propertyName} = '${value}'
+	</select>
+	<select id="findCmsModelList" resultType="CmsModel">
+		SELECT id ,name FROM cms_model
+	</select>
+</mapper>

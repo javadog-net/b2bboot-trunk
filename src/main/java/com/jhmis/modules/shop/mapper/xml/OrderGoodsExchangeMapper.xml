@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.OrderGoodsExchangeMapper">
+    
+	<sql id="orderGoodsExchangeColumns">
+		a.id AS "id",
+		a.order_goods_id AS "orderGoodsId",
+		a.exchange_num AS "exchangeNum",
+		a.applyer AS "applyer",
+		a.apply_time AS "applyTime",
+		a.audit_state AS "auditState",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.good_name AS "goodName",
+		a.remarks AS "remarks",
+		a.exchange_reason AS "exchangeReason",
+		a.audit_desc AS "auditDesc"
+	</sql>
+	<sql id="orderColumns">
+		o.order_sn AS "orderSn",
+		o.store_id AS "storeId",
+		o.store_name AS "storeName",
+		o.dealer_id AS "dealerId",
+		o.kjt_account AS "kjtAccount",
+		o.pay_sn AS "paySn",
+		o.goods_amount AS "goodsAmount",
+		o.order_amount AS "orderAmount",
+		o.api_pay_date AS "apiPayDate",
+		o.trade_no AS "tradeNo",
+		o.address_info AS "addressInfo",
+		o.shipping_info AS "shippingInfo"
+	</sql>
+	<sql id="orderGoodsColumn">
+		og.goods_code AS "goodsCode",
+		og.goods_name AS "oldGoodsName",
+		og.price AS "price",
+		og.num AS "num",
+		og.main_pic_url AS "mainPicUrl",
+		og.pay_price AS "payPrice",
+		pa.login_name AS "purchaserLoginName",
+		pa.real_name AS "purchaserRealName",
+		pa.mobile AS "purchaserMobile",
+		da.login_name AS "dealerLoginName",
+		da.real_name AS "dealerRealName",
+		da.mobile AS "dealerMobile"
+	</sql>
+	<sql id="orderGoodsExchangeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OrderGoodsExchange" >
+		SELECT
+		<include refid="orderGoodsExchangeColumns"/>,
+		<include refid="orderColumns"/>,
+		<include refid="orderGoodsColumn"/>
+		FROM order_goods_exchange a
+
+		LEFT JOIN order_goods og on a.order_goods_id = og.id
+		LEFT JOIN orders o on o.id = og.order_id
+		LEFT JOIN dealer_account da on a.auditor=da.id
+		LEFT JOIN purchaser_account pa on pa.id=a.applyer
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoodsExchange" >
+		SELECT 
+			<include refid="orderGoodsExchangeColumns"/>,
+			<include refid="orderColumns"/>,
+			<include refid="orderGoodsColumn"/>
+		FROM order_goods_exchange a
+
+		LEFT JOIN order_goods og on a.order_goods_id = og.id
+		LEFT JOIN orders o on o.id = og.order_id
+		LEFT JOIN dealer_account da on a.auditor=da.id
+		LEFT JOIN purchaser_account pa on pa.id=a.applyer
+		<where>
+			${dataScope}
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+			<if test="auditTimeStart != null and auditTimeStart !='' and auditTimeEnd !=null and auditTimeEnd !=''">
+				and a.audit_time BETWEEN #{auditTimeStart} AND #{auditTimeEnd}
+			</if>
+			<if test="createDateStart != null and createDateStart !='' and createDateEnd !=null and createDateEnd !=''">
+				and a.apply_time BETWEEN #{createDateStart} AND #{createDateEnd}
+			</if>
+			<if test ="orderSn != null and orderSn!=''">
+				AND o.order_sn=#{orderSn}
+			</if>
+			<if test ="applyer != null and applyer!=''">
+				AND a.applyer=#{applyer}
+			</if>
+			<if test ="auditor != null and auditor!=''">
+				AND a.auditor=#{auditor}
+			</if>
+			<if test ="purchaserId != null and purchaserId!=''">
+				AND og.purchaser_id=#{purchaserId }
+			</if>
+			<if test ="dealerId != null and dealerId!=''">
+				AND o.dealer_id=#{dealerId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoodsExchange" >
+		SELECT 
+			<include refid="orderGoodsExchangeColumns"/>
+		FROM order_goods_exchange a
+		<include refid="orderGoodsExchangeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_goods_exchange(
+			id,
+			order_goods_id,
+			exchange_num,
+			applyer,
+			apply_time,
+			audit_state,
+			audit_time,
+			auditor,
+			good_name,
+			remarks,
+			exchange_reason,
+			audit_desc
+		) VALUES (
+			#{id},
+			#{orderGoodsId},
+			#{exchangeNum},
+			#{applyer},
+			#{applyTime},
+			#{auditState},
+			#{auditTime},
+			#{auditor},
+			#{goodName},
+			#{remarks},
+			#{exchangeReason},
+			#{auditDesc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods_exchange SET 	
+			order_goods_id = #{orderGoodsId},
+			exchange_num = #{exchangeNum},
+			applyer = #{applyer},
+			apply_time = #{applyTime},
+			audit_state = #{auditState},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			audit_desc = #{auditDesc}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM order_goods_exchange
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE order_goods_exchange SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OrderGoodsExchange" statementType="STATEMENT">
+		select * FROM order_goods_exchange  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

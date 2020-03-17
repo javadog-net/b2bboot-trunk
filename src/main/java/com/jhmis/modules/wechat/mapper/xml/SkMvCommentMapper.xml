@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.SkMvCommentMapper">
+    
+	<sql id="skMvCommentColumns">
+		a.id AS "id",
+		a.sk_mv_id AS "skMvId",
+		a.sk_mv_name AS "skMvName",
+		a.user_id AS "userId",
+		a.image AS "image",
+		a.user_name AS "userName",
+		a.sk_mv_comment AS "skMvComment",
+		a.sk_mv_comment_time AS "skMvCommentTime",
+		a.sk_mv_ispass AS "skMvIspass",
+		a.sk_mv_ispass_examiner AS "skMvIspassExaminer"
+	</sql>
+	
+	<sql id="skMvCommentJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="SkMvComment" >
+		SELECT 
+			<include refid="skMvCommentColumns"/>
+		FROM sk_mv_comment a
+		<include refid="skMvCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findListById" resultType="SkMvComment">
+	
+	select * from sk_mv_comment WHERE sk_mv_id = #{id} 
+
+	order by sk_mv_comment_time desc
+	</select>
+	
+	<select id="findList" resultType="SkMvComment" >
+		SELECT 
+			<include refid="skMvCommentColumns"/>
+		FROM sk_mv_comment a
+		<include refid="skMvCommentJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="skMvId != null and skMvId != ''">
+				AND a.sk_mv_id = #{skMvId}
+			</if>
+			<if test="skMvName != null and skMvName != ''">
+				AND a.sk_mv_name = #{skMvName}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="skMvComment != null and skMvComment != ''">
+				AND a.sk_mv_comment = #{skMvComment}
+			</if>
+			<if test="skMvCommentTime != null and skMvCommentTime != ''">
+				AND a.sk_mv_comment_time = #{skMvCommentTime}
+			</if>
+			<if test="skMvIspass != null and skMvIspass != ''">
+				AND a.sk_mv_ispass = #{skMvIspass}
+			</if>
+			<if test="skMvIspassExaminer != null and skMvIspassExaminer != ''">
+				AND a.sk_mv_ispass_examiner = #{skMvIspassExaminer}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SkMvComment" >
+		SELECT 
+			<include refid="skMvCommentColumns"/>
+		FROM sk_mv_comment a
+		<include refid="skMvCommentJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sk_mv_comment(
+			id,
+			sk_mv_id,
+			sk_mv_name,
+			user_id,
+			image,
+			user_name,
+			sk_mv_comment,
+			sk_mv_comment_time,
+			sk_mv_ispass,
+			sk_mv_ispass_examiner
+		) VALUES (
+			#{id},
+			#{skMvId},
+			#{skMvName},
+			#{userId},
+			#{image},
+			#{userName},
+			#{skMvComment},
+			#{skMvCommentTime},
+			#{skMvIspass},
+			#{skMvIspassExaminer}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sk_mv_comment SET 	
+			sk_mv_id = #{skMvId},
+			sk_mv_name = #{skMvName},
+			user_id = #{userId},
+			user_name = #{userName},
+			sk_mv_comment = #{skMvComment},
+			sk_mv_comment_time = #{skMvCommentTime},
+			sk_mv_ispass = #{skMvIspass},
+			sk_mv_ispass_examiner = #{skMvIspassExaminer}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sk_mv_comment
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sk_mv_comment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateState">
+	UPDATE sk_mv_comment SET 
+			sk_mv_ispass = #{state},
+			sk_mv_ispass_examiner = #{username}
+		WHERE id = #{id}
+	
+	
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="SkMvComment" statementType="STATEMENT">
+		select * FROM sk_mv_comment  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopProjectInfoMapper">
+    
+	<sql id="oldShopProjectInfoColumns">
+		a.id AS "id",
+		a.projectcode AS "projectcode",
+		a.projectname AS "projectname",
+		a.companyname AS "companyname",
+		a.companysize AS "companysize",
+		a.contact AS "contact",
+		a.contmobile AS "contmobile",
+		a.product AS "product",
+		a.count AS "count",
+		a.bindtime AS "bindtime",
+		a.bindamount AS "bindamount",
+		a.indus AS "indus",
+		a.address AS "address",
+		a.orgid AS "orgid",
+		a.orgname AS "orgname",
+		a.orgidcharge AS "orgidcharge",
+		a.distributor AS "distributor",
+		a.orderstate AS "orderstate",
+		a.projectstate AS "projectstate",
+		a.losstime AS "losstime",
+		a.nodename AS "nodename",
+		a.nodestate AS "nodestate",
+		a.causeloss AS "causeloss",
+		a.channel AS "channel",
+		a.descp AS "descp",
+		a.infcode AS "infcode",
+		a.cancelflag AS "cancelflag",
+		a.cancelreason AS "cancelreason",
+		a.cancelperson AS "cancelperson",
+		a.canceltime AS "canceltime",
+		a.bz1 AS "bz1",
+		a.bz2 AS "bz2",
+		a.creater AS "creater",
+		a.createdate AS "createdate",
+		a.lastupdater AS "lastupdater",
+		a.lastupdate AS "lastupdate",
+		a.allmoney AS "allmoney",
+		a.custcontact AS "custcontact",
+		a.isvalid AS "isvalid",
+		a.partyprjcompany AS "partyprjcompany",
+		a.tenderdate AS "tenderdate",
+		a.yjsigndate AS "yjsigndate",
+		a.bidprogress AS "bidprogress",
+		a.signdate AS "signdate",
+		a.constructionstate AS "constructionstate",
+		a.projecttype AS "projecttype",
+		a.resourceflag AS "resourceflag",
+		a.isnewcust AS "isnewcust",
+		a.isnewuser AS "isnewuser",
+		a.projectsourse AS "projectsourse",
+		a.isbidloss AS "isbidloss",
+		a.statusfx AS "statusfx",
+		a.bidlossmoney AS "bidlossmoney",
+		a.isfedbatch AS "isfedbatch",
+		a.usergroup AS "usergroup",
+		a.usertype AS "usertype",
+		a.expr1 AS "expr1",
+		a.expr2 AS "expr2",
+		a.iszlsp AS "iszlsp",
+		a.expr5 AS "expr5",
+		a.expr6 AS "expr6",
+		a.oldprojectcode AS "oldprojectcode",
+		a.r4savetime AS "r4savetime",
+		a.signprogress AS "signprogress",
+		a.turnvolume AS "turnvolume",
+		a.msgid AS "msgid"
+	</sql>
+	
+	<sql id="oldShopProjectInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopProjectInfo" >
+		SELECT 
+			<include refid="oldShopProjectInfoColumns"/>
+		FROM old_shop_project_info a
+		<include refid="oldShopProjectInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopProjectInfo" >
+		SELECT 
+			<include refid="oldShopProjectInfoColumns"/>
+		FROM old_shop_project_info a
+		<include refid="oldShopProjectInfoJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="projectcode != null and projectcode != ''">
+				AND a.projectcode = #{projectcode}
+			</if>
+			<if test="projectname != null and projectname != ''">
+				AND a.projectname = #{projectname}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				AND a.companyname = #{companyname}
+			</if>
+			<if test="companysize != null and companysize != ''">
+				AND a.companysize = #{companysize}
+			</if>
+			<if test="contact != null and contact != ''">
+				AND a.contact = #{contact}
+			</if>
+			<if test="contmobile != null and contmobile != ''">
+				AND a.contmobile = #{contmobile}
+			</if>
+			<if test="product != null and product != ''">
+				AND a.product = #{product}
+			</if>
+			<if test="count != null and count != ''">
+				AND a.count = #{count}
+			</if>
+			<if test="bindtime != null and bindtime != ''">
+				AND a.bindtime = #{bindtime}
+			</if>
+			<if test="bindamount != null and bindamount != ''">
+				AND a.bindamount = #{bindamount}
+			</if>
+			<if test="indus != null and indus != ''">
+				AND a.indus = #{indus}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="orgid != null and orgid != ''">
+				AND a.orgid = #{orgid}
+			</if>
+			<if test="orgname != null and orgname != ''">
+				AND a.orgname = #{orgname}
+			</if>
+			<if test="orgidcharge != null and orgidcharge != ''">
+				AND a.orgidcharge = #{orgidcharge}
+			</if>
+			<if test="distributor != null and distributor != ''">
+				AND a.distributor = #{distributor}
+			</if>
+			<if test="orderstate != null and orderstate != ''">
+				AND a.orderstate = #{orderstate}
+			</if>
+			<if test="projectstate != null and projectstate != ''">
+				AND a.projectstate = #{projectstate}
+			</if>
+			<if test="losstime != null and losstime != ''">
+				AND a.losstime = #{losstime}
+			</if>
+			<if test="nodename != null and nodename != ''">
+				AND a.nodename = #{nodename}
+			</if>
+			<if test="nodestate != null and nodestate != ''">
+				AND a.nodestate = #{nodestate}
+			</if>
+			<if test="causeloss != null and causeloss != ''">
+				AND a.causeloss = #{causeloss}
+			</if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+			<if test="descp != null and descp != ''">
+				AND a.descp = #{descp}
+			</if>
+			<if test="infcode != null and infcode != ''">
+				AND a.infcode = #{infcode}
+			</if>
+			<if test="cancelflag != null and cancelflag != ''">
+				AND a.cancelflag = #{cancelflag}
+			</if>
+			<if test="cancelreason != null and cancelreason != ''">
+				AND a.cancelreason = #{cancelreason}
+			</if>
+			<if test="cancelperson != null and cancelperson != ''">
+				AND a.cancelperson = #{cancelperson}
+			</if>
+			<if test="canceltime != null and canceltime != ''">
+				AND a.canceltime = #{canceltime}
+			</if>
+			<if test="bz1 != null and bz1 != ''">
+				AND a.bz1 = #{bz1}
+			</if>
+			<if test="bz2 != null and bz2 != ''">
+				AND a.bz2 = #{bz2}
+			</if>
+			<if test="creater != null and creater != ''">
+				AND a.creater = #{creater}
+			</if>
+			<if test="createdate != null and createdate != ''">
+				AND a.createdate = #{createdate}
+			</if>
+			<if test="lastupdater != null and lastupdater != ''">
+				AND a.lastupdater = #{lastupdater}
+			</if>
+			<if test="lastupdate != null and lastupdate != ''">
+				AND a.lastupdate = #{lastupdate}
+			</if>
+			<if test="allmoney != null and allmoney != ''">
+				AND a.allmoney = #{allmoney}
+			</if>
+			<if test="custcontact != null and custcontact != ''">
+				AND a.custcontact = #{custcontact}
+			</if>
+			<if test="isvalid != null and isvalid != ''">
+				AND a.isvalid = #{isvalid}
+			</if>
+			<if test="partyprjcompany != null and partyprjcompany != ''">
+				AND a.partyprjcompany = #{partyprjcompany}
+			</if>
+			<if test="tenderdate != null and tenderdate != ''">
+				AND a.tenderdate = #{tenderdate}
+			</if>
+			<if test="yjsigndate != null and yjsigndate != ''">
+				AND a.yjsigndate = #{yjsigndate}
+			</if>
+			<if test="bidprogress != null and bidprogress != ''">
+				AND a.bidprogress = #{bidprogress}
+			</if>
+			<if test="signdate != null and signdate != ''">
+				AND a.signdate = #{signdate}
+			</if>
+			<if test="constructionstate != null and constructionstate != ''">
+				AND a.constructionstate = #{constructionstate}
+			</if>
+			<if test="projecttype != null and projecttype != ''">
+				AND a.projecttype = #{projecttype}
+			</if>
+			<if test="resourceflag != null and resourceflag != ''">
+				AND a.resourceflag = #{resourceflag}
+			</if>
+			<if test="isnewcust != null and isnewcust != ''">
+				AND a.isnewcust = #{isnewcust}
+			</if>
+			<if test="isnewuser != null and isnewuser != ''">
+				AND a.isnewuser = #{isnewuser}
+			</if>
+			<if test="projectsourse != null and projectsourse != ''">
+				AND a.projectsourse = #{projectsourse}
+			</if>
+			<if test="isbidloss != null and isbidloss != ''">
+				AND a.isbidloss = #{isbidloss}
+			</if>
+			<if test="statusfx != null and statusfx != ''">
+				AND a.statusfx = #{statusfx}
+			</if>
+			<if test="bidlossmoney != null and bidlossmoney != ''">
+				AND a.bidlossmoney = #{bidlossmoney}
+			</if>
+			<if test="isfedbatch != null and isfedbatch != ''">
+				AND a.isfedbatch = #{isfedbatch}
+			</if>
+			<if test="usergroup != null and usergroup != ''">
+				AND a.usergroup = #{usergroup}
+			</if>
+			<if test="usertype != null and usertype != ''">
+				AND a.usertype = #{usertype}
+			</if>
+			<if test="expr1 != null and expr1 != ''">
+				AND a.expr1 = #{expr1}
+			</if>
+			<if test="expr2 != null and expr2 != ''">
+				AND a.expr2 = #{expr2}
+			</if>
+			<if test="iszlsp != null and iszlsp != ''">
+				AND a.iszlsp = #{iszlsp}
+			</if>
+			<if test="expr5 != null and expr5 != ''">
+				AND a.expr5 = #{expr5}
+			</if>
+			<if test="expr6 != null and expr6 != ''">
+				AND a.expr6 = #{expr6}
+			</if>
+			<if test="oldprojectcode != null and oldprojectcode != ''">
+				AND a.oldprojectcode = #{oldprojectcode}
+			</if>
+			<if test="r4savetime != null and r4savetime != ''">
+				AND a.r4savetime = #{r4savetime}
+			</if>
+			<if test="signprogress != null and signprogress != ''">
+				AND a.signprogress = #{signprogress}
+			</if>
+			<if test="turnvolume != null and turnvolume != ''">
+				AND a.turnvolume = #{turnvolume}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msgid = #{msgid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopProjectInfo" >
+		SELECT 
+			<include refid="oldShopProjectInfoColumns"/>
+		FROM old_shop_project_info a
+		<include refid="oldShopProjectInfoJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_project_info(
+			id,
+			projectcode,
+			projectname,
+			companyname,
+			companysize,
+			contact,
+			contmobile,
+			product,
+			count,
+			bindtime,
+			bindamount,
+			indus,
+			address,
+			orgid,
+			orgname,
+			orgidcharge,
+			distributor,
+			orderstate,
+			projectstate,
+			losstime,
+			nodename,
+			nodestate,
+			causeloss,
+			channel,
+			descp,
+			infcode,
+			cancelflag,
+			cancelreason,
+			cancelperson,
+			canceltime,
+			bz1,
+			bz2,
+			creater,
+			createdate,
+			lastupdater,
+			lastupdate,
+			allmoney,
+			custcontact,
+			isvalid,
+			partyprjcompany,
+			tenderdate,
+			yjsigndate,
+			bidprogress,
+			signdate,
+			constructionstate,
+			projecttype,
+			resourceflag,
+			isnewcust,
+			isnewuser,
+			projectsourse,
+			isbidloss,
+			statusfx,
+			bidlossmoney,
+			isfedbatch,
+			usergroup,
+			usertype,
+			expr1,
+			expr2,
+			iszlsp,
+			expr5,
+			expr6,
+			oldprojectcode,
+			r4savetime,
+			signprogress,
+			turnvolume,
+			msgid
+		) VALUES (
+			#{id},
+			#{projectcode},
+			#{projectname},
+			#{companyname},
+			#{companysize},
+			#{contact},
+			#{contmobile},
+			#{product},
+			#{count},
+			#{bindtime},
+			#{bindamount},
+			#{indus},
+			#{address},
+			#{orgid},
+			#{orgname},
+			#{orgidcharge},
+			#{distributor},
+			#{orderstate},
+			#{projectstate},
+			#{losstime},
+			#{nodename},
+			#{nodestate},
+			#{causeloss},
+			#{channel},
+			#{descp},
+			#{infcode},
+			#{cancelflag},
+			#{cancelreason},
+			#{cancelperson},
+			#{canceltime},
+			#{bz1},
+			#{bz2},
+			#{creater},
+			#{createdate},
+			#{lastupdater},
+			#{lastupdate},
+			#{allmoney},
+			#{custcontact},
+			#{isvalid},
+			#{partyprjcompany},
+			#{tenderdate},
+			#{yjsigndate},
+			#{bidprogress},
+			#{signdate},
+			#{constructionstate},
+			#{projecttype},
+			#{resourceflag},
+			#{isnewcust},
+			#{isnewuser},
+			#{projectsourse},
+			#{isbidloss},
+			#{statusfx},
+			#{bidlossmoney},
+			#{isfedbatch},
+			#{usergroup},
+			#{usertype},
+			#{expr1},
+			#{expr2},
+			#{iszlsp},
+			#{expr5},
+			#{expr6},
+			#{oldprojectcode},
+			#{r4savetime},
+			#{signprogress},
+			#{turnvolume},
+			#{msgid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_project_info SET 	
+			projectcode = #{projectcode},
+			projectname = #{projectname},
+			companyname = #{companyname},
+			companysize = #{companysize},
+			contact = #{contact},
+			contmobile = #{contmobile},
+			product = #{product},
+			count = #{count},
+			bindtime = #{bindtime},
+			bindamount = #{bindamount},
+			indus = #{indus},
+			address = #{address},
+			orgid = #{orgid},
+			orgname = #{orgname},
+			orgidcharge = #{orgidcharge},
+			distributor = #{distributor},
+			orderstate = #{orderstate},
+			projectstate = #{projectstate},
+			losstime = #{losstime},
+			nodename = #{nodename},
+			nodestate = #{nodestate},
+			causeloss = #{causeloss},
+			channel = #{channel},
+			descp = #{descp},
+			infcode = #{infcode},
+			cancelflag = #{cancelflag},
+			cancelreason = #{cancelreason},
+			cancelperson = #{cancelperson},
+			canceltime = #{canceltime},
+			bz1 = #{bz1},
+			bz2 = #{bz2},
+			creater = #{creater},
+			createdate = #{createdate},
+			lastupdater = #{lastupdater},
+			lastupdate = #{lastupdate},
+			allmoney = #{allmoney},
+			custcontact = #{custcontact},
+			isvalid = #{isvalid},
+			partyprjcompany = #{partyprjcompany},
+			tenderdate = #{tenderdate},
+			yjsigndate = #{yjsigndate},
+			bidprogress = #{bidprogress},
+			signdate = #{signdate},
+			constructionstate = #{constructionstate},
+			projecttype = #{projecttype},
+			resourceflag = #{resourceflag},
+			isnewcust = #{isnewcust},
+			isnewuser = #{isnewuser},
+			projectsourse = #{projectsourse},
+			isbidloss = #{isbidloss},
+			statusfx = #{statusfx},
+			bidlossmoney = #{bidlossmoney},
+			isfedbatch = #{isfedbatch},
+			usergroup = #{usergroup},
+			usertype = #{usertype},
+			expr1 = #{expr1},
+			expr2 = #{expr2},
+			iszlsp = #{iszlsp},
+			expr5 = #{expr5},
+			expr6 = #{expr6},
+			oldprojectcode = #{oldprojectcode},
+			r4savetime = #{r4savetime},
+			signprogress = #{signprogress},
+			turnvolume = #{turnvolume},
+			msgid = #{msgid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_project_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_project_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopProjectInfo" statementType="STATEMENT">
+		select * FROM old_shop_project_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

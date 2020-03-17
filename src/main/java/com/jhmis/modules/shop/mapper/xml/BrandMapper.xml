@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.BrandMapper">
+    
+	<sql id="brandColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id"
+	</sql>
+	
+	<sql id="brandJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Brand" >
+		SELECT 
+			<include refid="brandColumns"/>
+		FROM brand a
+		<include refid="brandJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Brand" >
+		SELECT 
+			<include refid="brandColumns"/>
+		FROM brand a
+		<include refid="brandJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Brand" >
+		SELECT 
+			<include refid="brandColumns"/>
+		FROM brand a
+		<include refid="brandJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO brand(
+			id,
+			name,
+			remarks,
+			create_by,
+			create_date,
+			update_date,
+			update_by
+		) VALUES (
+			#{id},
+			#{name},
+			#{remarks},
+			#{createBy.id},
+			#{createDate},
+			#{updateDate},
+			#{updateBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE brand SET 	
+			name = #{name},
+			remarks = #{remarks},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM brand
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE brand SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Brand" statementType="STATEMENT">
+		select * FROM brand  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="selectBrandForSearch" resultType="Brand" parameterType="String">
+		SELECT DISTINCT
+			b.id AS id,
+			b. name AS name
+		FROM
+			store_goods sg
+		LEFT JOIN goods g ON sg.`code` = g. CODE
+		LEFT JOIN brand b ON g.brand = b.id
+		<where>
+			<if test="_parameter != null and _parameter != ''">
+			and g.name like  CONCAT(CONCAT('%',#{arg0},'%'))
+			</if>
+		</where>
+	</select>
+</mapper>

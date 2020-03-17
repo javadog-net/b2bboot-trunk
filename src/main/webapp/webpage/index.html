@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="choujiang/css/luckdraw.css" />
+	<script src="choujiang/js/jquery.min.js"></script>
+	<style>
+	</style>
+</head>
+
+<body>
+	<div class="bg">
+		<div id="he">
+
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+	function getUrlParam() {
+		var url = location.search;
+		console.log(88888);
+		var theRequest = new Object();
+		if (url.indexOf("?") != -1) {
+			var str = url.substr(1);
+			var strs = str.split("&");
+			for (var i = 0; i < strs.length; i++) {
+				theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+			}
+		}
+		return theRequest;
+	}
+	var obj = getUrlParam();
+	var actvid = obj.actvid;
+	var meetingid = obj.meetingid;
+	console.log(obj);
+
+	$.ajax({
+		type: "POST",
+		url: "../../api/web/app/draw/initdraw",
+		dataType: 'json',
+		data: {
+			actvid: actvid,
+			meetingid: meetingid
+		},
+		success: function (res) {
+			// debugger;
+			// console.log(111);
+			console.log(res);
+			var array = [];
+			array = res.body.result;
+			console.log(array);
+
+			for (var i = 0; i < array.length; i++) {
+				console.log(i);
+				var alreadClass = "";
+				$("#he").append('<span class="spanbtn" wardid="' + array[i].id + '" activeid="' + array[i].actvId +
+					'"  num = "' + array[i].prizeNum + '"   hui  panduan= "' + array[i].prizeTab + '"  meet = "' + array[i].meetingId +
+					'">' + array[i].prizeType +
+					'<span>');
+				if (array[i].prizeTab == 1) {
+					$('.spanbtn').eq(i).css({
+						background: "rgb(194, 194, 194)",
+						opacity: "0.8"
+					});	
+				}
+			}
+			$('.spanbtn').on('click', function () {
+				var active = $(this).attr("activeid");
+				var wardid = $(this).attr("wardid");
+				var num = $(this).attr("num");
+				var meetingId = $(this).attr("meet");
+				var name = $(this).text();
+				var panduan = $(this).attr("panduan");
+				console.log(name);
+				console.log(active);
+				// debugger;
+				if (panduan == 1) {
+					alert('您已抽奖请勿重复点击');
+				} else {
+
+					window.location.href = "start.html?id=" + active + "&name=" + name + '&meet=' + meetingId + '&wardid=' +
+						wardid + '&num=' + num;
+				}
+
+
+			})
+		},
+		error: function (err) {
+
+			console.log(err);
+		}
+	});
+</script>
+
+</html>

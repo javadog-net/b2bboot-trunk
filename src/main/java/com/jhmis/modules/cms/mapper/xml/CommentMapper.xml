@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CommentMapper">
+    
+	<sql id="commentColumns">
+		a.id AS "id",
+		a.category_id AS "categoryId",
+		a.content_id AS "contentId",
+		a.parent_id AS "parentId",
+		a.reply_to AS "replyTo",
+		a.level AS "level",
+		a.title AS "title",
+		a.is_anonymous AS "isAnonymous",
+		a.content AS "content",
+		a.purchaser_id AS "purchaserId",
+		a.user_name AS "userName",
+		a.ip AS "ip",
+		a.create_date AS "createDate",
+		a.audit_user_id AS "auditUserId",
+		a.audit_date AS "auditDate",
+		a.status AS "status",
+		a.del_flag AS "delFlag",
+		a.opposes AS "opposes",
+		a.likes AS "likes",
+a.avatar AS "avatar"
+	</sql>
+	
+	<sql id="commentJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Comment" >
+		SELECT 
+			<include refid="commentColumns"/>
+		FROM cms_comment a
+		<include refid="commentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Comment" >
+		SELECT 
+			<include refid="commentColumns"/>
+		FROM cms_comment a
+		<include refid="commentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="contentId != null and contentId != ''">
+				AND a.content_id = #{contentId}
+			</if>
+			<if test="parentId != null and parentId != ''">
+				AND a.parent_id = #{parentId}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="level != null">
+				AND a.level = #{level}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Comment" >
+		SELECT 
+			<include refid="commentColumns"/>
+		FROM cms_comment a
+		<include refid="commentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_comment(
+			id,
+			category_id,
+			content_id,
+			parent_id,
+			reply_to,
+			level,
+			title,
+			is_anonymous,
+			content,
+			purchaser_id,
+			user_name,
+			ip,
+			create_date,
+			audit_user_id,
+			audit_date,
+			status,
+			del_flag,
+			opposes,
+			likes,
+			avatar
+		) VALUES (
+			#{id},
+			#{categoryId},
+			#{contentId},
+			#{parent.id},
+			#{replyTo},
+			#{level},
+			#{title},
+			#{isAnonymous},
+			#{content},
+			#{purchaserId},
+			#{userName},
+			#{ip},
+			#{createDate},
+			#{auditUserId},
+			#{auditDate},
+			#{status},
+			#{delFlag},
+			#{opposes},
+			#{likes},
+		    #{avatar}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_comment SET 	
+			category_id = #{categoryId},
+			content_id = #{contentId},
+			parent_id = #{parent.id},
+			reply_to = #{replyTo},
+			level = #{level},
+			title = #{title},
+			is_anonymous = #{isAnonymous},
+			content = #{content},
+			purchaser_id = #{purchaserId},
+			user_name = #{userName},
+			ip = #{ip},
+			audit_user_id = #{auditUserId},
+			audit_date = #{auditDate},
+			status = #{status},
+			opposes = #{opposes},
+			likes = #{likes}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_comment
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_comment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Comment" statementType="STATEMENT">
+		select * FROM cms_comment  where ${propertyName} = '${value}'
+	</select>
+	<select id="selectCountById" resultType="integer">
+	  select count(*) FROM cms_comment  where content_id = #{id}
+	</select>
+</mapper>

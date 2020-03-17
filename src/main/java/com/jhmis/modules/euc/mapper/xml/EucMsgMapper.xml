@@ -1,0 +1,1218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.euc.mapper.EucMsgMapper">
+    
+	<sql id="eucMsgColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.business_code AS "businessCode",
+		a.business_name AS "businessName",
+		a.business_source AS "businessSource",
+		a.business_type AS "businessType",
+		a.top_customer_abbreviation AS "topCustomerAbbreviation",
+		a.company_name_a AS "companyNameA",
+		a.contact_name_a AS "contactNameA",
+		a.contact_mobile_a AS "contactMobileA",
+		a.industry AS "industry",
+		a.state AS "state",
+		a.haier_theater AS "haierTheater",
+		a.center AS "center",
+		a.center_name AS "centerName",
+		a.small_mesh AS "smallMesh",
+		a.grid AS "grid",
+		a.province AS "province",
+		a.province_id AS "provinceId",
+		a.city AS "city",
+		a.city_id AS "cityId",
+		a.district AS "district",
+		a.district_id AS "districtId",
+		a.business_opportunity_address AS "businessOpportunityAddress",
+		a.last_processing_time AS "lastProcessingTime",
+		a.entry_date AS "entryDate",
+		a.project_manager_code AS "projectManagerCode",
+		a.project_manager_name AS "projectManagerName",
+		a.contractor_code AS "contractorCode",
+		a.contractor_name AS "contractorName",
+		a.business_channel AS "businessChannel",
+		a.competitors AS "competitors",
+		a.remarks AS "remarks",
+		a.update_date AS "updateDate",
+		a.is_send_hps AS "isSendHps",
+		a.project_code AS "projectCode",
+		a.industry_id AS "industryId",
+		a.if_top_customer AS "ifTopCustomer",
+		a.customer_msg_id AS "customerMsgId",
+		a.small_mesh_code AS "smallMeshCode",
+		a.grid_code AS "gridCode",
+		a.screen_ststus AS "screenStstus",
+		a.is_valid AS "isValid",
+		a.share_count AS "shareCount",
+		emo.undertake AS "undertake",
+		emo.trade_count AS "tradeCount",
+		emo.order_type AS "orderType",
+		emo.org_id AS "orgId",
+		emo.is_check AS "isCheck",
+		emo.checker AS "checker",
+		emo.is_bind AS "isBind",
+		emo.check_date AS "checkDate",
+		emo.image_url AS "imageUrl",
+		emo.update_time AS "updateTime",
+		emo.is_abandon AS "isAbandon",
+		emo.abandon_type AS "abandonType",
+		emo.abandon_reason AS "abandonReason",
+		emo.abandon_time AS "abandonTime",
+		emo.abandon_remark AS "abandonRemark",
+		emo.abandon_write as "abandonWrite",
+		emo.id AS "orderId"
+	</sql>
+	
+	<sql id="eucMsgJoins">
+		left join euc_msg_order emo on a.id = emo.euc_id
+	</sql>
+
+	<sql id="eucMsgPunctureColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.business_code AS "businessCode",
+		a.business_name AS "businessName",
+		a.business_source AS "businessSource",
+		a.business_type AS "businessType",
+		a.top_customer_abbreviation AS "topCustomerAbbreviation",
+		a.company_name_a AS "companyNameA",
+		a.contact_name_a AS "contactNameA",
+		a.contact_mobile_a AS "contactMobileA",
+		a.industry AS "industry",
+		a.state AS "state",
+		a.haier_theater AS "haierTheater",
+		a.center AS "center",
+		a.center_name AS "centerName",
+		a.small_mesh AS "smallMesh",
+		a.grid AS "grid",
+		a.province AS "province",
+		a.province_id AS "provinceId",
+		a.city AS "city",
+		a.city_id AS "cityId",
+		a.district AS "district",
+		a.district_id AS "districtId",
+		a.business_opportunity_address AS "businessOpportunityAddress",
+		a.last_processing_time AS "lastProcessingTime",
+		a.entry_date AS "entryDate",
+		a.project_manager_code AS "projectManagerCode",
+		a.project_manager_name AS "projectManagerName",
+		a.contractor_code AS "contractorCode",
+		a.contractor_name AS "contractorName",
+		a.business_channel AS "businessChannel",
+		a.competitors AS "competitors",
+		a.remarks AS "remarks",
+		a.update_date AS "updateDate",
+		a.is_send_hps AS "isSendHps",
+		a.project_code AS "projectCode",
+		a.industry_id AS "industryId",
+		a.if_top_customer AS "ifTopCustomer",
+		a.customer_msg_id AS "customerMsgId",
+		a.small_mesh_code AS "smallMeshCode",
+		a.grid_code AS "gridCode",
+		a.screen_ststus AS "screenStstus",
+		a.is_valid AS "isValid",
+		a.share_count AS "shareCount"
+	</sql>
+
+
+	<select id="findPuncture" resultType="EucMsg" >
+		<if test="gridCode != null and gridCode != ''">
+		(SELECT
+		<include refid="eucMsgPunctureColumns"/>
+		FROM euc_msg a
+		<where>
+			${dataScope}
+			a.screen_ststus = '0'
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessSource != null and businessSource != ''">
+				AND a.business_source = #{businessSource}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+				AND a.top_customer_abbreviation LIKE
+				<if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+			</if>
+			<if test="companyNameA != null and companyNameA != ''">
+				AND a.company_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+			</if>
+			<if test="contactNameA != null and contactNameA != ''">
+				AND a.contact_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+			</if>
+			<if test="contactMobileA != null and contactMobileA != ''">
+				AND a.contact_mobile_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="haierTheater != null and haierTheater != ''">
+				AND a.haier_theater = #{haierTheater}
+			</if>
+			<if test="smallMesh != null and smallMesh != ''">
+				AND a.small_mesh = #{smallMesh}
+			</if>
+			<if test="gridCode != null and gridCode != ''">
+				AND a.grid_code = #{gridCode}
+			</if>
+			<if test="grid != null and grid != ''">
+				AND a.grid LIKE
+				<if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+				AND a.business_opportunity_address = #{businessOpportunityAddress}
+			</if>
+			<if test="lastProcessingTime != null and lastProcessingTime != ''">
+				AND a.last_processing_time = #{lastProcessingTime}
+			</if>
+			<if test="entryDate != null and entryDate != ''">
+				AND a.entry_date = #{entryDate}
+			</if>
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND a.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND a.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="businessChannel != null and businessChannel != ''">
+				AND a.business_channel = #{businessChannel}
+			</if>
+			<if test="competitors != null and competitors != ''">
+				AND a.competitors = #{competitors}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="isSendHps != null and isSendHps != ''">
+				AND a.is_send_hps = #{isSendHps}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code = #{projectCode}
+			</if>
+			<if test="industryId != null and industryId != ''">
+				AND a.industry_id = #{industryId}
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+		)
+		union all
+		</if>
+		<if test="center != null and center != ''">
+		(SELECT
+		<include refid="eucMsgPunctureColumns"/>
+		FROM euc_msg a
+		<where>
+			${dataScope}
+			a.screen_ststus = '1'
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessSource != null and businessSource != ''">
+				AND a.business_source = #{businessSource}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+				AND a.top_customer_abbreviation LIKE
+				<if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+			</if>
+			<if test="companyNameA != null and companyNameA != ''">
+				AND a.company_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+			</if>
+			<if test="contactNameA != null and contactNameA != ''">
+				AND a.contact_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+			</if>
+			<if test="contactMobileA != null and contactMobileA != ''">
+				AND a.contact_mobile_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="haierTheater != null and haierTheater != ''">
+				AND a.haier_theater = #{haierTheater}
+			</if>
+			<if test="center != null and center != ''">
+				AND a.center = #{center}
+			</if>
+			<if test="smallMesh != null and smallMesh != ''">
+				AND a.small_mesh = #{smallMesh}
+			</if>
+			<if test="grid != null and grid != ''">
+				AND a.grid LIKE
+				<if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+				AND a.business_opportunity_address = #{businessOpportunityAddress}
+			</if>
+			<if test="lastProcessingTime != null and lastProcessingTime != ''">
+				AND a.last_processing_time = #{lastProcessingTime}
+			</if>
+			<if test="entryDate != null and entryDate != ''">
+				AND a.entry_date = #{entryDate}
+			</if>
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND a.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND a.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="businessChannel != null and businessChannel != ''">
+				AND a.business_channel = #{businessChannel}
+			</if>
+			<if test="competitors != null and competitors != ''">
+				AND a.competitors = #{competitors}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="isSendHps != null and isSendHps != ''">
+				AND a.is_send_hps = #{isSendHps}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code = #{projectCode}
+			</if>
+			<if test="industryId != null and industryId != ''">
+				AND a.industry_id = #{industryId}
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>)
+		union all
+		</if>
+		(SELECT
+		<include refid="eucMsgPunctureColumns"/>
+		FROM euc_msg a
+		<where>
+			${dataScope}
+			a.screen_ststus = '2'
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessSource != null and businessSource != ''">
+				AND a.business_source = #{businessSource}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+				AND a.top_customer_abbreviation LIKE
+				<if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+			</if>
+			<if test="companyNameA != null and companyNameA != ''">
+				AND a.company_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+			</if>
+			<if test="contactNameA != null and contactNameA != ''">
+				AND a.contact_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+			</if>
+			<if test="contactMobileA != null and contactMobileA != ''">
+				AND a.contact_mobile_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="haierTheater != null and haierTheater != ''">
+				AND a.haier_theater = #{haierTheater}
+			</if>
+			<if test="smallMesh != null and smallMesh != ''">
+				AND a.small_mesh = #{smallMesh}
+			</if>
+			<if test="grid != null and grid != ''">
+				AND a.grid LIKE
+				<if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+				AND a.business_opportunity_address = #{businessOpportunityAddress}
+			</if>
+			<if test="lastProcessingTime != null and lastProcessingTime != ''">
+				AND a.last_processing_time = #{lastProcessingTime}
+			</if>
+			<if test="entryDate != null and entryDate != ''">
+				AND a.entry_date = #{entryDate}
+			</if>
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND a.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND a.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="businessChannel != null and businessChannel != ''">
+				AND a.business_channel = #{businessChannel}
+			</if>
+			<if test="competitors != null and competitors != ''">
+				AND a.competitors = #{competitors}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="isSendHps != null and isSendHps != ''">
+				AND a.is_send_hps = #{isSendHps}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code = #{projectCode}
+			</if>
+			<if test="industryId != null and industryId != ''">
+				AND a.industry_id = #{industryId}
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>)
+	</select>
+	
+    
+	<select id="get" resultType="EucMsg" >
+		SELECT 
+			<include refid="eucMsgColumns"/>
+		FROM euc_msg a
+		<include refid="eucMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+    <select id="getById" resultType="EucMsg" >
+        SELECT
+        *
+        FROM euc_msg a
+        <include refid="eucMsgJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+
+	<select id="getOwnById" resultType="EucMsg" >
+		SELECT
+		*
+		FROM euc_msg a
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findListOver" resultType="EucMsg" >
+		SELECT
+		<include refid="eucMsgColumns"/>
+		FROM euc_msg a
+		<include refid="eucMsgJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessSource != null and businessSource != ''">
+				AND a.business_source = #{businessSource}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+				AND a.top_customer_abbreviation LIKE
+				<if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+			</if>
+			<if test="companyNameA != null and companyNameA != ''">
+				AND a.company_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+			</if>
+			<if test="contactNameA != null and contactNameA != ''">
+				AND a.contact_name_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+			</if>
+			<if test="contactMobileA != null and contactMobileA != ''">
+				AND a.contact_mobile_a LIKE
+				<if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="state != null and state != ''">
+				AND (a.state = '100' or a.state = '200')
+			</if>
+			<if test="haierTheater != null and haierTheater != ''">
+				AND a.haier_theater = #{haierTheater}
+			</if>
+			<if test="center != null and center != ''">
+				AND a.center = #{center}
+			</if>
+			<if test="smallMesh != null and smallMesh != ''">
+				AND a.small_mesh = #{smallMesh}
+			</if>
+			<if test="grid != null and grid != ''">
+				AND a.grid LIKE
+				<if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+				AND a.business_opportunity_address = #{businessOpportunityAddress}
+			</if>
+			<if test="lastProcessingTime != null and lastProcessingTime != ''">
+				AND a.last_processing_time = #{lastProcessingTime}
+			</if>
+			<if test="entryDate != null and entryDate != ''">
+				AND a.entry_date = #{entryDate}
+			</if>
+
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND a.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND a.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="businessChannel != null and businessChannel != ''">
+				AND a.business_channel = #{businessChannel}
+			</if>
+			<if test="competitors != null and competitors != ''">
+				AND a.competitors = #{competitors}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="isSendHps != null and isSendHps != ''">
+				AND a.is_send_hps = #{isSendHps}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code = #{projectCode}
+			</if>
+			<if test="industryId != null and industryId != ''">
+				AND a.industry_id = #{industryId}
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+
+			<if test="smallMeshCode != null and smallMeshCode != ''">
+				AND a.small_mesh_code = #{smallMeshCode}
+			</if>
+			<if test="gridCode != null and gridCode != ''">
+				AND a.grid_code = #{gridCode}
+			</if>
+			<if test="screenStstus != null and screenStstus != ''">
+				AND a.screen_ststus = #{screenStstus}
+			</if>
+			<if test="isValid != null and isValid != ''">
+				AND a.is_valid = #{isValid}
+			</if>
+			<if test="shareCount != null and shareCount != ''">
+				AND a.share_count = #{shareCount}
+			</if>
+
+			<if test="isAll != null and isAll != ''">
+				AND (a.contractor_code is null or a.contractor_code = '')
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findList" resultType="EucMsg" >
+		SELECT
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.business_code AS "businessCode",
+		a.business_name AS "businessName",
+		a.business_source AS "businessSource",
+		a.business_type AS "businessType",
+		a.top_customer_abbreviation AS "topCustomerAbbreviation",
+		a.company_name_a AS "companyNameA",
+		a.contact_name_a AS "contactNameA",
+		a.contact_mobile_a AS "contactMobileA",
+		a.industry AS "industry",
+		a.state AS "state",
+		a.haier_theater AS "haierTheater",
+		a.center AS "center",
+		a.center_name AS "centerName",
+		a.small_mesh AS "smallMesh",
+		a.grid AS "grid",
+		a.province AS "province",
+		a.province_id AS "provinceId",
+		a.city AS "city",
+		a.city_id AS "cityId",
+		a.district AS "district",
+		a.district_id AS "districtId",
+		a.business_opportunity_address AS "businessOpportunityAddress",
+		a.last_processing_time AS "lastProcessingTime",
+		a.entry_date AS "entryDate",
+		a.project_manager_code AS "projectManagerCode",
+		a.project_manager_name AS "projectManagerName",
+		a.contractor_code AS "contractorCode",
+		a.contractor_name AS "contractorName",
+		a.business_channel AS "businessChannel",
+		a.competitors AS "competitors",
+		a.remarks AS "remarks",
+		a.update_date AS "updateDate",
+		a.is_send_hps AS "isSendHps",
+		a.project_code AS "projectCode",
+		a.industry_id AS "industryId",
+		a.if_top_customer AS "ifTopCustomer",
+		a.customer_msg_id AS "customerMsgId",
+		a.small_mesh_code AS "smallMeshCode",
+		a.grid_code AS "gridCode",
+		a.screen_ststus AS "screenStstus",
+		a.is_valid AS "isValid",
+		a.share_count AS "shareCount"
+		FROM euc_msg a
+
+		<where>
+			
+			${dataScope}
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessSource != null and businessSource != ''">
+				AND a.business_source = #{businessSource}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+				AND a.top_customer_abbreviation LIKE 
+					<if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+			</if>
+			<if test="companyNameA != null and companyNameA != ''">
+				AND a.company_name_a LIKE 
+					<if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+			</if>
+			<if test="contactNameA != null and contactNameA != ''">
+				AND a.contact_name_a LIKE 
+					<if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+			</if>
+			<if test="contactMobileA != null and contactMobileA != ''">
+				AND a.contact_mobile_a LIKE 
+					<if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="state != null and state != ''">
+				AND (a.state = '100' or a.state = '200')
+			</if>
+			<if test="haierTheater != null and haierTheater != ''">
+				AND a.haier_theater = #{haierTheater}
+			</if>
+			<if test="center != null and center != ''">
+				AND a.center = #{center}
+			</if>
+			<if test="smallMesh != null and smallMesh != ''">
+				AND a.small_mesh = #{smallMesh}
+			</if>
+			<if test="grid != null and grid != ''">
+				AND a.grid LIKE
+				<if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+				AND a.business_opportunity_address = #{businessOpportunityAddress}
+			</if>
+			<if test="lastProcessingTime != null and lastProcessingTime != ''">
+				AND a.last_processing_time = #{lastProcessingTime}
+			</if>
+			<if test="entryDate != null and entryDate != ''">
+				AND a.entry_date = #{entryDate}
+			</if>
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND a.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND a.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+			<if test="projectManagerCode != null and projectManagerCode != ''">
+				AND a.project_manager_code = #{projectManagerCode}
+			</if>
+			<if test="projectManagerName != null and projectManagerName != ''">
+				AND a.project_manager_name = #{projectManagerName}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code = #{contractorCode}
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name = #{contractorName}
+			</if>
+			<if test="businessChannel != null and businessChannel != ''">
+				AND a.business_channel = #{businessChannel}
+			</if>
+			<if test="competitors != null and competitors != ''">
+				AND a.competitors = #{competitors}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="isSendHps != null and isSendHps != ''">
+				AND a.is_send_hps = #{isSendHps}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code = #{projectCode}
+			</if>
+			<if test="industryId != null and industryId != ''">
+				AND a.industry_id = #{industryId}
+			</if>
+			<if test="centerName != null and centerName != ''">
+				AND a.center_name = #{centerName}
+			</if>
+			<if test="ifTopCustomer != null and ifTopCustomer != ''">
+				AND a.if_top_customer = #{ifTopCustomer}
+			</if>
+			<if test="customerMsgId != null and customerMsgId != ''">
+				AND a.customer_msg_id = #{customerMsgId}
+			</if>
+
+			<if test="smallMeshCode != null and smallMeshCode != ''">
+				AND a.small_mesh_code = #{smallMeshCode}
+			</if>
+			<if test="gridCode != null and gridCode != ''">
+				AND a.grid_code = #{gridCode}
+			</if>
+			<if test="screenStstus != null and screenStstus != ''">
+				AND a.screen_ststus = #{screenStstus}
+			</if>
+			<if test="isValid != null and isValid != ''">
+				AND a.is_valid = #{isValid}
+			</if>
+			<if test="shareCount != null and shareCount != ''">
+				AND a.share_count = #{shareCount}
+			</if>
+
+            <if test="isAll != null and isAll != ''">
+				AND (a.contractor_code is null or a.contractor_code = '')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findAllNoShare" resultType="EucMsg" >
+		SELECT
+		<include refid="eucMsgPunctureColumns"/>
+		FROM euc_msg a
+		<where>
+			a.is_valid = '1' and a.share_count = 0 and <![CDATA[ a.screen_ststus <> 2 ]]>
+		</where>
+	</select>
+
+	<select id="findAllList" resultType="EucMsg" >
+		SELECT 
+			<include refid="eucMsgColumns"/>
+		FROM euc_msg a
+		<include refid="eucMsgJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO euc_msg(
+			id,
+			msg_id,
+			business_code,
+			business_name,
+			business_source,
+			business_type,
+			top_customer_abbreviation,
+			company_name_a,
+			contact_name_a,
+			contact_mobile_a,
+			industry,
+			state,
+			haier_theater,
+			center,
+			small_mesh,
+			grid,
+			province,
+			province_id,
+			city,
+			city_id,
+			district,
+			district_id,
+			business_opportunity_address,
+			last_processing_time,
+			entry_date,
+			project_manager_code,
+			project_manager_name,
+			contractor_code,
+			contractor_name,
+			business_channel,
+			competitors,
+			remarks,
+			update_date,
+			is_send_hps,
+			project_code,
+			industry_id,
+			center_name,
+			if_top_customer,
+			customer_msg_id,
+			small_mesh_code,
+			grid_code,
+			screen_ststus,
+			is_valid,
+			share_count
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{businessCode},
+			#{businessName},
+			#{businessSource},
+			#{businessType},
+			#{topCustomerAbbreviation},
+			#{companyNameA},
+			#{contactNameA},
+			#{contactMobileA},
+			#{industry},
+			#{state},
+			#{haierTheater},
+			#{center},
+			#{smallMesh},
+			#{grid},
+			#{province},
+			#{provinceId},
+			#{city},
+			#{cityId},
+			#{district},
+			#{districtId},
+			#{businessOpportunityAddress},
+			#{lastProcessingTime},
+			#{entryDate},
+			#{projectManagerCode},
+			#{projectManagerName},
+			#{contractorCode},
+			#{contractorName},
+			#{businessChannel},
+			#{competitors},
+			#{remarks},
+			#{updateDate},
+			#{isSendHps},
+			#{projectCode},
+			#{industryId},
+			#{centerName},
+			#{ifTopCustomer},
+			#{customerMsgId},
+			#{smallMeshCode},
+			#{gridCode},
+			#{screenStstus},
+			#{isValid},
+			#{shareCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE euc_msg SET 	
+			msg_id = #{msgId},
+			business_code = #{businessCode},
+			business_name = #{businessName},
+			business_source = #{businessSource},
+			business_type = #{businessType},
+			top_customer_abbreviation = #{topCustomerAbbreviation},
+			company_name_a = #{companyNameA},
+			contact_name_a = #{contactNameA},
+			contact_mobile_a = #{contactMobileA},
+			industry = #{industry},
+			state = #{state},
+			haier_theater = #{haierTheater},
+			center = #{center},
+			small_mesh = #{smallMesh},
+			grid = #{grid},
+			province = #{province},
+			province_id = #{provinceId},
+			city = #{city},
+			city_id = #{cityId},
+			district = #{district},
+			district_id = #{districtId},
+			business_opportunity_address = #{businessOpportunityAddress},
+			last_processing_time = #{lastProcessingTime},
+			entry_date = #{entryDate},
+			project_manager_code = #{projectManagerCode},
+			project_manager_name = #{projectManagerName},
+			contractor_code = #{contractorCode},
+			contractor_name = #{contractorName},
+			business_channel = #{businessChannel},
+			competitors = #{competitors},
+			remarks = #{remarks},
+			update_date = #{updateDate},
+			is_send_hps = #{isSendHps},
+			project_code = #{projectCode},
+			industry_id = #{industryId},
+			center_name = #{centerName},
+			if_top_customer = #{ifTopCustomer},
+			customer_msg_id = #{customerMsgId},
+			small_mesh_code = #{smallMeshCode},
+			grid_code = #{gridCode},
+			screen_ststus = #{screenStstus},
+			is_valid = #{isValid},
+			share_count = #{shareCount}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM euc_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE euc_msg SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="EucMsg" statementType="STATEMENT">
+		select * FROM euc_msg  where ${propertyName} = '${value}'
+	</select>
+	<update id="updateIsValid">
+		UPDATE euc_msg SET
+			is_valid = #{isValid}
+		WHERE id = #{id}
+	</update>
+</mapper>

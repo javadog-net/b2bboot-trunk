@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.euc.mapper.EucLogMapper">
+    
+	<sql id="eucLogColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.business_code AS "businessCode",
+		a.business_name AS "businessName",
+		a.add_time AS "addTime",
+		a.status AS "status",
+		a.content AS "content"
+	</sql>
+	
+	<sql id="eucLogJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="EucLog" >
+		SELECT 
+			<include refid="eucLogColumns"/>
+		FROM euc_log a
+		<include refid="eucLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EucLog" >
+		SELECT 
+			<include refid="eucLogColumns"/>
+		FROM euc_log a
+		<include refid="eucLogJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				AND a.business_code = #{businessCode}
+			</if>
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name = #{businessName}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EucLog" >
+		SELECT 
+			<include refid="eucLogColumns"/>
+		FROM euc_log a
+		<include refid="eucLogJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO euc_log(
+			id,
+			msg_id,
+			business_code,
+			business_name,
+			add_time,
+			status,
+			content
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{businessCode},
+			#{businessName},
+			#{addTime},
+			#{status},
+			#{content}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE euc_log SET 	
+			msg_id = #{msgId},
+			business_code = #{businessCode},
+			business_name = #{businessName},
+			add_time = #{addTime},
+			status = #{status},
+			content = #{content}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM euc_log
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE euc_log SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="EucLog" statementType="STATEMENT">
+		select * FROM euc_log  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

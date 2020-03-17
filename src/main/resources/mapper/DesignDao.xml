@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.test.dao.DesignDao">
+
+    <resultMap type="com.jhmis.test.entity.Design" id="DesignMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="source" column="source" jdbcType="VARCHAR"/>
+        <result property="replyPerson" column="reply_person" jdbcType="VARCHAR"/>
+        <result property="replyTime" column="reply_time" jdbcType="TIMESTAMP"/>
+        <result property="result" column="result" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DesignMap">
+        select
+          id, name, phone, time, source, reply_person, reply_time, result
+        from b2bboot.design
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DesignMap">
+        select
+          id, name, phone, time, source, reply_person, reply_time, result
+        from b2bboot.design
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="DesignMap">
+        select
+          id, name, phone, time, source, reply_person, reply_time, result
+        from b2bboot.design
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="source != null and source != ''">
+                and source = #{source}
+            </if>
+            <if test="replyPerson != null and replyPerson != ''">
+                and reply_person = #{replyPerson}
+            </if>
+            <if test="replyTime != null">
+                and reply_time = #{replyTime}
+            </if>
+            <if test="result != null and result != ''">
+                and result = #{result}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into b2bboot.design(name, phone, time, source, reply_person, reply_time, result)
+        values (#{name}, #{phone}, #{time}, #{source}, #{replyPerson}, #{replyTime}, #{result})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update b2bboot.design
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="source != null and source != ''">
+                source = #{source},
+            </if>
+            <if test="replyPerson != null and replyPerson != ''">
+                reply_person = #{replyPerson},
+            </if>
+            <if test="replyTime != null">
+                reply_time = #{replyTime},
+            </if>
+            <if test="result != null and result != ''">
+                result = #{result},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from b2bboot.design where id = #{id}
+    </delete>
+
+</mapper>

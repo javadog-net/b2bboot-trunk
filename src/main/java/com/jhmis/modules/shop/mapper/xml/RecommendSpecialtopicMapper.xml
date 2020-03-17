@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.RecommendSpecialtopicMapper">
+    
+	<sql id="recommendSpecialtopicColumns">
+		a.id AS "id",
+		a.dictionary_id AS "dictionaryId",
+		a.dictionary_name AS "dictionaryName",
+		a.goods_id AS "goodsId",
+		a.goods_code AS "goodsCode",
+		a.store_id AS "storeId",
+		a.remark AS "remark",
+		a.sort AS "sort",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="recommendSpecialtopicJoins">
+		left join store s on a.store_id = s.id left join goods g on a.goods_code = g.code
+	</sql>
+	
+    
+	<select id="get" resultType="RecommendSpecialtopic" >
+		SELECT 
+			<include refid="recommendSpecialtopicColumns"/>
+		FROM recommend_specialtopic a
+		<include refid="recommendSpecialtopicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RecommendSpecialtopic" >
+		SELECT 
+			<include refid="recommendSpecialtopicColumns"/>,s.store_name as storeName,g.name as goodsName
+		FROM recommend_specialtopic a
+		<include refid="recommendSpecialtopicJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="dictionaryId != null and dictionaryId != ''">
+				AND a.dictionary_id = #{dictionaryId}
+			</if>
+			<if test="dictionaryName != null and dictionaryName != ''">
+				AND a.dictionary_name = #{dictionaryName}
+			</if>
+			<if test="goodsId != null and goodsId != ''">
+				AND a.goods_id = #{goodsId}
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.dictionary_id,a.sort
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RecommendSpecialtopic" >
+		SELECT 
+			<include refid="recommendSpecialtopicColumns"/>
+		FROM recommend_specialtopic a
+		<include refid="recommendSpecialtopicJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO recommend_specialtopic(
+			id,
+			dictionary_id,
+			dictionary_name,
+			goods_id,
+			goods_code,
+			store_id,
+			remark,
+			sort,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{dictionaryId},
+			#{dictionaryName},
+			#{goodsId},
+			#{goodsCode},
+			#{storeId},
+			#{remark},
+			#{sort},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE recommend_specialtopic SET 	
+			dictionary_id = #{dictionaryId},
+			dictionary_name = #{dictionaryName},
+			goods_id = #{goodsId},
+			goods_code = #{goodsCode},
+			store_id = #{storeId},
+			remark = #{remark},
+			sort = #{sort},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM recommend_specialtopic
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE recommend_specialtopic SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RecommendSpecialtopic" statementType="STATEMENT">
+		select * FROM recommend_specialtopic  where ${propertyName} = '${value}'
+	</select>
+
+
+
+	<select id="selectRcForApi" resultType="RecommendSpecialtopic" parameterType="String">
+		SELECT
+		rs.dictionary_id as dictionaryId,
+		rs.dictionary_name as dictionaryName,
+		group_concat(rs.goods_id) as goodsId,
+		group_concat(rs.goods_code) as goodsCode,
+		group_concat(rs.store_id) as storeId,
+		group_concat(rs.sort) as sort,
+		group_concat(sg.market_price) as marketPrice,
+		group_concat(sg.price) as price,
+		group_concat(s.store_name) as storeName,
+		group_concat(g.`name`) as goodsName,
+		group_concat(g.main_pic_url) as mainPicUrl
+		FROM
+		recommend_specialtopic rs LEFT JOIN store_goods  sg on rs.goods_id = sg.id LEFT JOIN store s on rs.store_id = s.id left join goods g on rs.goods_code = g.`code`
+		left join dealer d on s.dealer_id = d.id
+
+		<where>
+			<if test="dictionaryId != null and dictionaryId != ''">
+				AND rs.dictionary_id = #{dictionaryId}
+			</if>
+			<if test="cityid != null and cityid != ''">
+				and d.gm_id = (select orgid FROM cms_gm_city where cityid = #{cityid} )
+			</if>
+			AND sg.is_shelf = 1
+		</where>
+		GROUP BY
+		rs.dictionary_id,
+		rs.dictionary_name
+
+
+	</select>
+	
+</mapper>

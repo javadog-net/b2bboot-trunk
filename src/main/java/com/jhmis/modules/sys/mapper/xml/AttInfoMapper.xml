@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.sys.mapper.AttInfoMapper">
+    
+	<sql id="attInfoColumns">
+		a.id AS "id",
+		a.att_name AS "attName",
+		a.att_md5 AS "attMd5",
+		a.att_url AS "attUrl",
+		a.att_thumb AS "attThumb",
+		a.att_ext AS "attExt",
+		a.att_size AS "attSize"
+	</sql>
+	
+	<sql id="attInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="AttInfo" >
+		SELECT 
+			<include refid="attInfoColumns"/>
+		FROM sys_att_info a
+		<include refid="attInfoJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="attMd5 != null and attMd5 != ''">
+				AND a.att_md5 = #{attMd5}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="AttInfo" >
+		SELECT 
+			<include refid="attInfoColumns"/>
+		FROM sys_att_info a
+		<include refid="attInfoJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="attName != null and attName != ''">
+				AND a.att_name = #{attName}
+			</if>
+			<if test="attMd5 != null and attMd5 != ''">
+				AND a.att_md5 = #{attMd5}
+			</if>
+			<if test="attUrl != null and attUrl != ''">
+				AND a.att_url = #{attUrl}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AttInfo" >
+		SELECT 
+			<include refid="attInfoColumns"/>
+		FROM sys_att_info a
+		<include refid="attInfoJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_att_info(
+			id,
+			att_name,
+			att_md5,
+			att_url,
+			att_thumb,
+			att_ext,
+			att_size
+		) VALUES (
+			#{id},
+			#{attName},
+			#{attMd5},
+			#{attUrl},
+			#{attThumb},
+			#{attExt},
+			#{attSize}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_att_info SET 	
+			att_name = #{attName},
+			att_md5 = #{attMd5},
+			att_url = #{attUrl},
+			att_thumb = #{attThumb},
+			att_ext = #{attExt},
+			att_size = #{attSize}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sys_att_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sys_att_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="AttInfo" statementType="STATEMENT">
+		select * FROM sys_att_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

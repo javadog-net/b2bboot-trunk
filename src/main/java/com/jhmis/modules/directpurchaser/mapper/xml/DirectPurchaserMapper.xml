@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.directpurchaser.mapper.DirectPurchaserMapper">
+    
+	<sql id="purchaserColumns">
+		a.id AS "id",
+		a.company_code AS "companyCode",
+		a.company_name AS "companyName",
+		a.company_num AS "companyNum",
+		a.province_id AS "provinceId",
+		a.is_admin AS "isAdmin",
+		a.city_id AS "cityId",
+		a.district_id AS "districtId",
+		a.area_info AS "areaInfo",
+		a.detail_address AS "detailAddress",
+		a.industry_id AS "industryId",
+		a.company_tel AS "companyTel",
+		a.contacts AS "contacts",
+		a.mobile AS "mobile",
+		a.email AS "email",
+		a.company_nature AS "companyNature",
+		a.logo_url AS "logoUrl",
+		a.invitation_code AS "invitationCode",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.audit_state AS "auditState",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_desc AS "auditDesc",
+		i.name AS "industryName",
+		a.licence_url AS "licenceUrl",
+		a.bank_name AS "bankName",
+		a.bank_account AS "bankAccount",
+		a.bank_address AS "bankAddress",
+		a.company_type AS "companyType"
+	</sql>
+	
+	<sql id="purchaserJoins">
+		LEFT JOIN industry i on a.industry_id = i.id
+	</sql>
+    
+	<select id="get" resultType="Purchaser" >
+		SELECT 
+			<include refid="purchaserColumns"/>
+		FROM purchaser a
+		<include refid="purchaserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="getone" resultType="Purchaser" >
+		SELECT 
+		*
+		FROM purchaser a
+
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<select id="findListbymobile" resultType="Purchaser">
+	select * FROM purchaser where mobile = #{mobile}
+	</select>
+	<select id="findList" resultType="Purchaser" >
+		SELECT 
+			<include refid="purchaserColumns"/>
+		FROM purchaser a
+		<include refid="purchaserJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="companyCode != null and companyCode != ''">
+				AND a.company_code = #{companyCode}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+            <if test="industryId != null and industryId != ''">
+                AND a.industry_id = #{industryId}
+            </if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="districtId != null and districtId != ''">
+				AND a.district_id = #{districtId}
+			</if>
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="purchaseType != null and purchaseType != ''">
+				AND a.purchase_type = #{purchaseType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Purchaser" >
+		SELECT 
+			<include refid="purchaserColumns"/>
+		FROM purchaser a
+		<include refid="purchaserJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser(
+			id,
+			company_code,
+			company_name,
+			company_num,
+			province_id,
+			city_id,
+			district_id,
+			area_info,
+			detail_address,
+			industry_id,
+			company_tel,
+			contacts,
+			mobile,
+			email,
+			company_nature,
+			logo_url,
+			invitation_code,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			audit_state,
+			audit_time,
+			auditor,
+			audit_desc,
+			licence_url,
+			bank_name,
+			bank_account,
+			bank_address,
+			depart,
+			channel,
+			company_type
+		) VALUES (
+			#{id},
+			#{companyCode},
+			#{companyName},
+			#{companyNum},
+			#{provinceId},
+			#{cityId},
+			#{districtId},
+			#{areaInfo},
+			#{detailAddress},
+			#{industryId},
+			#{companyTel},
+			#{contacts},
+			#{mobile},
+			#{email},
+			#{companyNature},
+			#{logoUrl},
+			#{invitationCode},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{auditState},
+			#{auditTime},
+			#{auditor},
+			#{auditDesc},
+			#{licenceUrl},
+			#{bankName},
+			#{bankAccount},
+			#{bankAddress},
+			#{depart},
+			#{channel},
+			#{companyType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser SET 	
+			company_code = #{companyCode},
+			company_name = #{companyName},
+			company_num = #{companyNum},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			district_id = #{districtId},
+			area_info = #{areaInfo},
+			detail_address = #{detailAddress},
+			industry_id = #{industryId},
+			company_tel = #{companyTel},
+			contacts = #{contacts},
+			mobile = #{mobile},
+			email = #{email},
+			company_nature = #{companyNature},
+			logo_url = #{logoUrl},
+			invitation_code = #{invitationCode},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			audit_state = #{auditState},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			audit_desc = #{auditDesc},
+			licence_url = #{licenceUrl},
+			bank_name = #{bankName},
+		    depart = #{depart},
+			channel = #{channel},
+			bank_account = #{bankAccount},
+			bank_address = #{bankAddress},
+			company_Type = #{companyType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser
+		WHERE id = #{id}
+	</update>
+	<delete id="deleteById">
+		DELETE FROM purchaser
+		WHERE id = #{id}
+	</delete>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 修改采购商主子级别 -->
+	<update id="updatePurchaserRel">
+		UPDATE purchaser SET 
+			is_admin = #{isAdmin}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Purchaser" statementType="STATEMENT">
+		select * FROM purchaser  where ${propertyName} = '${value}'
+	</select>
+
+    <update id="updateAuditState" parameterType="Purchaser">
+        update purchaser set
+          audit_state = #{auditState},
+          audit_desc = #{auditDesc},
+          auditor = #{auditor},
+          audit_time = #{auditTime},
+          company_type = #{companyType},
+          login_num = #{loginNum}
+        where id= #{id}
+    </update>
+
+    <!--删除子账号-->
+    <update id="deleteAccount">
+        DELETE FROM purchaser_account
+        WHERE purchaser_id = #{purchaserId}
+    </update>
+	<update id="logicDeleteAccount">
+		UPDATE purchaser_account SET del_flag = '1'
+		WHERE purchaser_id = #{id}
+	</update>
+	<update id="updatechannelById">
+        UPDATE purchaser SET
+        channel = #{channel}
+        WHERE id = #{id}
+    </update>
+	<update id="updatedapartname">
+        UPDATE purchaser SET
+        depart = #{depart}
+        WHERE id = #{id}
+    </update>
+    <update id="updatedapartandcompany">
+        UPDATE purchaser SET
+        depart = #{depart},
+        company_name=#{companyName},
+        detail_address=#{detailAddress},
+        province_id=#{provinceId},
+        city_id=#{cityId}
+        WHERE id = #{id}
+    </update>
+	<update id="savechannelbyid">
+	UPDATE purchaser SET
+        channel = #{openid}
+        WHERE id = #{id}
+	</update>
+
+	<!--获取经销商有订单关系的采购商，这里因为传递的参数是Purchaser，直接把id当做供应商的id来处理-->
+    <select id="getRelatedPurchaser" resultType="Purchaser" >
+        SELECT DISTINCT
+        p.id,
+        p.company_code as "companyCode",
+        p.company_name as "companyName",
+        p.contacts,
+        p.mobile
+        FROM
+        purchaser p
+        INNER JOIN orders o ON o.purchaser_id = p.id
+        INNER JOIN dealer d ON d.id = o.dealer_id
+        <where>
+            AND d.id = #{id}
+            <if test="companyCode != null and companyCode != ''">
+                AND p.company_code = #{companyCode}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND p.company_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+            </if>
+            <if test="contacts != null and contacts != ''">
+                AND p.contacts LIKE
+                <if test="dbName == 'oracle'">'%'||#{contacts}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{contacts}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{contacts},'%')</if>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND p.mobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY p.id
+            </otherwise>
+        </choose>
+    </select>
+    
+    <!--获取关联的子采购商-->
+    <select id="getSubRelPurchaser" resultType="Purchaser" >
+        SELECT
+			<include refid="purchaserColumns"/> ,pa.login_name AS "loginName" ,pa.login_num AS "loginNum"
+        FROM
+        purchaser a
+        LEFT JOIN purchaser_master_slave_rel l on l.purchaser_slave_id = a.id
+        LEFT JOIN purchaser_account pa on pa.purchaser_id = a.id
+		<include refid="purchaserJoins"/>
+        where l.purchaser_master_id = #{id}
+		<if test="companyCode != null and companyCode != ''">
+			AND a.company_code = #{companyCode}
+		</if>
+		<if test="auditState != null and auditState != ''">
+			AND a.audit_state = #{auditState}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND a.company_name LIKE
+			<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+			<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+		</if>
+
+    </select>
+     <!--获取未关联的主采购商-->
+    <select id="getNoRelPurchaser" resultType="Purchaser" >
+        SELECT *
+        FROM
+        purchaser p
+        where p.is_admin='1' and p.id not
+        in
+        (SELECT purchaser_slave_id from purchaser_master_slave_rel l  where l.purchaser_master_id = #{id}) and p.id != #{id}
+    </select>
+    
+    
+    <select id="getpurchaserbyid" resultType="Purchaser" parameterType="String">
+    select *from purchaser where id=#{id}
+    </select>
+
+</mapper>

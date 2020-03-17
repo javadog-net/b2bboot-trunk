@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.directpurchaser.mapper.DirectGoodsMapper">
+    
+	<sql id="goodsColumns">
+		a.code AS "code",
+		a.main_pic_url AS "mainPicUrl",
+		a.name AS "name",
+		a.brand AS "brand",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		e.category_id AS "cat.id",
+		e.category_id AS "categoryId",
+		e.category_pid AS "categoryPid",
+		brand.name as "brandName",
+		e.state AS "state",
+		e.market_price AS "marketPrice",
+		b.name AS "cat.name"
+	</sql>
+	
+	<sql id="goodsJoins">
+			LEFT JOIN goods_ext e ON e.code = a.code
+			LEFT JOIN goods_category b ON b.id = e.category_id
+			LEFT JOIN brand brand on a.brand = brand.id
+	</sql>
+	
+    
+	<select id="get" resultType="Goods" >
+		SELECT 
+			<include refid="goodsColumns"/>
+		FROM goods a
+		<include refid="goodsJoins"/>
+		WHERE a.code = #{code}
+	</select>
+	
+	
+	
+	<select id="findPurchaserRelList" resultType="Goods" >
+	
+	
+		SELECT 
+			<include refid="goodsColumns"/> ,l.exclusive_price AS "exclusivePrice",l.ope_date AS "updateTime"
+		FROM goods a
+		<include refid="goodsJoins"/>
+		LEFT JOIN purchaser_goods_rel l on a.code = l.goods_sku
+		WHERE l.purchaser_id = #{purchaserId}
+
+		order by l.ope_date desc
+	
+	</select>
+
+	<select id="findPurchaserRelListByGoods" resultType="Goods" >
+
+		SELECT
+			<include refid="goodsColumns"/> ,p.exclusive_price AS "exclusivePrice"
+		FROM goods a LEFT JOIN purchaser_goods_rel p ON p.goods_sku = a.code
+		<include refid="goodsJoins"/>
+		WHERE p.purchaser_id = #{purchaserId}
+
+		<if test="name != null and name != ''">
+			AND a.name LIKE
+			<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+			<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+		</if>
+		<if test="categoryPid != null and categoryPid != ''">
+			AND e.category_pid = #{categoryPid}
+		</if>
+		<if test="categoryId != null and categoryId != ''">
+			AND e.category_id = #{categoryId}
+		</if>
+	</select>
+
+	<select id="findPurchaserRelByGoods" resultType="Goods" >
+		SELECT
+		<include refid="goodsColumns"/> ,p.exclusive_price AS "exclusivePrice"
+		FROM goods a LEFT JOIN purchaser_goods_rel p ON p.goods_sku = a.code
+		<include refid="goodsJoins"/>
+		WHERE p.purchaser_id = #{purchaserId} and p.goods_sku = #{code}
+	</select>
+	
+	<select id="findList" resultType="Goods" >
+		SELECT 
+			<include refid="goodsColumns"/>,brand.name as brandName
+		FROM goods a left join brand brand on a.brand = brand.id left join goods_ext ge on a.code = ge.code
+		<include refid="goodsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND ge.category_id = #{categoryId}
+			</if>
+			<if test="categoryPid != null and categoryPid != ''">
+				AND ge.category_pid = #{categoryPid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+                    <if test="cat != null  and cat.id != null and cat.id != ''">
+                        AND (b.id = #{cat.id} OR b.parent_ids LIKE
+                        <if test="dbName == 'oracle'">'%,'||#{cat.id}||',%')</if>
+                        <if test="dbName == 'mysql'">CONCAT('%,', #{cat.id}, ',%'))</if>
+                        <if test="dbName == 'mssql'">'%'+#{cat.id}+'%')</if>
+                    </if>
+				<if test="state != null and state != ''">
+					AND ge.state = #{state}
+				</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findNoPublishList" resultType="Goods" >
+		SELECT
+		<include refid="goodsColumns"/>,brand.name as brandName
+		FROM goods a left join brand brand on a.brand = brand.id left join goods_ext ge on a.code = ge.code
+		<include refid="goodsJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND ge.category_id = #{categoryId}
+			</if>
+			<if test="categoryPid != null and categoryPid != ''">
+				AND ge.category_pid = #{categoryPid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="cat != null  and cat.id != null and cat.id != ''">
+				AND (b.id = #{cat.id} OR b.parent_ids LIKE
+				<if test="dbName == 'oracle'">'%,'||#{cat.id}||',%')</if>
+				<if test="dbName == 'mysql'">CONCAT('%,', #{cat.id}, ',%'))</if>
+				<if test="dbName == 'mssql'">'%'+#{cat.id}+'%')</if>
+			</if>
+			<if test="state != null and state != ''">
+				AND ge.state = #{state}
+			</if>
+			and a.code not in(select storeGoods.code from store_goods storeGoods left join goods gs on storeGoods.code = gs.code where storeGoods.store_id = #{storeId})
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Goods" >
+		SELECT 
+			<include refid="goodsColumns"/>
+		FROM goods a
+		<include refid="goodsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods(
+			code,
+			main_pic_url,
+			name,
+			brand,
+			create_date,
+			update_date,
+			remarks
+		) VALUES (
+			#{code},
+			#{mainPicUrl},
+			#{name},
+			#{brand},
+			#{createDate},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods SET 	
+			code = #{code},
+			main_pic_url = #{mainPicUrl},
+			name = #{name},
+			brand = #{brand},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE code = #{code}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM goods
+		WHERE code = #{code}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Goods" statementType="STATEMENT">
+		select * FROM goods  where ${propertyName} = '${value}'
+	</select>
+	<!-- 根据code获取唯一产品 -->
+	<select id="findByCode" resultType="Goods" parameterType="java.lang.String">
+		select * FROM goods  where code = #{code}
+	</select>
+	
+</mapper>

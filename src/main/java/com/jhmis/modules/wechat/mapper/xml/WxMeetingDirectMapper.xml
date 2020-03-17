@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMeetingDirectMapper">
+    
+	<sql id="wxMeetingDirectColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.user_id AS "userId",
+		a.send_time AS "sendTime",
+		a.content AS "content",
+		a.img_url AS "imgUrl",
+		a.del_flag AS "delFlag",
+		a.create_time AS "createTime",
+		a.create_user AS "createUser"
+	</sql>
+	
+	<sql id="wxMeetingDirectJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMeetingDirect" >
+		SELECT 
+			<include refid="wxMeetingDirectColumns"/>
+		FROM wx_meeting_direct a
+		<include refid="wxMeetingDirectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMeetingDirect" >
+		SELECT 
+			<include refid="wxMeetingDirectColumns"/>
+		FROM wx_meeting_direct a
+		<include refid="wxMeetingDirectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="sendTime != null and sendTime != ''">
+				AND a.send_time = #{sendTime}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content LIKE 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				and a.meeting_id = #{meetingId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMeetingDirect" >
+		SELECT 
+			<include refid="wxMeetingDirectColumns"/>
+		FROM wx_meeting_direct a
+		<include refid="wxMeetingDirectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_meeting_direct(
+			id,
+			meeting_id,
+			user_id,
+			send_time,
+			content,
+			img_url,
+			del_flag,
+			create_time,
+			create_user
+		) VALUES (
+			#{id},
+			#{meetingId},
+			#{userId},
+			#{sendTime},
+			#{content},
+			#{imgUrl},
+			#{delFlag},
+			#{createTime},
+			#{createUser}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_meeting_direct SET 	
+			meeting_id = #{meetingId},
+			user_id = #{userId},
+			send_time = #{sendTime},
+			content = #{content},
+			img_url = #{imgUrl},
+			create_time = #{createTime},
+			create_user = #{createUser}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_meeting_direct
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_meeting_direct SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMeetingDirect" statementType="STATEMENT">
+		select * FROM wx_meeting_direct  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

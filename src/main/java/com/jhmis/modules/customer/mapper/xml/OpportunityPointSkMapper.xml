@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.OpportunityPointSkMapper">
+    
+	<sql id="opportunityPointSkColumns">
+		a.id AS "id",
+		a.industrytypename AS "industrytypename",
+		a.isvalid AS "isvalid",
+		a.parentid AS "parentid"
+	</sql>
+	
+	<sql id="opportunityPointSkJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OpportunityPointSk" >
+		SELECT 
+			<include refid="opportunityPointSkColumns"/>
+		FROM opportunity_point_sk a
+		<include refid="opportunityPointSkJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OpportunityPointSk" >
+		SELECT 
+			<include refid="opportunityPointSkColumns"/>
+		FROM opportunity_point_sk a
+		<include refid="opportunityPointSkJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="industrytypename != null and industrytypename != ''">
+				AND a.industrytypename LIKE 
+					<if test="dbName == 'oracle'">'%'||#{industrytypename}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{industrytypename}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{industrytypename},'%')</if>
+			</if>
+			<if test="isvalid != null and isvalid != ''">
+				AND a.isvalid = #{isvalid}
+			</if>
+			<if test="parentid != null and parentid != ''">
+				AND a.parentid = #{parentid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OpportunityPointSk" >
+		SELECT 
+			<include refid="opportunityPointSkColumns"/>
+		FROM opportunity_point_sk a
+		<include refid="opportunityPointSkJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO opportunity_point_sk(
+			id,
+			industrytypename,
+			isvalid,
+			parentid
+		) VALUES (
+			#{id},
+			#{industrytypename},
+			#{isvalid},
+			#{parentid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE opportunity_point_sk SET 	
+			industrytypename = #{industrytypename},
+			isvalid = #{isvalid},
+			parentid = #{parentid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM opportunity_point_sk
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE opportunity_point_sk SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OpportunityPointSk" statementType="STATEMENT">
+		select * FROM opportunity_point_sk  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

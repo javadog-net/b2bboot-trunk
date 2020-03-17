@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.dealer.DealerMsgMapper">
+    
+	<sql id="dealerMsgColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.type AS "type",
+		a.dealer_id AS "dealerId",
+		a.rel_id AS "relId",
+		a.content AS "content",
+		a.addtime AS "addtime",
+		a.readids AS "readids"
+	</sql>
+	
+	<sql id="dealerMsgJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="DealerMsg" >
+		SELECT 
+			<include refid="dealerMsgColumns"/>
+		FROM dealer_msg a
+		<include refid="dealerMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DealerMsg" >
+		SELECT 
+			<include refid="dealerMsgColumns"/>,
+            if(b.msg_id is null,'0','1') as isRead,
+            b.read_time as "readtime"
+		FROM dealer_msg a
+		<include refid="dealerMsgJoins"/>
+        left join dealer_msg_read b
+        on a.id=b.msg_id and b.account_id =  #{accountId}
+		<where>
+            AND (a.type='1' or a.dealer_id = #{dealerId})
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+            <if test="content != null and content != ''">
+                AND a.content LIKE
+                <if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+            </if>
+            <if test="isRead != null and isRead != ''">
+                <if test='isRead == "1"'>
+                    AND b.msg_id is not null
+                </if>
+                <if test='isRead == "0"'>
+                    AND b.msg_id is null
+                </if>
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.addtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DealerMsg" >
+		SELECT 
+			<include refid="dealerMsgColumns"/>
+		FROM dealer_msg a
+		<include refid="dealerMsgJoins"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+    <select id="findSysMsgList" resultType="DealerMsg" >
+        SELECT
+        <include refid="dealerMsgColumns"/>
+        FROM dealer_msg a
+        <include refid="dealerMsgJoins"/>
+        <where>
+            AND a.type = '1'
+            <if test="content != null and content != ''">
+                AND a.content LIKE
+                <if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.addtime DESC
+            </otherwise>
+        </choose>
+    </select>
+
+	<insert id="insert">
+		INSERT INTO dealer_msg(
+			id,
+			code,
+			type,
+			dealer_id,
+			rel_id,
+			content,
+			addtime,
+			readids
+		) VALUES (
+			#{id},
+			#{code},
+			#{type},
+			#{relId},
+			#{dealerId},
+			#{content},
+			#{addtime},
+			#{readids}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE dealer_msg SET 	
+			code = #{code},
+			type = #{type},
+			dealer_id = #{dealerId},
+			rel_id = #{relId},
+			content = #{content},
+			addtime = #{addtime},
+			readids = #{readids}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM dealer_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE dealer_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DealerMsg" statementType="STATEMENT">
+		select * FROM dealer_msg  where ${propertyName} = '${value}'
+	</select>
+
+
+    <select id="isRead" resultType="int">
+        select count(1) FROM dealer_msg_read  where
+         msg_id = #{msgId} and account_id = #{accountId}
+    </select>
+
+    <select id="unReadCount" resultType="int">
+        select count(a.id) FROM dealer_msg a
+        left join dealer_msg_read b
+        on a.id=b.msg_id and b.account_id =  #{accountId}
+        WHERE
+        b.msg_id is null
+        <if test="type != null and type != ''">
+            AND a.type = #{type}
+        </if>
+    </select>
+
+    <insert id="readMsg">
+        INSERT INTO dealer_msg_read(
+			msg_id,
+			account_id,
+			read_time
+		) VALUES (
+			#{msgId},
+			#{accountId},
+			now()
+		)
+    </insert>
+
+    <!--删除消息读取记录-->
+    <update id="deleteMsgRead">
+        DELETE FROM dealer_msg_read
+        WHERE msg_id = #{msgId}
+    </update>
+
+</mapper>

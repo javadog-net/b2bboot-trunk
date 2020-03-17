@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.GoodsEvaluateMapper">
+    
+	<sql id="goodsEvaluateColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.goods_code AS "goodsCode",
+		a.goods_name AS "goodsName",
+		a.goods_price AS "goodsPrice",
+		a.main_pic_url AS "mainPicUrl",
+		a.store_id AS "storeId",
+		a.store_name AS "storeName",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.content AS "content",
+		a.addtime AS "addtime",
+		a.isanonymous AS "isanonymous",
+		a.explain AS "explain",
+		a.content_again AS "contentAgain",
+		a.addtime_again AS "addtimeAgain",
+		a.image_again AS "imageAgain",
+		a.explain_again AS "explainAgain",
+		a.product_quality AS "productQuality",
+		a.demand_response AS "demandResponse",
+		a.delivery_credit AS "deliveryCredit",
+		a.supply_speed AS "supplySpeed",
+		a.customer_service AS "customerService",
+		pa.login_name AS "loginName",
+		p.logo_url AS "logoUrl"
+
+	</sql>
+	
+	<sql id="goodsEvaluateJoins">
+		inner join purchaser_account pa on a.purchaser_account_id = pa.id inner join purchaser p on pa.purchaser_id = p.id
+	</sql>
+	
+    
+	<select id="get" resultType="GoodsEvaluate" >
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsEvaluate" >
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn LIKE
+				<if test="dbName == 'oracle'">'%'||#{orderSn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orderSn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orderSn},'%')</if>
+			</if>
+			<if test="goodsCode != null and goodsCode != ''">
+				AND a.goods_code = #{goodsCode}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND a.goods_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="goodsPrice != null and goodsPrice != ''">
+				AND a.goods_price = #{goodsPrice}
+			</if>
+			<if test="mainPicUrl != null and mainPicUrl != ''">
+				AND a.main_pic_url = #{mainPicUrl}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				AND a.addtime = #{addtime}
+			</if>
+			<if test="isanonymous != null and isanonymous != ''">
+				AND a.isanonymous = #{isanonymous}
+			</if>
+			<if test="explain != null and explain != ''">
+				AND a.explain = #{explain}
+			</if>
+			<if test="contentAgain != null and contentAgain != ''">
+				AND a.content_again = #{contentAgain}
+			</if>
+			<if test="addtimeAgain != null and addtimeAgain != ''">
+				AND a.addtime_again = #{addtimeAgain}
+			</if>
+			<if test="imageAgain != null and imageAgain != ''">
+				AND a.image_again = #{imageAgain}
+			</if>
+			<if test="explainAgain != null and explainAgain != ''">
+				AND a.explain_again = #{explainAgain}
+			</if>
+			<if test="productQuality != null and productQuality != ''">
+				AND a.product_quality = #{productQuality}
+			</if>
+			<if test="demandResponse != null and demandResponse != ''">
+				AND a.demand_response = #{demandResponse}
+			</if>
+			<if test="deliveryCredit != null and deliveryCredit != ''">
+				AND a.delivery_credit = #{deliveryCredit}
+			</if>
+			<if test="supplySpeed != null and supplySpeed != ''">
+				AND a.supply_speed = #{supplySpeed}
+			</if>
+			<if test="customerService != null and customerService != ''">
+				AND a.customer_service = #{customerService}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsEvaluate" >
+		SELECT 
+			<include refid="goodsEvaluateColumns"/>
+		FROM goods_evaluate a
+		<include refid="goodsEvaluateJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_evaluate(
+		id,
+			order_id,
+			order_sn,
+			goods_code,
+			goods_name,
+			goods_price,
+			main_pic_url,
+			store_id,
+			store_name,
+			purchaser_account_id,
+			content,
+			addtime,
+			isanonymous,
+			`explain`,
+			content_again,
+			addtime_again,
+			image_again,
+			explain_again,
+			product_quality,
+			demand_response,
+			delivery_credit,
+			supply_speed,
+			customer_service
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{orderSn},
+			#{goodsCode},
+			#{goodsName},
+			#{goodsPrice},
+			#{mainPicUrl},
+			#{storeId},
+			#{storeName},
+			#{purchaserAccountId},
+			#{content},
+			#{addtime},
+			#{isanonymous},
+			#{explain},
+			#{contentAgain},
+			#{addtimeAgain},
+			#{imageAgain},
+			#{explainAgain},
+			#{productQuality},
+			#{demandResponse},
+			#{deliveryCredit},
+			#{supplySpeed},
+			#{customerService}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_evaluate SET 	
+			order_id = #{orderId},
+			order_sn = #{orderSn},
+			goods_code = #{goodsCode},
+			goods_name = #{goodsName},
+			goods_price = #{goodsPrice},
+			main_pic_url = #{mainPicUrl},
+			store_id = #{storeId},
+			store_name = #{storeName},
+			purchaser_account_id = #{purchaserAccountId},
+			content = #{content},
+			addtime = #{addtime},
+			isanonymous = #{isanonymous},
+			`explain` = #{explain},
+			content_again = #{contentAgain},
+			addtime_again = #{addtimeAgain},
+			image_again = #{imageAgain},
+			explain_again = #{explainAgain},
+			product_quality = #{productQuality},
+			demand_response = #{demandResponse},
+			delivery_credit = #{deliveryCredit},
+			supply_speed = #{supplySpeed},
+			customer_service = #{customerService}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM goods_evaluate
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE goods_evaluate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="GoodsEvaluate" statementType="STATEMENT">
+		select * FROM goods_evaluate  where ${propertyName} = '${value}'
+	</select>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findByOrderOrCode" resultType="GoodsEvaluate" parameterType="String">
+		select * FROM goods_evaluate  where order_id = #{arg0} and goods_code = #{arg1}
+	</select>
+
+</mapper>

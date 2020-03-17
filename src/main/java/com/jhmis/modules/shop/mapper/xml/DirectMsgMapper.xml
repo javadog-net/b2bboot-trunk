@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.DirectMsgMapper">
+    
+	<sql id="directMsgColumns">
+		a.id AS "id",
+		a.msg_order AS "msgOrder",
+		a.projectname AS "projectname",
+		a.first_company_name AS "firstCompanyName",
+		a.first_contact_name AS "firstContactName",
+		a.phone AS "phone",
+		a.project_creater_code AS "projectCreaterCode",
+		a.project_creater_name AS "projectCreaterName",
+		a.project_manager_code AS "projectManagerCode",
+		a.project_manager_name AS "projectManagerName",
+		a.sh_partner AS "shPartner",
+		a.py_partner AS "pyPartner",
+		a.bp_partner AS "bpPartner",
+		a.status AS "status",
+		a.address_province AS "addressProvince",
+		a.address_city AS "addressCity",
+		a.address_county AS "addressCounty",
+		a.add_user AS "addUser",
+		a.add_time AS "addTime",
+		a.error_msg AS "errorMsg",
+		a.error_time AS "errorTime"
+	</sql>
+	
+	<sql id="directMsgJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="DirectMsg" >
+		SELECT 
+			<include refid="directMsgColumns"/>
+		FROM direct_msg a
+		<include refid="directMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DirectMsg" >
+		SELECT 
+			<include refid="directMsgColumns"/>
+		FROM direct_msg a
+		<include refid="directMsgJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgOrder != null and msgOrder != ''">
+				AND a.msg_order = #{msgOrder}
+			</if>
+			<if test="projectname != null and projectname != ''">
+				AND a.projectname = #{projectname}
+			</if>
+			<if test="firstCompanyName != null and firstCompanyName != ''">
+				AND a.first_company_name = #{firstCompanyName}
+			</if>
+			<if test="firstContactName != null and firstContactName != ''">
+				AND a.first_contact_name = #{firstContactName}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="projectCreaterCode != null and projectCreaterCode != ''">
+				AND a.project_creater_code = #{projectCreaterCode}
+			</if>
+			<if test="shPartner != null and shPartner != ''">
+				AND a.sh_partner = #{shPartner}
+			</if>
+			<if test="pyPartner != null and pyPartner != ''">
+				AND a.py_partner = #{pyPartner}
+			</if>
+			<if test="bpPartner != null and bpPartner != ''">
+				AND a.bp_partner = #{bpPartner}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DirectMsg" >
+		SELECT 
+			<include refid="directMsgColumns"/>
+		FROM direct_msg a
+		<include refid="directMsgJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO direct_msg(
+			id,
+			msg_order,
+			projectname,
+			first_company_name,
+			first_contact_name,
+			phone,
+			project_creater_code,
+			project_creater_name,
+			project_manager_code,
+			project_manager_name,
+			sh_partner,
+			py_partner,
+			bp_partner,
+			status,
+			address_province,
+			address_city,
+			address_county,
+			add_user,
+			add_time,
+			error_msg,
+			error_time
+		) VALUES (
+			#{id},
+			#{msgOrder},
+			#{projectname},
+			#{firstCompanyName},
+			#{firstContactName},
+			#{phone},
+			#{projectCreaterCode},
+			#{projectCreaterName},
+			#{projectManagerCode},
+			#{projectManagerName},
+			#{shPartner},
+			#{pyPartner},
+			#{bpPartner},
+			#{status},
+			#{addressProvince},
+			#{addressCity},
+			#{addressCounty},
+			#{addUser},
+			#{addTime},
+			#{errorMsg},
+			#{errorTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE direct_msg SET 	
+			msg_order = #{msgOrder},
+			projectname = #{projectname},
+			first_company_name = #{firstCompanyName},
+			first_contact_name = #{firstContactName},
+			phone = #{phone},
+			project_creater_code = #{projectCreaterCode},
+			project_creater_name = #{projectCreaterName},
+			project_manager_code = #{projectManagerCode},
+			project_manager_name = #{projectManagerName},
+			sh_partner = #{shPartner},
+			py_partner = #{pyPartner},
+			bp_partner = #{bpPartner},
+			status = #{status},
+			address_province = #{addressProvince},
+			address_city = #{addressCity},
+			address_county = #{addressCounty},
+			add_user = #{addUser},
+			add_time = #{addTime},
+			error_msg = #{errorMsg},
+			error_time = #{errorTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM direct_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE direct_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DirectMsg" statementType="STATEMENT">
+		select * FROM direct_msg  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

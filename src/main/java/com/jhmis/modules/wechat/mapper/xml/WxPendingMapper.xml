@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxPendingMapper">
+    
+
+	<select id="findAllPending" resultType="com.jhmis.modules.wechat.entity.WxPending" >
+		SELECT 
+			id,
+			user_id,
+			type,
+			type_id,
+			status,
+			friend_name,
+			sign_status,
+			meeting_name,
+			meeting_site,
+			meeting_start_time,
+			time
+		FROM 
+			wx_pending
+		WHERE 
+			status=0 AND user_id=#{userId}
+		ORDER BY time desc
+	</select>
+ 
+	<select id="getById" resultType="com.jhmis.modules.wechat.entity.WxPending" >
+		SELECT 
+			id,
+			user_id,
+			type,
+			type_id,
+			status,
+			friend_name,
+			sign_status,
+			meeting_name,
+			meeting_site,
+			meeting_start_time,
+			time
+		FROM 
+			wx_pending
+		WHERE 
+			id=#{id}
+	</select>
+	
+	
+	<select id="getByWxPending" resultType="com.jhmis.modules.wechat.entity.WxPending">
+		SELECT 
+			id,
+			user_id,
+			type,
+			type_id,
+			status,
+			friend_name,
+			sign_status,
+			meeting_name,
+			meeting_site,
+			meeting_start_time,
+			time
+		FROM 
+			wx_pending
+		WHERE 
+			1=1
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND user_id=#{userId}
+			</if>
+			<if test="type != null and type != ''">
+				AND type=#{type}
+			</if>
+			<if test="typeId != null and typeId != ''">
+				AND type_id=#{typeId}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+			<if test="friendName != null and friendName != ''">
+				AND friend_name=#{friendName}
+			</if>
+			<if test="signStatus != null and signStatus != ''">
+				AND sign_status=#{signStatus}
+			</if>
+			<if test="meetingName != null and meetingName != ''">
+				AND meeting_name=#{meetingName}
+			</if>
+			<if test="meetingSite != null and meetingSite != ''">
+				AND meeting_site=#{meetingSite}
+			</if>
+			<if test="meetingStartTime != null">
+				AND meeting_start_time=#{meetingStartTime}
+			</if>
+			<if test="time != null">
+				AND time=#{time}
+			</if>
+			
+			
+	</select>
+	
+	<select id="getPendingNumber" resultType="java.lang.Integer" >
+		SELECT 
+			count(id)
+		FROM 
+			wx_pending
+		WHERE 
+			status=0 AND user_id=#{userId}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_pending(
+			id,
+			user_id,
+			type,
+			type_id,
+			status,
+			friend_name,
+			sign_status,
+			meeting_name,
+			meeting_site,
+			meeting_start_time,
+			time
+		) VALUES (
+			#{id},
+			#{userId},
+			#{type},
+			#{typeId},
+			#{status},
+			#{friendName},
+			#{signStatus},
+			#{meetingName},
+			#{meetingSite},
+			#{meetingStartTime},
+			#{time}
+		)
+	</insert>
+	
+	<!-- <update id="updateStatusById">
+		UPDATE wx_pending SET 	
+			status = #{status}
+		WHERE id = #{id}
+	</update> -->
+	
+	<update id="updateStatusById">
+		UPDATE wx_pending SET 	
+			status=1
+		WHERE id=#{id}
+	</update>
+
+	<delete id="deleteById">
+		DELETE FROM wx_pending
+		WHERE id=#{id}
+	</delete>
+
+	<delete id="deletebyuserid">
+		DELETE FROM wx_pending
+		WHERE user_id=#{id}
+	</delete>
+	
+</mapper>

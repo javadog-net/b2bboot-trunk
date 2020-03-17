@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxGroupMessageMapper">
+
+	<sql id="wxGroupMessageColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.group_id AS "groupId",
+		a.content AS "content",
+		a.share_url,
+		a.share_summary,
+		a.is_del AS "isDel",
+		a.is_read AS "isRead",
+		a.send_time AS "sendTime",
+		a.is_back AS "isBack",
+		a.img AS "img",
+		a.type AS "type",
+		a.file_name AS
+		"fileName",
+		pa.nick_name AS "userName",
+		pa.purchaser_id AS "purchaserId"
+	</sql>
+
+	<sql id="wxGroupMessageJoins">
+
+		LEFT JOIN purchaser_account pa ON pa.id = a.user_id
+	</sql>
+
+
+	<select id="get" resultType="WxGroupMessage">
+		SELECT
+		<include refid="wxGroupMessageColumns" />
+		FROM wx_group_message a
+		<include refid="wxGroupMessageJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WxGroupMessage">
+		SELECT
+		<include refid="wxGroupMessageColumns" />
+		FROM wx_group_message a
+		<include refid="wxGroupMessageJoins" />
+		<where>
+			${dataScope}
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WxGroupMessage">
+		SELECT
+		<include refid="wxGroupMessageColumns" />
+		FROM wx_group_message a
+		<include refid="wxGroupMessageJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wx_group_message(
+		id,
+		user_id,
+		group_id,
+		content,
+		share_url,
+		share_summary,
+		is_del,
+		is_read,
+		send_time,
+		is_back,
+		img,
+		type,
+		file_name
+		) VALUES (
+		#{id},
+		#{userId},
+		#{groupId},
+		#{content},
+		#{shareUrl},
+		#{shareSummary},
+		#{isDel},
+		#{isRead},
+		#{sendTime},
+		#{isBack},
+		#{img},
+		#{type},
+		#{fileName}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wx_group_message SET
+		user_id = #{userId},
+		group_id = #{groupId},
+		content = #{content},
+		share_url=#{shareUrl},
+		share_summary=#{shareSummary},
+		is_del = #{isDel},
+		is_read = #{isRead},
+		send_time = #{sendTime},
+		is_back = #{isBack},
+		img = #{img}
+		type = #{type}
+		file_name = #{fileName}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM wx_group_message
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE wx_group_message SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxGroupMessage"
+		statementType="STATEMENT">
+		select * FROM wx_group_message where ${propertyName} =
+		'${value}'
+	</select>
+
+	<select id="messageNumber" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(id) from wx_group_message where
+		group_id=#{groupId}
+	</select>
+
+</mapper>

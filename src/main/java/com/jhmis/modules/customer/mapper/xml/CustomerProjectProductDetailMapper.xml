@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerProjectProductDetailMapper">
+    
+	<sql id="customerProjectProductDetailColumns">
+		a.id AS "id",
+		a.projectcode AS "projectcode",
+		a.currstate AS "currstate",
+		a.amount AS "amount",
+		a.cjprice AS "cjprice",
+		a.cjpricesum AS "cjpricesum",
+		a.price AS "price",
+		a.pricesum AS "pricesum",
+		a.bargainprice AS "bargainprice",
+		a.bargainpricesum AS "bargainpricesum",
+		a.stepflrebat AS "stepflrebat",
+		a.productid AS "productid",
+		a.productname AS "productname",
+		a.classcode AS "classcode",
+		a.classname AS "classname",
+		a.modelcode AS "modelcode",
+		a.modelname AS "modelname",
+		a.sendbccstate AS "sendbccstate",
+		a.bccfxprice AS "bccfxprice",
+		a.bccblprice AS "bccblprice",
+		a.bccbbprice AS "bccbbprice",
+		a.plprice AS "plprice",
+		a.fxprice AS "fxprice",
+		a.blprice AS "blprice",
+		a.bbprice AS "bbprice",
+		a.httype AS "httype",
+		a.sysdatetime AS "sysdatetime",
+		a.isvalid AS "isvalid",
+		a.isprochange AS "isprochange",
+		a.modlebllv AS "modlebllv",
+		a.xqqty AS "xqqty",
+		a.companyname AS "companyname",
+		a.manager AS "manager",
+		a.mobilephone AS "mobilephone",
+		a.relation AS "relation",
+		a.tzspg AS "tzspg",
+		a.expr1 AS "expr1",
+		a.expr2 AS "expr2",
+		a.expr3 AS "expr3",
+		a.expr4 AS "expr4",
+		a.addressdetail AS "addressdetail",
+		a.modelblprice AS "modelblprice"
+	</sql>
+	
+	<sql id="customerProjectProductDetailJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CustomerProjectProductDetail" >
+		SELECT 
+			<include refid="customerProjectProductDetailColumns"/>
+		FROM customer_project_product_detail a
+		<include refid="customerProjectProductDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CustomerProjectProductDetail" >
+		SELECT 
+			<include refid="customerProjectProductDetailColumns"/>
+		FROM customer_project_product_detail a
+		<include refid="customerProjectProductDetailJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="projectcode != null and projectcode != ''">
+				AND a.projectcode = #{projectcode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerProjectProductDetail" >
+		SELECT 
+			<include refid="customerProjectProductDetailColumns"/>
+		FROM customer_project_product_detail a
+		<include refid="customerProjectProductDetailJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_project_product_detail(
+			projectcode,
+			currstate,
+			amount,
+			cjprice,
+			cjpricesum,
+			price,
+			pricesum,
+			bargainprice,
+			bargainpricesum,
+			stepflrebat,
+			productid,
+			productname,
+			classcode,
+			classname,
+			modelcode,
+			modelname,
+			sendbccstate,
+			bccfxprice,
+			bccblprice,
+			bccbbprice,
+			plprice,
+			fxprice,
+			blprice,
+			bbprice,
+			httype,
+			sysdatetime,
+			isvalid,
+			isprochange,
+			modlebllv,
+			xqqty,
+			companyname,
+			manager,
+			mobilephone,
+			relation,
+			tzspg,
+			expr1,
+			expr2,
+			expr3,
+			expr4,
+			addressdetail,
+			modelblprice
+		) VALUES (
+			#{projectcode},
+			#{currstate},
+			#{amount},
+			#{cjprice},
+			#{cjpricesum},
+			#{price},
+			#{pricesum},
+			#{bargainprice},
+			#{bargainpricesum},
+			#{stepflrebat},
+			#{productid},
+			#{productname},
+			#{classcode},
+			#{classname},
+			#{modelcode},
+			#{modelname},
+			#{sendbccstate},
+			#{bccfxprice},
+			#{bccblprice},
+			#{bccbbprice},
+			#{plprice},
+			#{fxprice},
+			#{blprice},
+			#{bbprice},
+			#{httype},
+			#{sysdatetime},
+			#{isvalid},
+			#{isprochange},
+			#{modlebllv},
+			#{xqqty},
+			#{companyname},
+			#{manager},
+			#{mobilephone},
+			#{relation},
+			#{tzspg},
+			#{expr1},
+			#{expr2},
+			#{expr3},
+			#{expr4},
+			#{addressdetail},
+			#{modelblprice}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_project_product_detail SET 	
+			projectcode = #{projectcode},
+			currstate = #{currstate},
+			amount = #{amount},
+			cjprice = #{cjprice},
+			cjpricesum = #{cjpricesum},
+			price = #{price},
+			pricesum = #{pricesum},
+			bargainprice = #{bargainprice},
+			bargainpricesum = #{bargainpricesum},
+			stepflrebat = #{stepflrebat},
+			productid = #{productid},
+			productname = #{productname},
+			classcode = #{classcode},
+			classname = #{classname},
+			modelcode = #{modelcode},
+			modelname = #{modelname},
+			sendbccstate = #{sendbccstate},
+			bccfxprice = #{bccfxprice},
+			bccblprice = #{bccblprice},
+			bccbbprice = #{bccbbprice},
+			plprice = #{plprice},
+			fxprice = #{fxprice},
+			blprice = #{blprice},
+			bbprice = #{bbprice},
+			httype = #{httype},
+			sysdatetime = #{sysdatetime},
+			isvalid = #{isvalid},
+			isprochange = #{isprochange},
+			modlebllv = #{modlebllv},
+			xqqty = #{xqqty},
+			companyname = #{companyname},
+			manager = #{manager},
+			mobilephone = #{mobilephone},
+			relation = #{relation},
+			tzspg = #{tzspg},
+			expr1 = #{expr1},
+			expr2 = #{expr2},
+			expr3 = #{expr3},
+			expr4 = #{expr4},
+			addressdetail = #{addressdetail},
+			modelblprice = #{modelblprice}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_project_product_detail
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_project_product_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerProjectProductDetail" statementType="STATEMENT">
+		select * FROM customer_project_product_detail  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

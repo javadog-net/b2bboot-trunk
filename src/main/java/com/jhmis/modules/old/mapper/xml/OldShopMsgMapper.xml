@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.old.mapper.OldShopMsgMapper">
+    
+	<sql id="oldShopMsgColumns">
+		a.id AS "id",
+		a.provinceid AS "provinceid",
+		a.provincename AS "provincename",
+		a.cityid AS "cityid",
+		a.cityname AS "cityname",
+		a.orgid AS "orgid",
+		a.orgname AS "orgname",
+		a.product AS "product",
+		a.count AS "count",
+		a.money AS "money",
+		a.createtime AS "createtime",
+		a.channel AS "channel",
+		a.companyname AS "companyname",
+		a.companysize AS "companysize",
+		a.keypersion AS "keypersion",
+		a.keymobile AS "keymobile",
+		a.reservemobile AS "reservemobile",
+		a.adress AS "adress",
+		a.indus AS "indus",
+		a.infcode AS "infcode",
+		a.flag AS "flag",
+		a.custcode AS "custcode",
+		a.oldcode AS "oldcode",
+		a.msgvalid AS "msgvalid",
+		a.memberid AS "memberid",
+		a.subtime AS "subtime",
+		a.quotainfo AS "quotainfo",
+		a.msgflag AS "msgflag",
+		a.memo AS "memo",
+		a.approtime AS "approtime",
+		a.isqd AS "isqd",
+		a.qq AS "qq",
+		a.email AS "email",
+		a.ptchecker AS "ptchecker",
+		a.ptispass AS "ptispass",
+		a.ptchecktime AS "ptchecktime",
+		a.ptdescp AS "ptdescp",
+		a.isdispatch AS "isdispatch",
+		a.appchecker AS "appchecker",
+		a.appdescp AS "appdescp",
+		a.appispass AS "appispass",
+		a.ordertype AS "ordertype",
+		a.grabtime AS "grabtime",
+		a.mimgurl AS "mimgurl",
+		a.uploadtime AS "uploadtime",
+		a.stracheck AS "stracheck",
+		a.strachecker AS "strachecker",
+		a.strachecktime AS "strachecktime",
+		a.msgisclose AS "msgisclose",
+		a.haveundertake AS "haveundertake",
+		a.skmodel AS "skmodel",
+		a.skproductd AS "skproductd",
+		a.acgprojectid AS "acgprojectid",
+		a.projectcode AS "projectcode",
+		a.depart AS "depart",
+		a.smallprojectid AS "smallprojectid",
+		a.category AS "category",
+		a.isback AS "isback",
+		a.dataurl AS "dataurl",
+		a.unreadmsg AS "unreadmsg",
+		a.cooperationandexchange AS "cooperationandexchange",
+		a.nodetag AS "nodetag",
+		a.isread AS "isread",
+		a.projectname AS "projectname",
+		a.managerno AS "managerno",
+		a.managername AS "managername",
+		a.conditionermembertype AS "conditionermembertype",
+		a.remarks AS "remarks",
+		a.remarkstime AS "remarkstime",
+		a.remarksperson AS "remarksperson",
+		a.hpsprovinceid AS "hpsprovinceid",
+		a.hpscityid AS "hpscityid",
+		a.hpsdistrictid AS "hpsdistrictid",
+		a.firstcompanyorgcode AS "firstcompanyorgcode",
+		a.firstcompanyorgname AS "firstcompanyorgname",
+		a.areadetails AS "areadetails",
+		a.sendmsg AS "sendmsg"
+	</sql>
+	
+	<sql id="oldShopMsgJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="OldShopMsg" >
+		SELECT 
+			<include refid="oldShopMsgColumns"/>
+		FROM old_shop_msg a
+		<include refid="oldShopMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OldShopMsg" >
+		SELECT 
+			<include refid="oldShopMsgColumns"/>
+		FROM old_shop_msg a
+		<include refid="oldShopMsgJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="provinceid != null and provinceid != ''">
+				AND a.provinceid = #{provinceid}
+			</if>
+			<if test="provincename != null and provincename != ''">
+				AND a.provincename = #{provincename}
+			</if>
+			<if test="cityid != null and cityid != ''">
+				AND a.cityid = #{cityid}
+			</if>
+			<if test="cityname != null and cityname != ''">
+				AND a.cityname = #{cityname}
+			</if>
+			<if test="orgid != null and orgid != ''">
+				AND a.orgid = #{orgid}
+			</if>
+			<if test="orgname != null and orgname != ''">
+				AND a.orgname = #{orgname}
+			</if>
+			<if test="product != null and product != ''">
+				AND a.product = #{product}
+			</if>
+			<if test="count != null and count != ''">
+				AND a.count = #{count}
+			</if>
+			<if test="money != null and money != ''">
+				AND a.money = #{money}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				AND a.companyname = #{companyname}
+			</if>
+			<if test="companysize != null and companysize != ''">
+				AND a.companysize = #{companysize}
+			</if>
+			<if test="keypersion != null and keypersion != ''">
+				AND a.keypersion = #{keypersion}
+			</if>
+			<if test="keymobile != null and keymobile != ''">
+				AND a.keymobile = #{keymobile}
+			</if>
+			<if test="reservemobile != null and reservemobile != ''">
+				AND a.reservemobile = #{reservemobile}
+			</if>
+			<if test="adress != null and adress != ''">
+				AND a.adress = #{adress}
+			</if>
+			<if test="indus != null and indus != ''">
+				AND a.indus = #{indus}
+			</if>
+			<if test="infcode != null and infcode != ''">
+				AND a.infcode = #{infcode}
+			</if>
+			<if test="flag != null and flag != ''">
+				AND a.flag = #{flag}
+			</if>
+			<if test="custcode != null and custcode != ''">
+				AND a.custcode = #{custcode}
+			</if>
+			<if test="oldcode != null and oldcode != ''">
+				AND a.oldcode = #{oldcode}
+			</if>
+			<if test="msgvalid != null and msgvalid != ''">
+				AND a.msgvalid = #{msgvalid}
+			</if>
+			<if test="memberid != null and memberid != ''">
+				AND a.memberid = #{memberid}
+			</if>
+			<if test="subtime != null and subtime != ''">
+				AND a.subtime = #{subtime}
+			</if>
+			<if test="quotainfo != null and quotainfo != ''">
+				AND a.quotainfo = #{quotainfo}
+			</if>
+			<if test="msgflag != null and msgflag != ''">
+				AND a.msgflag = #{msgflag}
+			</if>
+			<if test="memo != null and memo != ''">
+				AND a.memo = #{memo}
+			</if>
+			<if test="approtime != null and approtime != ''">
+				AND a.approtime = #{approtime}
+			</if>
+			<if test="isqd != null and isqd != ''">
+				AND a.isqd = #{isqd}
+			</if>
+			<if test="qq != null and qq != ''">
+				AND a.qq = #{qq}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
+			</if>
+			<if test="ptchecker != null and ptchecker != ''">
+				AND a.ptchecker = #{ptchecker}
+			</if>
+			<if test="ptispass != null and ptispass != ''">
+				AND a.ptispass = #{ptispass}
+			</if>
+			<if test="ptchecktime != null and ptchecktime != ''">
+				AND a.ptchecktime = #{ptchecktime}
+			</if>
+			<if test="ptdescp != null and ptdescp != ''">
+				AND a.ptdescp = #{ptdescp}
+			</if>
+			<if test="isdispatch != null and isdispatch != ''">
+				AND a.isdispatch = #{isdispatch}
+			</if>
+			<if test="appchecker != null and appchecker != ''">
+				AND a.appchecker = #{appchecker}
+			</if>
+			<if test="appdescp != null and appdescp != ''">
+				AND a.appdescp = #{appdescp}
+			</if>
+			<if test="appispass != null and appispass != ''">
+				AND a.appispass = #{appispass}
+			</if>
+			<if test="ordertype != null and ordertype != ''">
+				AND a.ordertype = #{ordertype}
+			</if>
+			<if test="grabtime != null and grabtime != ''">
+				AND a.grabtime = #{grabtime}
+			</if>
+			<if test="mimgurl != null and mimgurl != ''">
+				AND a.mimgurl = #{mimgurl}
+			</if>
+			<if test="uploadtime != null and uploadtime != ''">
+				AND a.uploadtime = #{uploadtime}
+			</if>
+			<if test="stracheck != null and stracheck != ''">
+				AND a.stracheck = #{stracheck}
+			</if>
+			<if test="strachecker != null and strachecker != ''">
+				AND a.strachecker = #{strachecker}
+			</if>
+			<if test="strachecktime != null and strachecktime != ''">
+				AND a.strachecktime = #{strachecktime}
+			</if>
+			<if test="msgisclose != null and msgisclose != ''">
+				AND a.msgisclose = #{msgisclose}
+			</if>
+			<if test="haveundertake != null and haveundertake != ''">
+				AND a.haveundertake = #{haveundertake}
+			</if>
+			<if test="skmodel != null and skmodel != ''">
+				AND a.skmodel = #{skmodel}
+			</if>
+			<if test="skproductd != null and skproductd != ''">
+				AND a.skproductd = #{skproductd}
+			</if>
+			<if test="acgprojectid != null and acgprojectid != ''">
+				AND a.acgprojectid = #{acgprojectid}
+			</if>
+			<if test="projectcode != null and projectcode != ''">
+				AND a.projectcode = #{projectcode}
+			</if>
+			<if test="depart != null and depart != ''">
+				AND a.depart = #{depart}
+			</if>
+			<if test="smallprojectid != null and smallprojectid != ''">
+				AND a.smallprojectid = #{smallprojectid}
+			</if>
+			<if test="category != null and category != ''">
+				AND a.category = #{category}
+			</if>
+			<if test="isback != null and isback != ''">
+				AND a.isback = #{isback}
+			</if>
+			<if test="dataurl != null and dataurl != ''">
+				AND a.dataurl = #{dataurl}
+			</if>
+			<if test="unreadmsg != null and unreadmsg != ''">
+				AND a.unreadmsg = #{unreadmsg}
+			</if>
+			<if test="cooperationandexchange != null and cooperationandexchange != ''">
+				AND a.cooperationandexchange = #{cooperationandexchange}
+			</if>
+			<if test="nodetag != null and nodetag != ''">
+				AND a.nodetag = #{nodetag}
+			</if>
+			<if test="isread != null and isread != ''">
+				AND a.isread = #{isread}
+			</if>
+			<if test="projectname != null and projectname != ''">
+				AND a.projectname = #{projectname}
+			</if>
+			<if test="managerno != null and managerno != ''">
+				AND a.managerno = #{managerno}
+			</if>
+			<if test="managername != null and managername != ''">
+				AND a.managername = #{managername}
+			</if>
+			<if test="conditionermembertype != null and conditionermembertype != ''">
+				AND a.conditionermembertype = #{conditionermembertype}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="remarkstime != null and remarkstime != ''">
+				AND a.remarkstime = #{remarkstime}
+			</if>
+			<if test="remarksperson != null and remarksperson != ''">
+				AND a.remarksperson = #{remarksperson}
+			</if>
+			<if test="hpsprovinceid != null and hpsprovinceid != ''">
+				AND a.hpsprovinceid = #{hpsprovinceid}
+			</if>
+			<if test="hpscityid != null and hpscityid != ''">
+				AND a.hpscityid = #{hpscityid}
+			</if>
+			<if test="hpsdistrictid != null and hpsdistrictid != ''">
+				AND a.hpsdistrictid = #{hpsdistrictid}
+			</if>
+			<if test="firstcompanyorgcode != null and firstcompanyorgcode != ''">
+				AND a.firstcompanyorgcode = #{firstcompanyorgcode}
+			</if>
+			<if test="firstcompanyorgname != null and firstcompanyorgname != ''">
+				AND a.firstcompanyorgname = #{firstcompanyorgname}
+			</if>
+			<if test="areadetails != null and areadetails != ''">
+				AND a.areadetails = #{areadetails}
+			</if>
+			<if test="sendmsg != null and sendmsg != ''">
+				AND a.sendmsg = #{sendmsg}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OldShopMsg" >
+		SELECT 
+			<include refid="oldShopMsgColumns"/>
+		FROM old_shop_msg a
+		<include refid="oldShopMsgJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO old_shop_msg(
+			id,
+			provinceid,
+			provincename,
+			cityid,
+			cityname,
+			orgid,
+			orgname,
+			product,
+			count,
+			money,
+			createtime,
+			channel,
+			companyname,
+			companysize,
+			keypersion,
+			keymobile,
+			reservemobile,
+			adress,
+			indus,
+			infcode,
+			flag,
+			custcode,
+			oldcode,
+			msgvalid,
+			memberid,
+			subtime,
+			quotainfo,
+			msgflag,
+			memo,
+			approtime,
+			isqd,
+			qq,
+			email,
+			ptchecker,
+			ptispass,
+			ptchecktime,
+			ptdescp,
+			isdispatch,
+			appchecker,
+			appdescp,
+			appispass,
+			ordertype,
+			grabtime,
+			mimgurl,
+			uploadtime,
+			stracheck,
+			strachecker,
+			strachecktime,
+			msgisclose,
+			haveundertake,
+			skmodel,
+			skproductd,
+			acgprojectid,
+			projectcode,
+			depart,
+			smallprojectid,
+			category,
+			isback,
+			dataurl,
+			unreadmsg,
+			cooperationandexchange,
+			nodetag,
+			isread,
+			projectname,
+			managerno,
+			managername,
+			conditionermembertype,
+			remarks,
+			remarkstime,
+			remarksperson,
+			hpsprovinceid,
+			hpscityid,
+			hpsdistrictid,
+			firstcompanyorgcode,
+			firstcompanyorgname,
+			areadetails,
+			sendmsg
+		) VALUES (
+			#{id},
+			#{provinceid},
+			#{provincename},
+			#{cityid},
+			#{cityname},
+			#{orgid},
+			#{orgname},
+			#{product},
+			#{count},
+			#{money},
+			#{createtime},
+			#{channel},
+			#{companyname},
+			#{companysize},
+			#{keypersion},
+			#{keymobile},
+			#{reservemobile},
+			#{adress},
+			#{indus},
+			#{infcode},
+			#{flag},
+			#{custcode},
+			#{oldcode},
+			#{msgvalid},
+			#{memberid},
+			#{subtime},
+			#{quotainfo},
+			#{msgflag},
+			#{memo},
+			#{approtime},
+			#{isqd},
+			#{qq},
+			#{email},
+			#{ptchecker},
+			#{ptispass},
+			#{ptchecktime},
+			#{ptdescp},
+			#{isdispatch},
+			#{appchecker},
+			#{appdescp},
+			#{appispass},
+			#{ordertype},
+			#{grabtime},
+			#{mimgurl},
+			#{uploadtime},
+			#{stracheck},
+			#{strachecker},
+			#{strachecktime},
+			#{msgisclose},
+			#{haveundertake},
+			#{skmodel},
+			#{skproductd},
+			#{acgprojectid},
+			#{projectcode},
+			#{depart},
+			#{smallprojectid},
+			#{category},
+			#{isback},
+			#{dataurl},
+			#{unreadmsg},
+			#{cooperationandexchange},
+			#{nodetag},
+			#{isread},
+			#{projectname},
+			#{managerno},
+			#{managername},
+			#{conditionermembertype},
+			#{remarks},
+			#{remarkstime},
+			#{remarksperson},
+			#{hpsprovinceid},
+			#{hpscityid},
+			#{hpsdistrictid},
+			#{firstcompanyorgcode},
+			#{firstcompanyorgname},
+			#{areadetails},
+			#{sendmsg}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE old_shop_msg SET 	
+			provinceid = #{provinceid},
+			provincename = #{provincename},
+			cityid = #{cityid},
+			cityname = #{cityname},
+			orgid = #{orgid},
+			orgname = #{orgname},
+			product = #{product},
+			count = #{count},
+			money = #{money},
+			createtime = #{createtime},
+			channel = #{channel},
+			companyname = #{companyname},
+			companysize = #{companysize},
+			keypersion = #{keypersion},
+			keymobile = #{keymobile},
+			reservemobile = #{reservemobile},
+			adress = #{adress},
+			indus = #{indus},
+			infcode = #{infcode},
+			flag = #{flag},
+			custcode = #{custcode},
+			oldcode = #{oldcode},
+			msgvalid = #{msgvalid},
+			memberid = #{memberid},
+			subtime = #{subtime},
+			quotainfo = #{quotainfo},
+			msgflag = #{msgflag},
+			memo = #{memo},
+			approtime = #{approtime},
+			isqd = #{isqd},
+			qq = #{qq},
+			email = #{email},
+			ptchecker = #{ptchecker},
+			ptispass = #{ptispass},
+			ptchecktime = #{ptchecktime},
+			ptdescp = #{ptdescp},
+			isdispatch = #{isdispatch},
+			appchecker = #{appchecker},
+			appdescp = #{appdescp},
+			appispass = #{appispass},
+			ordertype = #{ordertype},
+			grabtime = #{grabtime},
+			mimgurl = #{mimgurl},
+			uploadtime = #{uploadtime},
+			stracheck = #{stracheck},
+			strachecker = #{strachecker},
+			strachecktime = #{strachecktime},
+			msgisclose = #{msgisclose},
+			haveundertake = #{haveundertake},
+			skmodel = #{skmodel},
+			skproductd = #{skproductd},
+			acgprojectid = #{acgprojectid},
+			projectcode = #{projectcode},
+			depart = #{depart},
+			smallprojectid = #{smallprojectid},
+			category = #{category},
+			isback = #{isback},
+			dataurl = #{dataurl},
+			unreadmsg = #{unreadmsg},
+			cooperationandexchange = #{cooperationandexchange},
+			nodetag = #{nodetag},
+			isread = #{isread},
+			projectname = #{projectname},
+			managerno = #{managerno},
+			managername = #{managername},
+			conditionermembertype = #{conditionermembertype},
+			remarks = #{remarks},
+			remarkstime = #{remarkstime},
+			remarksperson = #{remarksperson},
+			hpsprovinceid = #{hpsprovinceid},
+			hpscityid = #{hpscityid},
+			hpsdistrictid = #{hpsdistrictid},
+			firstcompanyorgcode = #{firstcompanyorgcode},
+			firstcompanyorgname = #{firstcompanyorgname},
+			areadetails = #{areadetails},
+			sendmsg = #{sendmsg}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM old_shop_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE old_shop_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="OldShopMsg" statementType="STATEMENT">
+		select * FROM old_shop_msg  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

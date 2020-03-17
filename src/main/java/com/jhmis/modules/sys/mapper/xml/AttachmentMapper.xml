@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.sys.mapper.AttachmentMapper">
+    
+	<sql id="attachmentColumns">
+		a.id AS "id",
+		a.att_name AS "attName",
+		a.att_md5 AS "attMd5",
+		a.att_url AS "attUrl",
+		a.att_thumb AS "attThumb",
+		a.att_ext AS "attExt",
+		a.att_size AS "attSize",
+		a.cat_id AS "attCat.id",
+		a.user_id AS "userId",
+		a.user_type AS "userType",
+		a.att_type AS "attType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.name AS "attCat.name"
+	</sql>
+	
+	<sql id="attachmentJoins">
+			LEFT JOIN sys_att_cat b ON b.id = a.cat_id
+		LEFT JOIN sys_user userId ON userId.id = a.user_id
+	</sql>
+	
+    
+	<select id="get" resultType="Attachment" >
+		SELECT 
+			<include refid="attachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="attachmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Attachment" >
+		SELECT 
+			<include refid="attachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="attachmentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="attName != null and attName != ''">
+				AND a.att_name = #{attName}
+			</if>
+			<if test="attMd5 != null and attMd5 != ''">
+				AND a.att_md5 = #{attMd5}
+			</if>
+                    <if test="attCat != null  and attCat.id != null and attCat.id != ''">
+                        AND (b.id = #{attCat.id} OR b.parent_ids LIKE
+                        <if test="dbName == 'oracle'">'%,'||#{attCat.id}||',%')</if>
+                        <if test="dbName == 'mysql'">CONCAT('%,', #{attCat.id}, ',%'))</if>
+                        <if test="dbName == 'mssql'">'%'+#{attCat.id}+'%')</if>
+                    </if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="userType != null and userType != ''">
+				AND a.user_type = #{userType}
+			</if>
+			<if test="attType != null and attType != ''">
+				AND a.att_type = #{attType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Attachment" >
+		SELECT 
+			<include refid="attachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="attachmentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_attachment(
+			id,
+			att_name,
+			att_md5,
+			att_url,
+			att_thumb,
+			att_ext,
+			att_size,
+			cat_id,
+			user_id,
+			user_type,
+			att_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{attName},
+			#{attMd5},
+			#{attUrl},
+			#{attThumb},
+			#{attExt},
+			#{attSize},
+			#{attCat.id},
+			#{userId},
+			#{userType},
+			#{attType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_attachment SET 	
+			att_name = #{attName},
+			att_md5 = #{attMd5},
+			att_url = #{attUrl},
+			att_thumb = #{attThumb},
+			att_ext = #{attExt},
+			att_size = #{attSize},
+			cat_id = #{attCat.id},
+			user_id = #{userId},
+			user_type = #{userType},
+			att_type = #{attType},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sys_attachment
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE cat_id = #{attCat.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sys_attachment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE cat_id = #{attCat.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Attachment" statementType="STATEMENT">
+		select * FROM sys_attachment  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

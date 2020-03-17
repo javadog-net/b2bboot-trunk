@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.NavigationMapper">
+    
+	<sql id="navigationColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.link_type AS "linkType",
+		a.n_type AS "nType",
+		a.position AS "position",
+		a.thumb AS "thumb",
+		a.name AS "name",
+		a.link_kind AS "linkKind",
+		a.link_id AS "linkId",
+		a.link_name AS "linkName",
+		a.link_mark AS "linkMark",
+		a.link_url AS "linkUrl",
+		a.is_show AS "isShow",
+		a.is_link AS "isLink",
+		a.is_target_blank AS "isTargetBlank",
+		a.is_extend AS "isExtend",
+		a.page_url AS "pageUrl",
+		a.sort AS "sort",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+
+	<sql id="navigationJoins">
+		LEFT join  cms_navigation c on c.id = a.parent_id
+	</sql>
+	
+    
+	<select id="get" resultType="Navigation" >
+		SELECT 
+			<include refid="navigationColumns"/>
+		FROM cms_navigation a
+		<include refid="navigationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Navigation" >
+		SELECT 
+			<include refid="navigationColumns"/>
+		FROM cms_navigation a
+		<include refid="navigationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="position != null and position !=''">
+				AND a.position = #{position}
+			</if>
+			<if test="nType != null and nType !=''">
+				AND a.n_type = #{nType}
+			</if>
+			<if test="isShow != null and isShow !=''">
+				AND a.is_show = #{isShow}
+			</if>
+			<choose>
+				<when test="parent != null and parent.id =='par'">
+					AND (a.parent_id is null or a.parent_id ='' or a.parent_id='0')
+				</when>
+				<when test="parent!=null and parent.id !='par'">
+					AND a.parent_id = #{parent.id}
+				</when>
+				<otherwise></otherwise>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Navigation" >
+		SELECT 
+			<include refid="navigationColumns"/>
+		FROM cms_navigation a
+		<include refid="navigationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_navigation(
+			id,
+			parent_id,
+			parent_ids,
+			link_type,
+			n_type,
+			position,
+			thumb,
+			name,
+			link_kind,
+			link_id,
+			link_name,
+			link_mark,
+			link_url,
+			is_show,
+			is_link,
+			is_target_blank,
+			is_extend,
+			page_url,
+			sort,
+			del_flag,
+			remarks,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{linkType},
+			#{nType},
+			#{position},
+			#{thumb},
+			#{name},
+			#{linkKind},
+			#{linkId},
+			#{linkName},
+			#{linkMark},
+			#{linkUrl},
+			#{isShow},
+			#{isLink},
+			#{isTargetBlank},
+			#{isExtend},
+			#{pageUrl},
+			#{sort},
+			#{delFlag},
+			#{remarks},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_navigation SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			link_type = #{linkType},
+			n_type = #{nType},
+			position = #{position},
+			thumb = #{thumb},
+			name = #{name},
+			link_kind = #{linkKind},
+			link_id = #{linkId},
+			link_name = #{linkName},
+			link_mark = #{linkMark},
+			link_url = #{linkUrl},
+			is_show = #{isShow},
+			is_link = #{isLink},
+			is_target_blank = #{isTargetBlank},
+			is_extend = #{isExtend},
+			page_url = #{pageUrl},
+			sort = #{sort},
+			remarks = #{remarks},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_navigation
+		WHERE id = #{id}
+		OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_navigation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+		OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Navigation" statementType="STATEMENT">
+		select * FROM cms_navigation  where ${propertyName} = '${value}'
+	</select>
+	<select id="findByParentIdsLike" resultType="Navigation">
+		SELECT
+		<include refid="navigationColumns"></include>
+		FROM cms_navigation a
+		<include refid="navigationJoins"></include>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.parent_id LIKE
+			<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{id}, '%')</if>
+		</where>
+		order by a.sort
+	</select>
+	<update id="updateParentIds">
+		UPDATE cms_navigation SET
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	<select id="navigationSort" resultType="Navigation">
+		SELECT
+		<include refid="navigationColumns"></include>
+		FROM cms_navigation a
+		<include refid="navigationJoins"></include>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="parent.id != null and parent.id !=''">
+				AND a.parent_id =#{parent.id}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id != #{id}
+			</if>
+			<choose>
+				<when test="sortType=='up' and sort != null">
+					AND  a.sort <![CDATA[ <= ]]>  ${sort}
+				</when>
+				<when test="sortType=='down' and sort != null ">
+					AND a.sort <![CDATA[ >= ]]>  ${sort}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+		</where>
+		<choose>
+			<when test="sortType=='up'">
+				order by a.sort desc
+			</when>
+			<otherwise>
+				order by a.sort
+			</otherwise>
+		</choose>
+	</select>
+	<update id="updateSort">
+		UPDATE cms_navigation SET sort = #{sort} WHERE id = #{id}
+	</update>
+	<select id="findMaxSort" parameterType="Navigation" resultType="java.lang.Integer">
+		SELECT MAX(sort) from cms_navigation  where del_flag=#{DEL_FLAG_NORMAL}
+	</select>
+</mapper>

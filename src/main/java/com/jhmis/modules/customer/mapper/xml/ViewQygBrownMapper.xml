@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.ViewQygBrownMapper">
+    
+	<sql id="viewQygBrownColumns">
+		a.brown_id AS "brownId",
+		a.project_id AS "projectId",
+		a.project_code AS "projectCode",
+		a.project_name AS "projectName",
+		a.contract_id AS "contractId",
+		a.brown_code AS "brownCode",
+		a.product_group_id AS "productGroupId",
+		a.product_group_code AS "productGroupCode",
+		a.product_group_name AS "productGroupName",
+		a.dealer_id AS "dealerId",
+		a.dealer_code AS "dealerCode",
+		a.dealer_name AS "dealerName",
+		a.center AS "center",
+		a.type AS "type",
+		a.domain_code AS "domainCode",
+		a.open_system AS "openSystem",
+		a.brown_count AS "brownCount",
+		a.expire_time AS "expireTime",
+		a.be_valid AS "beValid",
+		a.is_check AS "isCheck",
+		a.effect_time AS "effectTime",
+		a.is_success AS "isSuccess",
+		a.rrs_be_success AS "rrsBeSuccess",
+		a.rrs_success_time AS "rrsSuccessTime",
+		a.cdepcode AS "cdepcode",
+		a.caddress AS "caddress",
+		a.gvs_be_success AS "gvsBeSuccess",
+		a.gvs_time AS "gvsTime",
+		a.gvs_message AS "gvsMessage",
+		a.last_modified_date AS "lastModifiedDate",
+		a.order_quantity_sum AS "orderQuantitySum",
+		a.expire_time_before_approve AS "expireTimeBeforeApprove",
+		a.type_before_approve AS "typeBeforeApprove",
+		a.base_post_id AS "basePostId",
+		a.base_post_code AS "basePostCode",
+		a.base_post_name AS "basePostName",
+		a.gmzt AS "gmzt",
+		a.info_sourse AS "infoSourse",
+		a.cus_address AS "cusAddress",
+		a.cust_contact AS "custContact",
+		a.ctel AS "ctel",
+		a.cmobile AS "cmobile",
+		a.cpro_name AS "cproName",
+		a.cpro_address AS "cproAddress",
+		a.cpro_contact AS "cproContact",
+		a.cpro_tel AS "cproTel",
+		a.cpro_mobile AS "cproMobile",
+		a.sys_id AS "sysId",
+		a.sys_name AS "sysName",
+		a.back_ward AS "backWard",
+		a.iall_money AS "iallMoney",
+		a.bill_flag AS "billFlag",
+		a.created_by_id AS "createdById",
+		a.last_modified_by_id AS "lastModifiedById",
+		a.deleted AS "deleted",
+		a.created_by AS "createdBy",
+		a.created_date AS "createdDate",
+		a.last_modified_by AS "lastModifiedBy",
+		a.cre_pro_id AS "creProId",
+		a.mod_pro_id AS "modProId",
+		a.batch_date AS "batchDate"
+	</sql>
+	
+	<sql id="viewQygBrownJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ViewQygBrown" >
+		SELECT 
+			<include refid="viewQygBrownColumns"/>
+		FROM view_qyg_brown a
+		<include refid="viewQygBrownJoins"/>
+		WHERE a.brown_id = #{brownId}
+	</select>
+
+	<select id="findByMine" resultType="ViewQygBrown" >
+		SELECT
+		<include refid="viewQygBrownColumns"/>
+		FROM view_qyg_brown a
+		<include refid="viewQygBrownJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="brownId != null and brownId != ''">
+				AND a.brown_id = #{brownId}
+			</if>
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="contractId != null and contractId != ''">
+				AND a.contract_id = #{contractId}
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{brownCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{brownCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{brownCode},'%')</if>
+			</if>
+			<if test="productGroupId != null and productGroupId != ''">
+				AND a.product_group_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{productGroupId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productGroupId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productGroupId},'%')</if>
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{productGroupCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productGroupCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productGroupCode},'%')</if>
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{productGroupName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productGroupName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productGroupName},'%')</if>
+			</if>
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{dealerId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{dealerId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{dealerId},'%')</if>
+			</if>
+			<if test="dealerCode != null and dealerCode != ''">
+				AND a.dealer_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{dealerCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{dealerCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{dealerCode},'%')</if>
+			</if>
+			<if test="dealerName != null and dealerName != ''">
+				AND a.dealer_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{dealerName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{dealerName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{dealerName},'%')</if>
+			</if>
+			<if test="center != null and center != ''">
+				AND a.center LIKE
+				<if test="dbName == 'oracle'">'%'||#{center}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{center}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{center},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="domainCode != null and domainCode != ''">
+				AND a.domain_code = #{domainCode}
+			</if>
+			<if test="openSystem != null and openSystem != ''">
+				AND a.open_system = #{openSystem}
+			</if>
+			<if test="brownCount != null and brownCount != ''">
+				AND a.brown_count = #{brownCount}
+			</if>
+			<if test="beValid != null and beValid != ''">
+				AND a.be_valid = #{beValid}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="expireTimeStr != null and expireTimeStr != ''">
+				AND a.expire_time between  #{expireTimeStart} and #{expireTimeEnd}
+			</if>
+			<if test="effectTimeStr != null and effectTimeStr != ''">
+				AND a.effect_time between  #{effectTimeStart}  and #{effectTimeEnd}
+			</if>
+			<if test="isSuccess != null and isSuccess != ''">
+				AND a.is_success = #{isSuccess}
+			</if>
+			<if test="rrsBeSuccess != null and rrsBeSuccess != ''">
+				AND a.rrs_be_success = #{rrsBeSuccess}
+			</if>
+			<if test="rrsSuccessTime != null and rrsSuccessTime != ''">
+				AND a.rrs_success_time = #{rrsSuccessTime}
+			</if>
+			<if test="cdepcode != null and cdepcode != ''">
+				AND a.cdepcode = #{cdepcode}
+			</if>
+			<if test="caddress != null and caddress != ''">
+				AND a.caddress = #{caddress}
+			</if>
+			<if test="gvsBeSuccess != null and gvsBeSuccess != ''">
+				AND a.gvs_be_success = #{gvsBeSuccess}
+			</if>
+			<if test="gvsTime != null and gvsTime != ''">
+				AND a.gvs_time = #{gvsTime}
+			</if>
+			<if test="gvsMessage != null and gvsMessage != ''">
+				AND a.gvs_message = #{gvsMessage}
+			</if>
+			<if test="lastModifiedDate != null and lastModifiedDate != ''">
+				AND a.last_modified_date = #{lastModifiedDate}
+			</if>
+			<if test="orderQuantitySum != null and orderQuantitySum != ''">
+				AND a.order_quantity_sum = #{orderQuantitySum}
+			</if>
+			<if test="expireTimeBeforeApprove != null and expireTimeBeforeApprove != ''">
+				AND a.expire_time_before_approve = #{expireTimeBeforeApprove}
+			</if>
+			<if test="typeBeforeApprove != null and typeBeforeApprove != ''">
+				AND a.type_before_approve = #{typeBeforeApprove}
+			</if>
+			<if test="basePostId != null and basePostId != ''">
+				AND a.base_post_id = #{basePostId}
+			</if>
+			<if test="basePostCode != null and basePostCode != ''">
+				AND a.base_post_code = #{basePostCode}
+			</if>
+			<if test="basePostName != null and basePostName != ''">
+				AND a.base_post_name = #{basePostName}
+			</if>
+			<if test="gmzt != null and gmzt != ''">
+				AND a.gmzt = #{gmzt}
+			</if>
+			<if test="infoSourse != null and infoSourse != ''">
+				AND a.info_sourse = #{infoSourse}
+			</if>
+			<if test="cusAddress != null and cusAddress != ''">
+				AND a.cus_address = #{cusAddress}
+			</if>
+			<if test="custContact != null and custContact != ''">
+				AND a.cust_contact = #{custContact}
+			</if>
+			<if test="ctel != null and ctel != ''">
+				AND a.ctel = #{ctel}
+			</if>
+			<if test="cmobile != null and cmobile != ''">
+				AND a.cmobile = #{cmobile}
+			</if>
+			<if test="cproName != null and cproName != ''">
+				AND a.cpro_name = #{cproName}
+			</if>
+			<if test="cproAddress != null and cproAddress != ''">
+				AND a.cpro_address = #{cproAddress}
+			</if>
+			<if test="cproContact != null and cproContact != ''">
+				AND a.cpro_contact = #{cproContact}
+			</if>
+			<if test="cproTel != null and cproTel != ''">
+				AND a.cpro_tel = #{cproTel}
+			</if>
+			<if test="cproMobile != null and cproMobile != ''">
+				AND a.cpro_mobile = #{cproMobile}
+			</if>
+			<if test="sysId != null and sysId != ''">
+				AND a.sys_id = #{sysId}
+			</if>
+			<if test="sysName != null and sysName != ''">
+				AND a.sys_name = #{sysName}
+			</if>
+			<if test="backWard != null and backWard != ''">
+				AND a.back_ward = #{backWard}
+			</if>
+			<if test="iallMoney != null and iallMoney != ''">
+				AND a.iall_money = #{iallMoney}
+			</if>
+			<if test="billFlag != null and billFlag != ''">
+				AND a.bill_flag = #{billFlag}
+			</if>
+			<if test="createdById != null and createdById != ''">
+				AND a.created_by_id = #{createdById}
+			</if>
+			<if test="lastModifiedById != null and lastModifiedById != ''">
+				AND a.last_modified_by_id = #{lastModifiedById}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="createdBy != null and createdBy != ''">
+				AND a.created_by = #{createdBy}
+			</if>
+			<if test="createdDate != null and createdDate != ''">
+				AND a.created_date = #{createdDate}
+			</if>
+			<if test="lastModifiedBy != null and lastModifiedBy != ''">
+				AND a.last_modified_by = #{lastModifiedBy}
+			</if>
+			<if test="creProId != null and creProId != ''">
+				AND a.cre_pro_id = #{creProId}
+			</if>
+			<if test="modProId != null and modProId != ''">
+				AND a.mod_pro_id = #{modProId}
+			</if>
+			<if test="batchDate != null and batchDate != ''">
+				AND a.batch_date = #{batchDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findList" resultType="ViewQygBrown" >
+		SELECT 
+			<include refid="viewQygBrownColumns"/>
+		FROM view_qyg_brown a
+		<include refid="viewQygBrownJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="brownId != null and brownId != ''">
+				AND a.brown_id = #{brownId}
+			</if>
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="contractId != null and contractId != ''">
+				AND a.contract_id = #{contractId}
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{brownCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{brownCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{brownCode},'%')</if>
+			</if>
+			<if test="productGroupId != null and productGroupId != ''">
+				AND a.product_group_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productGroupId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productGroupId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productGroupId},'%')</if>
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productGroupCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productGroupCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productGroupCode},'%')</if>
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{productGroupName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{productGroupName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{productGroupName},'%')</if>
+			</if>
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{dealerId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{dealerId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{dealerId},'%')</if>
+			</if>
+			<if test="dealerCode != null and dealerCode != ''">
+				AND a.dealer_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{dealerCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{dealerCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{dealerCode},'%')</if>
+			</if>
+			<if test="dealerName != null and dealerName != ''">
+				AND a.dealer_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{dealerName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{dealerName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{dealerName},'%')</if>
+			</if>
+			<if test="center != null and center != ''">
+				AND a.center LIKE 
+					<if test="dbName == 'oracle'">'%'||#{center}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{center}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{center},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="domainCode != null and domainCode != ''">
+				AND a.domain_code = #{domainCode}
+			</if>
+			<if test="openSystem != null and openSystem != ''">
+				AND a.open_system = #{openSystem}
+			</if>
+			<if test="brownCount != null and brownCount != ''">
+				AND a.brown_count = #{brownCount}
+			</if>
+			<if test="beValid != null and beValid != ''">
+				AND a.be_valid = #{beValid}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="expireTimeStr != null and expireTimeStr != ''">
+				AND a.expire_time between  #{expireTimeStart} and #{expireTimeEnd}
+			</if>
+			<if test="effectTimeStr != null and effectTimeStr != ''">
+				AND a.effect_time between  #{effectTimeStart}  and #{effectTimeEnd}
+			</if>
+			<if test="isSuccess != null and isSuccess != ''">
+				AND a.is_success = #{isSuccess}
+			</if>
+			<if test="rrsBeSuccess != null and rrsBeSuccess != ''">
+				AND a.rrs_be_success = #{rrsBeSuccess}
+			</if>
+			<if test="rrsSuccessTime != null and rrsSuccessTime != ''">
+				AND a.rrs_success_time = #{rrsSuccessTime}
+			</if>
+			<if test="cdepcode != null and cdepcode != ''">
+				AND a.cdepcode = #{cdepcode}
+			</if>
+			<if test="caddress != null and caddress != ''">
+				AND a.caddress = #{caddress}
+			</if>
+			<if test="gvsBeSuccess != null and gvsBeSuccess != ''">
+				AND a.gvs_be_success = #{gvsBeSuccess}
+			</if>
+			<if test="gvsTime != null and gvsTime != ''">
+				AND a.gvs_time = #{gvsTime}
+			</if>
+			<if test="gvsMessage != null and gvsMessage != ''">
+				AND a.gvs_message = #{gvsMessage}
+			</if>
+			<if test="lastModifiedDate != null and lastModifiedDate != ''">
+				AND a.last_modified_date = #{lastModifiedDate}
+			</if>
+			<if test="orderQuantitySum != null and orderQuantitySum != ''">
+				AND a.order_quantity_sum = #{orderQuantitySum}
+			</if>
+			<if test="expireTimeBeforeApprove != null and expireTimeBeforeApprove != ''">
+				AND a.expire_time_before_approve = #{expireTimeBeforeApprove}
+			</if>
+			<if test="typeBeforeApprove != null and typeBeforeApprove != ''">
+				AND a.type_before_approve = #{typeBeforeApprove}
+			</if>
+			<if test="basePostId != null and basePostId != ''">
+				AND a.base_post_id = #{basePostId}
+			</if>
+			<if test="basePostCode != null and basePostCode != ''">
+				AND a.base_post_code = #{basePostCode}
+			</if>
+			<if test="basePostName != null and basePostName != ''">
+				AND a.base_post_name = #{basePostName}
+			</if>
+			<if test="gmzt != null and gmzt != ''">
+				AND a.gmzt = #{gmzt}
+			</if>
+			<if test="infoSourse != null and infoSourse != ''">
+				AND a.info_sourse = #{infoSourse}
+			</if>
+			<if test="cusAddress != null and cusAddress != ''">
+				AND a.cus_address = #{cusAddress}
+			</if>
+			<if test="custContact != null and custContact != ''">
+				AND a.cust_contact = #{custContact}
+			</if>
+			<if test="ctel != null and ctel != ''">
+				AND a.ctel = #{ctel}
+			</if>
+			<if test="cmobile != null and cmobile != ''">
+				AND a.cmobile = #{cmobile}
+			</if>
+			<if test="cproName != null and cproName != ''">
+				AND a.cpro_name = #{cproName}
+			</if>
+			<if test="cproAddress != null and cproAddress != ''">
+				AND a.cpro_address = #{cproAddress}
+			</if>
+			<if test="cproContact != null and cproContact != ''">
+				AND a.cpro_contact = #{cproContact}
+			</if>
+			<if test="cproTel != null and cproTel != ''">
+				AND a.cpro_tel = #{cproTel}
+			</if>
+			<if test="cproMobile != null and cproMobile != ''">
+				AND a.cpro_mobile = #{cproMobile}
+			</if>
+			<if test="sysId != null and sysId != ''">
+				AND a.sys_id = #{sysId}
+			</if>
+			<if test="sysName != null and sysName != ''">
+				AND a.sys_name = #{sysName}
+			</if>
+			<if test="backWard != null and backWard != ''">
+				AND a.back_ward = #{backWard}
+			</if>
+			<if test="iallMoney != null and iallMoney != ''">
+				AND a.iall_money = #{iallMoney}
+			</if>
+			<if test="billFlag != null and billFlag != ''">
+				AND a.bill_flag = #{billFlag}
+			</if>
+			<if test="createdById != null and createdById != ''">
+				AND a.created_by_id = #{createdById}
+			</if>
+			<if test="lastModifiedById != null and lastModifiedById != ''">
+				AND a.last_modified_by_id = #{lastModifiedById}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="createdBy != null and createdBy != ''">
+				AND a.created_by = #{createdBy}
+			</if>
+			<if test="createdDate != null and createdDate != ''">
+				AND a.created_date = #{createdDate}
+			</if>
+			<if test="lastModifiedBy != null and lastModifiedBy != ''">
+				AND a.last_modified_by = #{lastModifiedBy}
+			</if>
+			<if test="creProId != null and creProId != ''">
+				AND a.cre_pro_id = #{creProId}
+			</if>
+			<if test="modProId != null and modProId != ''">
+				AND a.mod_pro_id = #{modProId}
+			</if>
+			<if test="batchDate != null and batchDate != ''">
+				AND a.batch_date = #{batchDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ViewQygBrown" >
+		SELECT 
+			<include refid="viewQygBrownColumns"/>
+		FROM view_qyg_brown a
+		<include refid="viewQygBrownJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO view_qyg_brown(
+			brown_id,
+			project_id,
+			project_code,
+			project_name,
+			contract_id,
+			brown_code,
+			product_group_id,
+			product_group_code,
+			product_group_name,
+			dealer_id,
+			dealer_code,
+			dealer_name,
+			center,
+			type,
+			domain_code,
+			open_system,
+			brown_count,
+			expire_time,
+			be_valid,
+			is_check,
+			effect_time,
+			is_success,
+			rrs_be_success,
+			rrs_success_time,
+			cdepcode,
+			caddress,
+			gvs_be_success,
+			gvs_time,
+			gvs_message,
+			last_modified_date,
+			order_quantity_sum,
+			expire_time_before_approve,
+			type_before_approve,
+			base_post_id,
+			base_post_code,
+			base_post_name,
+			gmzt,
+			info_sourse,
+			cus_address,
+			cust_contact,
+			ctel,
+			cmobile,
+			cpro_name,
+			cpro_address,
+			cpro_contact,
+			cpro_tel,
+			cpro_mobile,
+			sys_id,
+			sys_name,
+			back_ward,
+			iall_money,
+			bill_flag,
+			created_by_id,
+			last_modified_by_id,
+			deleted,
+			created_by,
+			created_date,
+			last_modified_by,
+			cre_pro_id,
+			mod_pro_id,
+			batch_date
+		) VALUES (
+			#{brownId},
+			#{projectId},
+			#{projectCode},
+			#{projectName},
+			#{contractId},
+			#{brownCode},
+			#{productGroupId},
+			#{productGroupCode},
+			#{productGroupName},
+			#{dealerId},
+			#{dealerCode},
+			#{dealerName},
+			#{center},
+			#{type},
+			#{domainCode},
+			#{openSystem},
+			#{brownCount},
+			#{expireTime},
+			#{beValid},
+			#{isCheck},
+			#{effectTime},
+			#{isSuccess},
+			#{rrsBeSuccess},
+			#{rrsSuccessTime},
+			#{cdepcode},
+			#{caddress},
+			#{gvsBeSuccess},
+			#{gvsTime},
+			#{gvsMessage},
+			#{lastModifiedDate},
+			#{orderQuantitySum},
+			#{expireTimeBeforeApprove},
+			#{typeBeforeApprove},
+			#{basePostId},
+			#{basePostCode},
+			#{basePostName},
+			#{gmzt},
+			#{infoSourse},
+			#{cusAddress},
+			#{custContact},
+			#{ctel},
+			#{cmobile},
+			#{cproName},
+			#{cproAddress},
+			#{cproContact},
+			#{cproTel},
+			#{cproMobile},
+			#{sysId},
+			#{sysName},
+			#{backWard},
+			#{iallMoney},
+			#{billFlag},
+			#{createdById},
+			#{lastModifiedById},
+			#{deleted},
+			#{createdBy},
+			#{createdDate},
+			#{lastModifiedBy},
+			#{creProId},
+			#{modProId},
+			#{batchDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE view_qyg_brown SET 	
+			brown_id = #{brownId},
+			project_id = #{projectId},
+			project_code = #{projectCode},
+			project_name = #{projectName},
+			contract_id = #{contractId},
+			brown_code = #{brownCode},
+			product_group_id = #{productGroupId},
+			product_group_code = #{productGroupCode},
+			product_group_name = #{productGroupName},
+			dealer_id = #{dealerId},
+			dealer_code = #{dealerCode},
+			dealer_name = #{dealerName},
+			center = #{center},
+			type = #{type},
+			domain_code = #{domainCode},
+			open_system = #{openSystem},
+			brown_count = #{brownCount},
+			expire_time = #{expireTime},
+			be_valid = #{beValid},
+			is_check = #{isCheck},
+			effect_time = #{effectTime},
+			is_success = #{isSuccess},
+			rrs_be_success = #{rrsBeSuccess},
+			rrs_success_time = #{rrsSuccessTime},
+			cdepcode = #{cdepcode},
+			caddress = #{caddress},
+			gvs_be_success = #{gvsBeSuccess},
+			gvs_time = #{gvsTime},
+			gvs_message = #{gvsMessage},
+			last_modified_date = #{lastModifiedDate},
+			order_quantity_sum = #{orderQuantitySum},
+			expire_time_before_approve = #{expireTimeBeforeApprove},
+			type_before_approve = #{typeBeforeApprove},
+			base_post_id = #{basePostId},
+			base_post_code = #{basePostCode},
+			base_post_name = #{basePostName},
+			gmzt = #{gmzt},
+			info_sourse = #{infoSourse},
+			cus_address = #{cusAddress},
+			cust_contact = #{custContact},
+			ctel = #{ctel},
+			cmobile = #{cmobile},
+			cpro_name = #{cproName},
+			cpro_address = #{cproAddress},
+			cpro_contact = #{cproContact},
+			cpro_tel = #{cproTel},
+			cpro_mobile = #{cproMobile},
+			sys_id = #{sysId},
+			sys_name = #{sysName},
+			back_ward = #{backWard},
+			iall_money = #{iallMoney},
+			bill_flag = #{billFlag},
+			created_by_id = #{createdById},
+			last_modified_by_id = #{lastModifiedById},
+			deleted = #{deleted},
+			created_by = #{createdBy},
+			created_date = #{createdDate},
+			last_modified_by = #{lastModifiedBy},
+			cre_pro_id = #{creProId},
+			mod_pro_id = #{modProId},
+			batch_date = #{batchDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM view_qyg_brown
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE view_qyg_brown SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ViewQygBrown" statementType="STATEMENT">
+		select * FROM view_qyg_brown  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

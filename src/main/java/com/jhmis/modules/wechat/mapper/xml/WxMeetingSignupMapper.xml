@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMeetingSignupMapper">
+
+	<sql id="wxMeetingSignupColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.user_id AS
+		"userId",
+		a.sign_status AS "signStatus",
+		a.attend_status AS
+		"attendStatus",
+		a.sign_time AS "signTime",
+		a.examine_person AS
+		"examinePerson",
+		a.examine_time AS "examineTime",
+		a.attend_time AS
+		"attendTime",
+		a.sign_way AS "signWay",
+		a.real_name AS "realName",
+		a.phone AS "mobile",
+		a.company_name AS "companyName",
+		a.address AS "address",
+		a.email AS "email",
+		a.industry_name AS "industryName",
+		a.depart_name AS "departName",
+		a.seat_num AS "seatNum",
+		a.car_num AS
+		"carNum",
+		a.table_num AS "tableNum",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.orgid AS "orgid",
+		a.orgname AS "orgname"
+
+	</sql>
+	<resultMap type="WxMeetingSignup" id="ResultMapWxMeetingSignup">
+		<!-- column:库表的字段名 property:实体类里的属性名 -->
+		<id column="id" property="id" />
+		<result column="meeting_id" property="meetingId" />
+		<result column="user_id" property="userId" />
+		<result column="sign_status" property="signStatus" />
+		<result column="sign_time" property="signTime" />
+		<result column="examine_person" property="examinePerson" />
+		<result column="attend_time" property="attendTime" />
+		<result column="sign_way" property="signWay" />
+		<result column="real_name" property="realName" />
+		<result column="phone" property="mobile" />
+		<result column="company_name" property="companyName" />
+		<result column="address" property="address" />
+		<result column="email" property="email" />
+		<result column="industry_name" property="industryName" />
+		<result column="depart_name" property="departName" />
+		<result column="seat_num" property="seatNum" />
+		<result column="table_num" property="tableNum" />
+		<result column="car_num" property="carNum" />
+		<result column="city_id" property="cityId" />
+		<result column="province_id" property="provinceId" />
+		<result column="orgid" property="orgid" />
+		<result column="orgname" property="orgname" />
+	</resultMap>
+	<sql id="wxMeetingSignupJoins">
+
+		LEFT JOIN purchaser_account d ON d.id = a.user_id
+	</sql>
+
+
+	<select id="get" resultType="WxMeetingSignup">
+		SELECT
+		<include refid="wxMeetingSignupColumns" />
+		FROM wx_meeting_signup a
+		<include refid="wxMeetingSignupJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="findList" resultMap="ResultMapWxMeetingSignup">
+		select * from wx_meeting_signup s
+		<where>
+			${dataScope}
+			<if test="signStatus != null and signStatus != ''">
+				AND s.sign_status = #{signStatus}
+			</if>
+			<if test="signTime != null and signTime != ''">
+				AND s.sign_time = #{signTime}
+			</if>
+			<if test="examinePerson != null and examinePerson != ''">
+				AND s.examine_person = #{examinePerson}
+			</if>
+			<if test="attendTime != null and attendTime != ''">
+				AND s.attend_time = #{attendTime}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				and s.meeting_id = #{meetingId}
+			</if>
+			<if test="realName != null and realName != ''">
+				and s.real_name = #{realName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				and s.phone = #{mobile}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				and s.company_name like CONCAT("%",#{companyName},"%")
+			</if>
+		
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListVo" resultMap="ResultMapWxMeetingSignup">
+		SELECT
+		*
+		FROM wx_meeting_signup a
+		<where>
+
+			${dataScope}
+			<if test="signStatus != null and signStatus != ''">
+				AND a.sign_status = #{signStatus}
+			</if>
+			<if test="signTime != null and signTime != ''">
+				AND a.sign_time = #{signTime}
+			</if>
+			<if test="examinePerson != null and examinePerson != ''">
+				AND a.examine_person = #{examinePerson}
+			</if>
+			<if test="attendTime != null and attendTime != ''">
+				AND a.attend_time = #{attendTime}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				and a.meeting_id = #{meetingId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultMap="ResultMapWxMeetingSignup">
+		SELECT
+		<include refid="wxMeetingSignupColumns" />
+		FROM wx_meeting_signup a
+		<include refid="wxMeetingSignupJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO wx_meeting_signup(
+		id,
+		meeting_id,
+		user_id,
+		sign_status,
+		attend_status,
+		sign_time,
+		examine_person,
+		examine_time,
+		attend_time,
+		sign_way,
+		real_name,
+		phone,
+		company_name,
+		address,
+		email,
+		industry_name,
+		depart_name,
+		seat_num,
+		car_num,
+		table_num,
+		city_id,
+		province_id,
+		orgid,
+		orgname
+		) VALUES (
+		#{id},
+		#{meetingId},
+		#{userId},
+		#{signStatus},
+		#{attendStatus},
+		#{signTime},
+		#{examinePerson},
+		#{examineTime},
+		#{attendTime},
+		#{signWay},
+		#{realName},
+		#{mobile},
+		#{companyName},
+		#{address},
+		#{email},
+		#{industryName},
+		#{departName},
+		#{seatNum},
+		#{carNum},
+		#{tableNum},
+		#{cityId},
+		#{provinceId},
+		#{orgid},
+		#{orgname}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE wx_meeting_signup SET
+		meeting_id = #{meetingId},
+		user_id = #{userId},
+		sign_status = #{signStatus},
+		attend_status = #{attendStatus},
+		sign_time = #{signTime},
+		examine_person = #{examinePerson},
+		examine_time = #{examineTime},
+		attend_time = #{attendTime},
+		real_name = #{realName},
+		phone = #{mobile},
+		company_name = #{companyName},
+		address = #{address},
+		email = #{email},
+		industry_name = #{industryName},
+		depart_name = #{departName},
+		seat_num = #{seatNum},
+		car_num = #{carNum},
+		table_num = #{tableNum},
+		city_id=#{cityId},
+		province_id=#{provinceId},
+		orgid=#{orgid},
+		orgname=#{orgname}
+		WHERE id = #{id}
+	</update>
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM wx_meeting_signup
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE wx_meeting_signup SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultMap="ResultMapWxMeetingSignup"
+		statementType="STATEMENT">
+		select * FROM wx_meeting_signup where ${propertyName} =
+		'${value}'
+	</select>
+	<select id="findmeetingsignupstatus" resultMap="ResultMapWxMeetingSignup">
+		select m.name,m.start_time,m.site,s.meeting_id,s.sign_status,s.examine_time
+		from wx_meeting_signup s LEFT JOIN
+		wx_meeting m on m.id=s.meeting_id
+		where
+		<if test="signstatus != null and signstatus != ''">
+				 s.sign_status=#{signstatus} AND
+			</if> 
+		
+		 s.user_id=#{userid}
+	</select>
+	<select id="findMeetingByIdAndId" resultType="String">
+		select s.id from wx_meeting_signup s where s.user_id=#{userid} and
+		s.meeting_id=#{meetingid}
+	</select>
+	<select id="findMeetingByIdAndIdtwo" resultMap="ResultMapWxMeetingSignup">
+		select * from wx_meeting_signup s where s.user_id=#{userid} and
+		s.meeting_id=#{meetingid}
+	</select>
+	<select id="getmobileandmeetingid" resultMap="ResultMapWxMeetingSignup">
+		select * from wx_meeting_signup s where s.phone=#{mobile} and
+		s.meeting_id=#{meetingid}
+	</select>
+
+	<!-- <select id="findSignInList" resultType="WxMeetingSignup" parameterType="WxMeetingSignup"> 
+		select s.id AS "id", s.meeting_id AS "meetingId", s.user_id AS "userId", 
+		s.sign_status AS "signStatus", s.attend_status AS "attendStatus", s.sign_time 
+		AS "signTime", s.examine_person AS "examinePerson", s.examine_time AS "examineTime", 
+		s.attend_time AS "attendTime", a.real_name as realName , a.mobile as mobile, 
+		p.company_name as companyName from wx_meeting_signup s LEFT JOIN purchaser_account 
+		a on s.user_id=a.id left join purchaser p on a.purchaser_id=p.id where s.meeting_id={#meetingId} 
+		</select> -->
+	<!-- 暂时没用 -->
+	<select id="findSignInList" resultMap="ResultMapWxMeetingSignup"
+		parameterType="WxMeetingSignup">
+		select
+		s.id AS "id",
+		s.meeting_id AS "meetingId",
+		s.user_id AS "userId",
+		s.sign_status AS "signStatus",
+		s.attend_status AS "attendStatus",
+		s.sign_time AS "signTime",
+		s.examine_person AS "examinePerson",
+		s.examine_time AS "examineTime",
+		s.attend_time AS "attendTime",
+		a.real_name as "realName" ,
+		a.mobile as "mobile",
+		p.company_name as
+		"companyName"
+		from wx_meeting_signup s LEFT JOIN purchaser_account a on s.user_id=a.id
+		left join purchaser p on a.purchaser_id=p.id
+		<where>
+			where s.meeting_id={#meetingId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="notifyMsg" resultMap="ResultMapWxMeetingSignup">
+		select * from wx_meeting_signup s
+		<where>
+			s.meeting_id = #{id}
+			and s.sign_status="3"
+		</where>
+	</select>
+
+	<!-- (<![CDATA[ s.sign_status <> 0 ]]> and <![CDATA[ s.sign_status <> 2 
+		]]>) -->
+	<update id="updateimport">
+		UPDATE wx_meeting_signup SET
+		seat_num = #{seatNum},
+		table_num=#{tableNum},
+		car_num=#{carNum}
+		WHERE phone = #{mobile} and
+		meeting_id=#{meetingId}
+	</update>
+	<select id="findlastmymeeting" resultMap="ResultMapWxMeetingSignup">
+		select *from wx_meeting_signup where user_id=#{id} order by sign_time desc
+	</select>
+
+
+	<delete id="deletebyuserid">
+		DELETE FROM wx_meeting_signup
+		WHERE user_id = #{id}
+	</delete>
+</mapper>

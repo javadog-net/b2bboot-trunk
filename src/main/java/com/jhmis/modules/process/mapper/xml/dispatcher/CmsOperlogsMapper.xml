@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.dispatcher.CmsOperlogsMapper">
+    
+	<sql id="cmsOperlogsColumns">
+		a.id AS "id",
+		a.loginname AS "loginname",
+		a.opertime AS "opertime",
+		a.content AS "content",
+		a.ip AS "ip"
+	</sql>
+	
+	<sql id="cmsOperlogsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsOperlogs" >
+		SELECT 
+			<include refid="cmsOperlogsColumns"/>
+		FROM cms_operlogs a
+		<include refid="cmsOperlogsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsOperlogs" >
+		SELECT 
+			<include refid="cmsOperlogsColumns"/>
+		FROM cms_operlogs a
+		<include refid="cmsOperlogsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsOperlogs" >
+		SELECT 
+			<include refid="cmsOperlogsColumns"/>
+		FROM cms_operlogs a
+		<include refid="cmsOperlogsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_operlogs(
+			id,
+			loginname,
+			opertime,
+			content,
+			ip
+		) VALUES (
+			#{id},
+			#{loginname},
+			#{opertime},
+			#{content},
+			#{ip}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_operlogs SET 	
+			loginname = #{loginname},
+			opertime = #{opertime},
+			content = #{content},
+			ip = #{ip}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_operlogs
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_operlogs SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsOperlogs" statementType="STATEMENT">
+		select * FROM cms_operlogs  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.euc.mapper.EucMsgOrderMapper">
+    
+	<sql id="eucMsgOrderColumns">
+		a.id AS "id",
+		a.euc_id AS "eucId",
+		a.create_time AS "createTime",
+		a.contractor_code AS "contractorCode",
+		a.contractor_name AS "contractorName",
+		a.undertake AS "undertake",
+		a.trade_count AS "tradeCount",
+		a.order_type AS "orderType",
+		a.org_id AS "orgId",
+		a.is_check AS "isCheck",
+		a.checker AS "checker",
+		a.is_bind AS "isBind",
+		a.check_date AS "checkDate",
+		a.image_url AS "imageUrl",
+		a.update_time AS "updateTime",
+		a.is_abandon AS "isAbandon",
+		a.abandon_type AS "abandonType",
+		a.abandon_reason AS "abandonReason",
+		a.abandon_time AS "abandonTime",
+		a.abandon_remark AS "abandonRemark",
+		a.abandon_write as "abandonWrite",
+		a.authority_status as "authorityStatus",
+		a.authority_remark as "authorityRemark",
+		a.authority_time as "authorityTime",
+		a.authority_record as "authorityRecord",
+		a.appeal_status as "appealStatus",
+		a.appeal_content as "appealContent",
+		a.appeal_files as "appealFiles",
+		a.appeal_time as "appealTime",
+		a.appeal_remark as "appealRemark",
+		a.project_code AS "projectCode",
+		em.msg_id AS "msgId",
+		em.business_code AS "businessCode",
+		em.business_name AS "businessName",
+		em.business_source AS "businessSource",
+		em.business_type AS "businessType",
+		em.top_customer_abbreviation AS "topCustomerAbbreviation",
+		em.company_name_a AS "companyNameA",
+		em.contact_name_a AS "contactNameA",
+		em.contact_mobile_a AS "contactMobileA",
+		em.industry AS "industry",
+		em.state AS "state",
+		em.haier_theater AS "haierTheater",
+		em.center AS "center",
+		em.center_name AS "centerName",
+		em.small_mesh AS "smallMesh",
+		em.grid AS "grid",
+		em.province AS "province",
+		em.province_id AS "provinceId",
+		em.city AS "city",
+		em.city_id AS "cityId",
+		em.district AS "district",
+		em.district_id AS "districtId",
+		em.business_opportunity_address AS "businessOpportunityAddress",
+		em.last_processing_time AS "lastProcessingTime",
+		em.entry_date AS "entryDate",
+		em.project_manager_code AS "projectManagerCode",
+		em.project_manager_name AS "projectManagerName",
+		em.business_channel AS "businessChannel",
+		em.competitors AS "competitors",
+		em.remarks AS "remarks",
+		em.update_date AS "updateDate",
+		em.is_send_hps AS "isSendHps",
+		em.industry_id AS "industryId",
+		em.if_top_customer AS "ifTopCustomer",
+		em.customer_msg_id AS "customerMsgId"
+	</sql>
+	
+	<sql id="eucMsgOrderJoins">
+		left join euc_msg em on a.euc_id = em.id
+	</sql>
+	
+    
+	<select id="get" resultType="EucMsgOrder" >
+		SELECT 
+			<include refid="eucMsgOrderColumns"/>
+		FROM euc_msg_order a
+		<include refid="eucMsgOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="EucMsgOrder" >
+		SELECT
+		<include refid="eucMsgOrderColumns"/>
+		FROM euc_msg_order a
+		<include refid="eucMsgOrderJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="eucId != null and eucId != ''">
+				AND a.euc_id = #{eucId}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{contractorCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contractorCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contractorCode},'%')</if>
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{contractorName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contractorName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contractorName},'%')</if>
+			</if>
+			<if test="undertake != null and undertake != ''">
+				<if test="undertake == '99'">
+					AND (a.undertake = '' or a.undertake is null)
+				</if>
+				<if test="undertake != '99'">
+					AND a.undertake = #{undertake}
+				</if>
+			</if>
+			<if test="tradeCount != null and tradeCount != ''">
+				AND a.trade_count = #{tradeCount}
+			</if>
+			<if test="orderType != null and orderType != ''">
+				AND a.order_type = #{orderType}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="checker != null and checker != ''">
+				AND a.checker = #{checker}
+			</if>
+			<if test="isBind != null and isBind != ''">
+				AND a.is_bind = #{isBind}
+			</if>
+			<if test="checkDate != null and checkDate != ''">
+				AND a.check_date = #{checkDate}
+			</if>
+			<if test="imageUrl != null and imageUrl != ''">
+				AND a.image_url = #{imageUrl}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="isAbandon != null and isAbandon != ''">
+				AND a.is_abandon = #{isAbandon}
+			</if>
+			<if test="abandonType != null and abandonType != ''">
+				AND a.abandon_type = #{abandonType}
+			</if>
+			<if test="abandonReason != null and abandonReason != ''">
+				AND a.abandon_reason = #{abandonReason}
+			</if>
+			<if test="abandonTime != null and abandonTime != ''">
+				AND a.abandon_time = #{abandonTime}
+			</if>
+			<if test="noUndertake != null and noUndertake != ''">
+				AND a.undertake is null
+			</if>
+            <if test="abandonRemark != null and abandonRemark != ''">
+                AND a.abandon_remark = #{abandonRemark}
+            </if>
+            <if test="abandonWrite != null and abandonWrite != ''">
+                AND a.abandon_write = #{abandonWrite}
+            </if>
+
+			<if test="authorityStatus != null and authorityStatus != ''">
+				AND a.authority_status = #{authorityStatus}
+			</if>
+			<if test="authorityRemark != null and authorityRemark != ''">
+				AND a.authority_remark = #{authorityRemark}
+			</if>
+			<if test="authorityTime != null and authorityTime != ''">
+				AND a.authority_time = #{authorityTime}
+			</if>
+			<if test="authorityRecord != null and authorityRecord != ''">
+				AND a.authority_record = #{authorityRecord}
+			</if>
+			<if test="appealStatus != null and appealStatus != ''">
+				AND a.appeal_status = #{appealStatus}
+			</if>
+			<if test="appealContent != null and appealContent != ''">
+				AND a.appeal_content = #{appealContent}
+			</if>
+			<if test="appealFiles != null and appealFiles != ''">
+				AND a.appeal_files = #{appealFiles}
+			</if>
+			<if test="appealTime != null and appealTime != ''">
+				AND a.appeal_time = #{appealTime}
+			</if>
+			<if test="appealRemark != null and appealRemark != ''">
+				AND a.appeal_remark = #{appealRemark}
+			</if>
+            <if test="msgId != null and msgId != ''">
+                AND em.msg_id = #{msgId}
+            </if>
+            <if test="businessCode != null and businessCode != ''">
+                AND em.business_code LIKE
+                <if test="dbName == 'oracle'">'%'||#{businessCode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{businessCode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{businessCode},'%')</if>
+            </if>
+            <if test="businessName != null and businessName != ''">
+                AND em.business_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+            </if>
+            <if test="businessSource != null and businessSource != ''">
+                AND em.business_source = #{businessSource}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                AND em.business_type = #{businessType}
+            </if>
+            <if test="topCustomerAbbreviation != null and topCustomerAbbreviation != ''">
+                AND em.top_customer_abbreviation LIKE
+                <if test="dbName == 'oracle'">'%'||#{topCustomerAbbreviation}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{topCustomerAbbreviation}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{topCustomerAbbreviation},'%')</if>
+            </if>
+            <if test="companyNameA != null and companyNameA != ''">
+                AND em.company_name_a LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyNameA}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyNameA}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyNameA},'%')</if>
+            </if>
+            <if test="contactNameA != null and contactNameA != ''">
+                AND em.contact_name_a LIKE
+                <if test="dbName == 'oracle'">'%'||#{contactNameA}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{contactNameA}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{contactNameA},'%')</if>
+            </if>
+            <if test="contactMobileA != null and contactMobileA != ''">
+                AND em.contact_mobile_a LIKE
+                <if test="dbName == 'oracle'">'%'||#{contactMobileA}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{contactMobileA}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{contactMobileA},'%')</if>
+            </if>
+            <if test="industry != null and industry != ''">
+                AND em.industry = #{industry}
+            </if>
+            <if test="haierTheater != null and haierTheater != ''">
+                AND em.haier_theater = #{haierTheater}
+            </if>
+            <if test="center != null and center != ''">
+                AND em.center = #{center}
+            </if>
+            <if test="smallMesh != null and smallMesh != ''">
+                AND em.small_mesh = #{smallMesh}
+            </if>
+            <if test="grid != null and grid != ''">
+                AND em.grid LIKE
+                <if test="dbName == 'oracle'">'%'||#{grid}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{grid}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{grid},'%')</if>
+            </if>
+            <if test="province != null and province != ''">
+                AND em.province = #{province}
+            </if>
+            <if test="provinceId != null and provinceId != ''">
+                AND em.province_id = #{provinceId}
+            </if>
+            <if test="city != null and city != ''">
+                AND em.city = #{city}
+            </if>
+            <if test="cityId != null and cityId != ''">
+                AND em.city_id = #{cityId}
+            </if>
+            <if test="district != null and district != ''">
+                AND em.district = #{district}
+            </if>
+            <if test="districtId != null and districtId != ''">
+                AND em.district_id = #{districtId}
+            </if>
+            <if test="businessOpportunityAddress != null and businessOpportunityAddress != ''">
+                AND em.business_opportunity_address = #{businessOpportunityAddress}
+            </if>
+            <if test="lastProcessingTime != null and lastProcessingTime != ''">
+                AND em.last_processing_time = #{lastProcessingTime}
+            </if>
+            <if test="entryDate != null and entryDate != ''">
+                AND em.entry_date = #{entryDate}
+            </if>
+
+			<if test="startEntryDate != null and startEntryDate!=''">
+				AND em.entry_date <![CDATA[ >= #{startEntryDate} ]]>
+			</if>
+			<if test="endEntryDate != null and endEntryDate!=''">
+				AND em.entry_date <![CDATA[ <= #{endEntryDate} ]]>
+			</if>
+
+            <if test="projectManagerCode != null and projectManagerCode != ''">
+                AND em.project_manager_code = #{projectManagerCode}
+            </if>
+            <if test="projectManagerName != null and projectManagerName != ''">
+                AND em.project_manager_name = #{projectManagerName}
+            </if>
+            <if test="businessChannel != null and businessChannel != ''">
+                AND em.business_channel = #{businessChannel}
+            </if>
+            <if test="competitors != null and competitors != ''">
+                AND em.competitors = #{competitors}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND em.remarks = #{remarks}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND em.update_date = #{updateDate}
+            </if>
+            <if test="isSendHps != null and isSendHps != ''">
+                AND em.is_send_hps = #{isSendHps}
+            </if>
+            <if test="projectCode != null and projectCode != ''">
+                AND a.project_code = #{projectCode}
+            </if>
+            <if test="industryId != null and industryId != ''">
+                AND em.industry_id = #{industryId}
+            </if>
+            <if test="centerName != null and centerName != ''">
+                AND em.center_name = #{centerName}
+            </if>
+            <if test="ifTopCustomer != null and ifTopCustomer != ''">
+                AND em.if_top_customer = #{ifTopCustomer}
+            </if>
+            <if test="customerMsgId != null and customerMsgId != ''">
+                AND em.customer_msg_id = #{customerMsgId}
+            </if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListOver" resultType="EucMsgOrder" >
+		SELECT 
+			<include refid="eucMsgOrderColumns"/>
+		FROM euc_msg_order a
+		<include refid="eucMsgOrderJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="eucId != null and eucId != ''">
+				AND a.euc_id = #{eucId}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="contractorCode != null and contractorCode != ''">
+				AND a.contractor_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{contractorCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{contractorCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{contractorCode},'%')</if>
+			</if>
+			<if test="contractorName != null and contractorName != ''">
+				AND a.contractor_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{contractorName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{contractorName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{contractorName},'%')</if>
+			</if>
+			<if test="undertake != null and undertake != ''">
+				AND a.undertake = #{undertake}
+			</if>
+			<if test="tradeCount != null and tradeCount != ''">
+				AND a.trade_count = #{tradeCount}
+			</if>
+			<if test="orderType != null and orderType != ''">
+				AND a.order_type = #{orderType}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="checker != null and checker != ''">
+				AND a.checker = #{checker}
+			</if>
+			<if test="isBind != null and isBind != ''">
+				AND a.is_bind = #{isBind}
+			</if>
+			<if test="checkDate != null and checkDate != ''">
+				AND a.check_date = #{checkDate}
+			</if>
+			<if test="imageUrl != null and imageUrl != ''">
+				AND a.image_url = #{imageUrl}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="isAbandon != null and isAbandon != ''">
+				AND a.is_abandon = #{isAbandon}
+			</if>
+			<if test="abandonType != null and abandonType != ''">
+				AND a.abandon_type = #{abandonType}
+			</if>
+			<if test="abandonReason != null and abandonReason != ''">
+				AND a.abandon_reason = #{abandonReason}
+			</if>
+			<if test="abandonTime != null and abandonTime != ''">
+				AND a.abandon_time = #{abandonTime}
+			</if>
+			<if test="noUndertake != null and noUndertake != ''">
+				AND a.undertake =''
+			</if>
+            <if test="abandonRemark != null and abandonRemark != ''">
+                AND a.abandon_remark = #{abandonRemark}
+            </if>
+            <if test="abandonWrite != null and abandonWrite != ''">
+                AND a.abandon_write = #{abandonWrite}
+            </if>
+			<if test="authorityStatus != null and authorityStatus != ''">
+				AND a.authority_status = #{authorityStatus}
+			</if>
+			<if test="authorityRemark != null and authorityRemark != ''">
+				AND a.authority_remark = #{authorityRemark}
+			</if>
+			<if test="authorityTime != null and authorityTime != ''">
+				AND a.authority_time = #{authorityTime}
+			</if>
+			<if test="authorityRecord != null and authorityRecord != ''">
+				AND a.authority_record = #{authorityRecord}
+			</if>
+			<if test="appealStatus != null and appealStatus != ''">
+				AND a.appeal_status = #{appealStatus}
+			</if>
+			<if test="appealContent != null and appealContent != ''">
+				AND a.appeal_content = #{appealContent}
+			</if>
+			<if test="appealFiles != null and appealFiles != ''">
+				AND a.appeal_files = #{appealFiles}
+			</if>
+			<if test="appealTime != null and appealTime != ''">
+				AND a.appeal_time = #{appealTime}
+			</if>
+			<if test="appealRemark != null and appealRemark != ''">
+				AND a.appeal_remark = #{appealRemark}
+			</if>
+            <if test="projectCode != null and projectCode != ''">
+                AND a.project_code = #{projectCode}
+            </if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EucMsgOrder" >
+		SELECT 
+			<include refid="eucMsgOrderColumns"/>
+		FROM euc_msg_order a
+		<include refid="eucMsgOrderJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO euc_msg_order(
+			id,
+			euc_id,
+			create_time,
+			contractor_code,
+			contractor_name,
+			undertake,
+			trade_count,
+			order_type,
+			org_id,
+			is_check,
+			checker,
+			is_bind,
+			check_date,
+			image_url,
+			update_time,
+			is_abandon,
+			abandon_type,
+			abandon_reason,
+			abandon_time,
+			abandon_remark,
+			abandon_write,
+			authority_status,
+			authority_remark,
+			authority_time,
+			authority_record,
+			appeal_status,
+			appeal_content,
+			appeal_files,
+			appeal_time,
+			appeal_remark,
+			project_code,
+			business_code
+		) VALUES (
+			#{id},
+			#{eucId},
+			#{createTime},
+			#{contractorCode},
+			#{contractorName},
+			#{undertake},
+			#{tradeCount},
+			#{orderType},
+			#{orgId},
+			#{isCheck},
+			#{checker},
+			#{isBind},
+			#{checkDate},
+			#{imageUrl},
+			#{updateTime},
+			#{isAbandon},
+			#{abandonType},
+			#{abandonReason},
+			#{abandonTime},
+			#{abandonRemark},
+			#{abandonWrite},
+			#{authorityStatus},
+			#{authorityRemark},
+			#{authorityTime},
+			#{authorityRecord},
+			#{appealStatus},
+			#{appealContent},
+			#{appealFiles},
+			#{appealTime},
+			#{appealRemark},
+			#{projectCode},
+			#{businessCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE euc_msg_order SET 	
+			euc_id = #{eucId},
+			create_time = #{createTime},
+			contractor_code = #{contractorCode},
+			contractor_name = #{contractorName},
+			undertake = #{undertake},
+			trade_count = #{tradeCount},
+			order_type = #{orderType},
+			org_id = #{orgId},
+			is_check = #{isCheck},
+			checker = #{checker},
+			is_bind = #{isBind},
+			check_date = #{checkDate},
+			image_url = #{imageUrl},
+			update_time = #{updateTime},
+			is_abandon = #{isAbandon},
+			abandon_type = #{abandonType},
+			abandon_reason = #{abandonReason},
+			abandon_time = #{abandonTime},
+			abandon_remark = #{abandonRemark},
+			abandon_write = #{abandonWrite},
+			authority_status = #{authorityStatus},
+			authority_remark = #{authorityRemark},
+			authority_time = #{authorityTime},
+			authority_record = #{authorityRecord},
+			appeal_status = #{appealStatus},
+			appeal_content = #{appealContent},
+			appeal_files = #{appealFiles},
+			appeal_time = #{appealTime},
+			appeal_remark = #{appealRemark},
+			project_code = #{projectCode},
+			business_code = #{businessCode}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM euc_msg_order
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE euc_msg_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="EucMsgOrder" statementType="STATEMENT">
+		select * FROM euc_msg_order  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="dealerOrderAllStatus" resultType="Integer" parameterType="String">
+	select count(*) from euc_msg_order
+		   where abandon_type='1' and undertake is null and contractor_code= #{dealerCode}
+		   union all
+		select count(*) from euc_msg_order
+		   where is_abandon='1' and contractor_code= #{dealerCode} and undertake='0'
+		   union all
+		select count(*) from euc_msg_order
+		   where is_abandon='0' and is_bind='1' and contractor_code= #{dealerCode} and undertake='0'
+		   union all
+		select count(*) from euc_msg_order
+		   where is_abandon='0' and is_bind='0' and contractor_code= #{dealerCode} and undertake='0'
+		   union all
+		select count(*) from euc_msg_order
+		   where is_abandon='1' and contractor_code= #{dealerCode} and undertake='1'
+		   union all
+		select count(*) from euc_msg_order
+		   where is_abandon='0' and is_bind=1 and contractor_code= #{dealerCode} and undertake='1'
+		   union all(
+		select count(*) from euc_msg_order
+		   where undertake='1' and is_abandon='0' and is_bind=0 and contractor_code= #{dealerCode})
+	</select>
+	<update id ="updateAppealInfo">
+		UPDATE euc_msg_order SET
+			appeal_status = #{appealStatus},
+			appeal_content = #{appealContent},
+			appeal_files = #{appealFiles},
+			<if test="appealTime != null">
+				appeal_time = #{appealTime},
+			</if>
+			<if test="authorityTime != null">
+				authority_time = #{authorityTime},
+			</if>
+			<if test="authorityStatus != null and authorityStatus !=''">
+				authority_status = #{authorityStatus},
+			</if>
+			appeal_remark = #{appealRemark}
+		WHERE id = #{id}
+	</update>
+</mapper>

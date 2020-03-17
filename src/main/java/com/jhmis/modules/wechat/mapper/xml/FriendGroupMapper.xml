@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.FriendGroupMapper">
+    
+	<sql id="friendGroupColumns">
+		a.id AS "id",
+		a.group_name AS "groupName",
+		a.purchaser_id AS "purchaserId",
+		a.add_time AS "addTime",
+		a.is_default AS "isDefault",
+		a.remark1 AS "remark1",
+		a.remark2 AS "remark2",
+		a.remark3 AS "remark3"
+	</sql>
+	
+	<sql id="friendGroupJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="FriendGroup" >
+		SELECT 
+			<include refid="friendGroupColumns"/>
+		FROM friend_group a
+		<include refid="friendGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FriendGroup" >
+		SELECT 
+			<include refid="friendGroupColumns"/>
+		FROM friend_group a
+		<include refid="friendGroupJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FriendGroup" >
+		SELECT 
+			<include refid="friendGroupColumns"/>
+		FROM friend_group a
+		<include refid="friendGroupJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO friend_group(
+			id,
+			group_name,
+			purchaser_id,
+			add_time,
+			is_default,
+			remark1,
+			remark2,
+			remark3
+		) VALUES (
+			#{id},
+			#{groupName},
+			#{purchaserId},
+			#{addTime},
+			#{isDefault},
+			#{remark1},
+			#{remark2},
+			#{remark3}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE friend_group SET 	
+			group_name = #{groupName},
+			purchaser_id = #{purchaserId},
+			add_time = #{addTime},
+			is_default = #{isDefault},
+			remark1 = #{remark1},
+			remark2 = #{remark2},
+			remark3 = #{remark3}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM friend_group
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE friend_group SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="FriendGroup" statementType="STATEMENT">
+		select * FROM friend_group  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

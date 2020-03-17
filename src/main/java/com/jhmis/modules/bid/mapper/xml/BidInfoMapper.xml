@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.bid.mapper.BidInfoMapper">
+
+	<sql id="bidInfoColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.project_name AS
+		"projectName",
+		a.company_name AS "companyName",
+		a.project_intro AS
+		"projectIntro",
+		a.project_content AS "projectContent",
+		a.project_budget
+		AS "projectBudget",
+		a.project_logo AS "projectLogo",
+		a.province_id AS
+		"provinceId",
+		a.city_id AS "cityId",
+		a.bid_concat AS "bidConcat",
+		a.bid_concat_phone AS "bidConcatPhone",
+		a.bid_concat_email AS
+		"bidConcatEmail",
+		a.bid_concat_address AS "bidConcatAddress",
+		a.application_conditions AS "applicationConditions",
+		a.add_time AS
+		"addTime",
+		a.add_user AS "addUser",
+		a.status AS "status",
+		a.is_valid AS
+		"isValid",
+		a.is_del AS "isDel",
+		a.update_time AS "updateTime",
+		a.area_info AS "areaInfo",
+		visit_Num AS "visitNum",
+		a.source AS "source"
+
+	</sql>
+
+	<sql id="bidInfoJoins">
+
+	</sql>
+
+	<resultMap type="BidInfo" id="BidInfoResult"
+		autoMapping="true">
+		<!-- <result column="project_intro" property="projectIntro" typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/> 
+			<result column="project_content" property="projectContent" typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/> 
+			<result column="application_conditions" property="applicationConditions" 
+			typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/> -->
+	</resultMap>
+
+	<select id="get" resultMap="BidInfoResult">
+		SELECT
+		<include refid="bidInfoColumns" />
+		FROM bid_info a
+		<include refid="bidInfoJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultMap="BidInfoResult">
+		SELECT
+		<include refid="bidInfoColumns" />
+		FROM bid_info a
+		<include refid="bidInfoJoins" />
+		<where>
+			a.is_del=0
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name like '%${projectName}%' 
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="addUser != null and addUser != ''">
+				AND a.add_user = #{addUser}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.area_info like '%${provinceId}%'
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.area_info like CONCAT('%',#{cityId},'%')
+			</if>
+			<if test="threeDay != null and threeDay !=''">
+				AND DATE_SUB(CURDATE(),INTERVAL 3 DAY) &lt;= DATE(a.add_time)
+			</if>
+			<if test="sevenDay != null and sevenDay !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+			</if>
+			<if test="month != null  and month !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+			</if>
+			<if test="threeMonth != null and threeMonth !='' ">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+			</if>
+			<if test="sixMonth != null  and sixMonth !=''">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+			</if>
+			<if test="year != null  and year !=''">
+				AND a.add_time &gt; DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+			</if>
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultMap="BidInfoResult">
+		SELECT
+		<include refid="bidInfoColumns" />
+		FROM bid_info a
+		<include refid="bidInfoJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getVisitProjectList" resultMap="BidInfoResult">
+		SELECT
+		<include refid="bidInfoColumns" />
+		FROM bid_info a
+		<include refid="bidInfoJoins" />	
+		ORDER BY visit_Num desc
+	</select>
+
+	<insert id="insert">
+		INSERT INTO bid_info(
+		id,
+		industry,
+		project_name,
+		company_name,
+		project_intro,
+		project_content,
+		project_budget,
+		project_logo,
+		province_id,
+		city_id,
+		bid_concat,
+		bid_concat_phone,
+		bid_concat_email,
+		bid_concat_address,
+		application_conditions,
+		<!--add_time, -->
+		add_user,
+		status,
+		area_info,
+		source,
+		is_valid
+		<!--update_time -->
+		) VALUES (
+		#{id},
+		#{industry},
+		#{projectName},
+		#{companyName},
+		#{projectIntro},
+		#{projectContent},
+		#{projectBudget},
+		#{projectLogo},
+		#{provinceId},
+		#{cityId},
+		#{bidConcat},
+		#{bidConcatPhone},
+		#{bidConcatEmail},
+		#{bidConcatAddress},
+		#{applicationConditions},
+		<!--#{addTime}, -->
+		#{addUser},
+		#{status},
+		#{areaInfo},
+		#{source},
+		#{isValid}
+		<!--#{updateTime} -->
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE bid_info SET
+		industry = #{industry},
+		project_name = #{projectName},
+		company_name = #{companyName},
+		project_intro = #{projectIntro},
+		project_content = #{projectContent},
+		project_budget = #{projectBudget},
+		project_logo = #{projectLogo},
+		province_id = #{provinceId},
+		city_id = #{cityId},
+		bid_concat = #{bidConcat},
+		bid_concat_phone = #{bidConcatPhone},
+		bid_concat_email = #{bidConcatEmail},
+		bid_concat_address = #{bidConcatAddress},
+		application_conditions = #{applicationConditions},
+		<!--add_time = #{addTime}, -->
+		add_user = #{addUser},
+		status = #{status},
+		is_valid = #{isValid},
+		visit_Num = ${visitNum}
+		<!--update_time = #{updateTime} -->
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM bid_info
+		WHERE id = #{id}
+	</update>
+	<!--修改状态 -->
+	<update id="updateValid">
+		UPDATE bid_info SET
+		is_valid = #{valid}
+		WHERE id = #{id}
+	</update>
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE bid_info SET
+		is_del = #{isDel}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BidInfo"
+		statementType="STATEMENT">
+		select * FROM bid_info where ${propertyName} =
+		'${value}'
+	</select>
+
+</mapper>

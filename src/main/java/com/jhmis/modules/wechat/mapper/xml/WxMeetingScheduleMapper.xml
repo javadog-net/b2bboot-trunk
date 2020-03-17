@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxMeetingScheduleMapper">
+    
+	<sql id="wxMeetingScheduleColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.content AS "content",
+		a.conference_day AS "conferenceDay",
+		a.type AS "type",
+		a.my_type AS "myType",
+		a.remark1 AS "remark1",
+		a.remark2 AS "remark2"
+		
+	</sql>
+	
+	<sql id="wxMeetingScheduleJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMeetingSchedule" >
+		SELECT 
+			<include refid="wxMeetingScheduleColumns"/>
+		FROM wx_meeting_schedule a
+		<include refid="wxMeetingScheduleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMeetingSchedule" >
+		SELECT 
+			<include refid="wxMeetingScheduleColumns"/>
+		FROM wx_meeting_schedule a
+		<include refid="wxMeetingScheduleJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				and a.meeting_id = #{meetingId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMeetingSchedule" >
+		SELECT 
+			<include refid="wxMeetingScheduleColumns"/>
+		FROM wx_meeting_schedule a
+		<include refid="wxMeetingScheduleJoins"/>
+		<where>
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_meeting_schedule(
+			id,
+			meeting_id,
+			start_time,
+			end_time,
+			content,
+			conference_day,
+			type,
+			my_type,
+			remark1,
+			remark2
+		) VALUES (
+			#{id},
+			#{meetingId},
+			#{startTime},
+			#{endTime},
+			#{content},
+			#{conferenceDay},
+			#{type},
+			#{myType},
+			#{remark1},
+			#{remark2}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_meeting_schedule SET 	
+			meeting_id = #{meetingId},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			content = #{content},
+			conference_day = #{conferenceDay},
+			type = #{type},
+			my_type = #{myType},
+			remark1 = #{remark1},
+			remark2 = #{remark2}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_meeting_schedule
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_meeting_schedule SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMeetingSchedule" statementType="STATEMENT">
+		select * FROM wx_meeting_schedule  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="findMeetingScheduleList" resultType="com.jhmis.modules.wechat.entity.WxMeetingSchedule">
+		SELECT
+		*
+		FROM
+		wx_meeting_schedule a
+		<where>
+			<if test="meetingId != null and meetingId !=''">
+				a.meeting_id=#{meetingId}
+			</if>
+		</where>
+		ORDER BY
+			a.start_time,a.type,a.conference_day
+		
+		
+	</select>
+	
+</mapper>

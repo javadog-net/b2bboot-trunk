@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerQuotesMapper">
+    
+	<sql id="customerQuotesColumns">
+		a.id AS "id",
+		a.customer_msgid AS "msgId",
+		a.product_model AS "productModel",
+		a.domain_type AS "domainType",
+		a.product_group AS "productGroup",
+		a.brand AS "brand",
+		a.product_quote AS "productQuote",
+		a.product_code AS "productCode",
+		a.demand_quantity AS "demandQuantity",
+		a.bewisdom AS "beWisdom"
+	</sql>
+	
+	<sql id="customerQuotesJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CustomerQuotes" >
+		SELECT 
+			<include refid="customerQuotesColumns"/>
+		FROM customer_quotes a
+		<include refid="customerQuotesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CustomerQuotes" >
+		SELECT 
+			<include refid="customerQuotesColumns"/>
+		FROM customer_quotes a
+		<include refid="customerQuotesJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.customer_msgid = #{msgId}
+			</if>
+			<if test="productModel != null and productModel != ''">
+				AND a.product_model = #{productModel}
+			</if>
+			<if test="domainType != null and domainType != ''">
+				AND a.domain_type = #{domainType}
+			</if>
+			<if test="productGroup != null and productGroup != ''">
+				AND a.product_group = #{productGroup}
+			</if>
+			<if test="brand != null and brand != ''">
+				AND a.brand = #{brand}
+			</if>
+			<if test="productQuote != null and productQuote != ''">
+				AND a.product_quote = #{productQuote}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="demandQuantity != null and demandQuantity != ''">
+				AND a.demand_quantity = #{demandQuantity}
+			</if>
+			<if test="beWisdom != null and beWisdom != ''">
+				AND a.bewisdom = #{beWisdom}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerQuotes" >
+		SELECT 
+			<include refid="customerQuotesColumns"/>
+		FROM customer_quotes a
+		<include refid="customerQuotesJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_quotes(
+			id,
+			customer_msgid,
+			product_model,
+			domain_type,
+			product_group,
+			brand,
+			product_quote,
+			product_code,
+			demand_quantity,
+			bewisdom
+		) VALUES (
+			#{id},
+			#{msgId},
+			#{productModel},
+			#{domainType},
+			#{productGroup},
+			#{brand},
+			#{productQuote},
+			#{productCode},
+			#{demandQuantity},
+			#{beWisdom}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_quotes SET
+			id = #{id}, 	
+			customer_msgid = #{msgId},
+			product_model = #{productModel},
+			domain_type = #{domainType},
+			product_group = #{productGroup},
+			brand = #{brand},
+			product_quote = #{productQuote},
+			product_code = #{productCode},
+			demand_quantity = #{demandQuantity},
+			bewisdom = #{beWisdom}
+		WHERE id = #{id}
+	</update>
+	
+	<!--根据msgId删除-->
+	<delete id="deleteByMsgid">
+		DELETE FROM customer_quotes
+		WHERE customer_msgid = #{msgId}
+	</delete>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_quotes
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_quotes SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerQuotes" statementType="STATEMENT">
+		select * FROM customer_quotes  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

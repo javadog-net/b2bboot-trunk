@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.directpurchaser.mapper.DirectPurchaserAccountMapper">
+    
+	<sql id="purchaserAccountColumns">
+		a.id AS "id",
+		a.purchaser_id AS "purchaserId",
+		a.login_name AS "loginName",
+		a.passwd AS "passwd",
+		a.real_name AS "realName",
+		a.mobile AS "mobile",
+		a.avatar AS "avatar",
+		a.nick_name AS "nickName",
+		a.is_admin AS "isAdmin",
+		a.depart_name AS "departName",
+		a.email AS "email",
+		a.remarks AS "remarks",
+		a.wx_industry_name AS "wxindustryname",
+		a.is_closed AS "isClosed",
+		a.last_login_date AS "lastLoginDate",
+		a.create_by AS "createById",
+		a.create_date AS "createDate",
+		a.update_by AS "updateById",
+		a.update_date AS "updateDate",
+		a.haier_user_id AS "haierUserId",
+		purchaser.company_name AS "purchaserName",
+		purchaser.logo_url AS "logoUrl",
+		purchaser.detail_address AS "detailAddress"
+		
+	</sql>
+	<sql id="purchaserAccountJoins">
+		LEFT JOIN purchaser purchaser ON purchaser.id=a.purchaser_id
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserAccount" >
+		SELECT 
+			<include refid="purchaserAccountColumns"/>
+		FROM purchaser_account a
+		<include refid="purchaserAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserAccount" >
+		SELECT 
+			<include refid="purchaserAccountColumns"/>
+		FROM purchaser_account a
+		<include refid="purchaserAccountJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="loginName != null and loginName != ''">
+				AND a.login_name = #{loginName}
+			</if>
+			<if test="realName != null and realName != ''">
+				AND a.real_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{realName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{realName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{realName},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE 
+					<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="departName != null and departName != ''">
+				AND a.depart_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{departName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{departName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{departName},'%')</if>
+			</if>
+			<if test="isAdmin != null and isAdmin != ''">
+				AND a.is_admin = #{isAdmin}
+			</if>
+			<if test="isClosed != null and isClosed != ''">
+				AND a.is_closed = #{isClosed}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserAccount" >
+		SELECT 
+			<include refid="purchaserAccountColumns"/>
+		FROM purchaser_account a
+		<include refid="purchaserAccountJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_account(
+			id,
+			purchaser_id,
+			login_name,
+			passwd,
+			real_name,
+			mobile,
+			avatar,
+			nick_name,
+			depart_name,
+			is_admin,
+			email,
+			remarks,
+			is_closed,
+			last_login_date,
+			haier_user_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{purchaserId},
+			#{loginName},
+			#{passwd},
+			#{realName},
+			#{mobile},
+			#{avatar},
+			#{nickName},
+			#{departName},
+			#{isAdmin},
+			#{email},
+			#{remarks},
+			#{isClosed},
+			#{lastLoginDate},
+			#{haierUserId},
+			#{createById},
+			#{createDate},
+			#{updateById},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_account SET 	
+			purchaser_id = #{purchaserId},
+			login_name = #{loginName},
+			passwd = #{passwd},
+			real_name = #{realName},
+			mobile = #{mobile},
+			avatar = #{avatar},
+			nick_name = #{nickName},
+			wx_industry_name = #{wxindustryname},
+			depart_name = #{departName},
+			is_admin = #{isAdmin},
+			email = #{email},
+			remarks = #{remarks},
+			is_closed = #{isClosed},
+			last_login_date = #{lastLoginDate},
+			haier_user_id = #{haierUserId},
+			update_by = #{updateById},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+<update id="updatedapartname">
+        UPDATE purchaser SET
+        depart_name = #{departName}
+        WHERE id = #{id}
+    </update>	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_account
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserAccount" statementType="STATEMENT">
+		select * FROM purchaser_account  where ${propertyName} = '${value}'
+	</select>
+
+    <!-- 根据登录名查询用户 -->
+    <select id="getByLoginName" resultType="PurchaserAccount">
+        SELECT
+        <include refid="purchaserAccountColumns"/>
+        FROM purchaser_account a
+        <include refid="purchaserAccountJoins"/>
+        WHERE a.login_name = #{loginName}
+    </select>
+
+    <!-- 更新用户密码 -->
+    <update id="updatePasswordById">
+        UPDATE purchaser_account SET
+        passwd = #{passwd}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新登录信息，如登录IP、登录时间 -->
+    <update id="updateLoginInfo">
+        UPDATE purchaser_account SET
+        last_login_date = #{lastLoginDate}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户和角色关联表数据 -->
+    <delete id="deleteAccountRole">
+        DELETE FROM purchaser_account_role WHERE account_id = #{id}
+    </delete>
+
+    <!-- 插入用户和角色关联表数据 -->
+    <insert id="insertAccountRole">
+        INSERT INTO purchaser_account_role(account_id, role_id)
+        values
+        <foreach collection="roleList" item="role" index="index" separator=",">
+            (#{id},#{role.id})
+        </foreach>
+    </insert>
+
+    <!-- 更新用户信息  -->
+    <update id="updateAccountInfo">
+        UPDATE purchaser_account SET
+        real_name = #{realName},
+        mobile = #{mobile},
+        avatar = #{avatar},
+        nick_name = #{nickName},
+        depart_name = #{departName},
+        mobile = #{mobile},
+        update_by = #{updateById},
+        update_date = #{updateDate},
+        remarks = #{remarks},
+        email = #{email},
+        wx_industry_name = #{wxindustryname},
+        is_closed = #{isClosed}
+        WHERE id = #{id}
+    </update>
+    <select id="getbyid" resultType="PurchaserAccount" parameterType="String">
+    	select * from  purchaser_account where id=#{id}
+    </select>
+    <select id="getAvatarById" resultType="String" parameterType="String">
+    	select avatar from  purchaser_account where id=#{id}
+    </select>
+    <select id="getAdminByPurchaserId" resultType="PurchaserAccount" parameterType="String">
+    	select * from  purchaser_account where purchaser_id = #{purchaserId} and is_admin = #{isAdmin}
+    </select>
+    <select id="getNicknameById" resultType="String" parameterType="String">
+    	select nick_name from  purchaser_account where id=#{id}
+    </select>
+    <delete id="deletebypurchaserid"  parameterType="String">
+    	delete from  purchaser_account where id=#{id}
+    </delete>
+    <delete id="deletebymobiles"  parameterType="String">
+    	delete from  purchaser_account where mobile=#{mobiles} or login_name=#{mobiles}
+    </delete>
+</mapper>

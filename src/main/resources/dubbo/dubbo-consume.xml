@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://code.alibabatech.com/schema/dubbo
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}" />
+
+    <!-- 注册中心暴露服务地址 -->
+    <dubbo:registry protocol="${dubbo.registry.protocol}" address="${dubbo.registry.address}" />
+
+    <!-- 以下注册所有需要调用的接口bean -->
+    <dubbo:reference id="linkProductUpperReadService" interface="com.haier.link.upper.service.LinkProductUpperReadService"
+                     check="false" version="1.1"/>
+    <!-- mq 接口 subscribe订阅接口 -->
+    <dubbo:reference id="linkMQSubscribeService" interface="com.haier.link.mq.service.LinkMQSubscribeService" check="false"/>
+</beans>

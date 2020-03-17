@@ -1,0 +1,387 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#two-door{
+    width: 1200px;
+    margin: 0 auto;
+}
+ .content-header{
+    font-size: 14px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #F2F2F2;
+    position: relative;
+}
+.content-header div{
+    width: 1200px;
+    height: 40px;
+    margin: 0 auto;
+}
+.content-header div span{
+    display:block;
+    float: left;
+    margin:0 5px;
+}
+/* 第二部分内容 */
+.content-middle{
+    width: 1200px;
+    height: 410px;
+    margin-top: 10px;
+}
+/* 第二部分左侧内容 */
+.content-middle .content-left{
+    float: left;
+    width: 352px;
+    height: 410px;
+}
+.content-left .larger-map{
+    width: 352px;
+    height: 352px;
+}
+.content-left .larger-map li{
+    height: 352px;
+    width: 352px;
+    border: 1px solid #ccc;
+    display: none;
+}
+.content-left .larger-map li img{
+    width: 100%;
+    height:100%;
+}
+
+/*商品图片选项卡左右按钮 */
+.button-left{
+    height: 60px;
+    width: 25px;
+    outline:none;
+    border: none;
+    line-height: 60px;
+    background: #fff;
+    font-size: 20px;
+    position: relative;
+    top: 18px;
+    left: 0px;
+}
+.button-left img{
+    height: 50px;
+    margin-top: 5px;
+}
+.button-right{
+    height: 60px;
+    width: 25px;
+    border: none;
+    outline:none;
+    line-height: 60px;
+    background: #fff;
+    font-size: 20px;
+    position: relative;
+    top: -100px;
+    right: -329px;
+}
+.button-right img{
+    height: 50px;
+    margin-top: 5px;
+}
+
+.content-left .option{
+    height: 60px;
+    width: 352px;
+    /* background: blue; */
+    position: relative;
+    left: 26px;
+    top: -45px;
+}
+.content-left .option li{
+    width:56px;
+    height: 56px;
+    float: left;  
+    border: 2px solid #fff;
+}
+.content-left .option li img{
+    width: 56px;
+    height: 56px;
+}
+
+/* 第二部分中间内容 */
+.content-middle .content-centre{
+    float: left;
+    width: 573px;
+    height: 410px;
+    margin-left: 35px;
+}
+.centre-top span{
+    color: #333333;
+    font-size: 16px;
+    line-height: 36px;
+    /* letter-spacing:6px; */
+}
+.centre-top span a{
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 15px;
+    color: #005AAA;
+    letter-spacing:0;
+}
+.intellectual{
+    height: 182px;
+    width: 568px;
+    background: #F2F2F2;
+    margin-top: 10px;
+    position: relative;
+    padding-left: 5px;
+    padding-top: 5px;
+    /* padding-bottom: 10px; */
+}
+.price{
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #EE1E1A;
+    margin-left: 10px;
+}
+.price .price-one{
+    font-size: 19px;
+}
+.price .price-two{
+    font-size: 30px;
+}
+.Inquiry-or-inquiry{
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.Inquiry-or-inquiry a{
+    text-decoration:underline;
+    color: #005AAA;
+}
+.delivery-cycle{
+    height: 80px;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 10px;
+    font-size: 12px;
+    line-height: 16px;
+}
+.centre-bottom{
+    /* background: red; */
+    height: 32px;
+    width: 573px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.centre-bottom div{
+    width: 103px;
+    height: 32px;
+    float: left;
+    margin-right: 40px;
+}
+.centre-bottom div img{
+    width: 32px;
+    height: 32px;
+    float: left;
+    /* background:#ccc; */
+}
+.centre-bottom div span{
+    display:block;
+    height: 32px;
+    width:56px;
+    line-height: 32px;
+    float: left;
+    margin-left: 15px;
+}
+.Rapid-inquiry{
+    height: 46px;
+    width: 174px;
+    background: #EE1E1A;
+    font-size: 24px;
+    line-height: 46px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    left: 130px;
+    top: -40px;
+}
+.Rapid-inquiry a{
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: inline-block
+}
+.add-subtract{
+    width: 101px;
+    height: 46px;
+    border: 1px solid #ccc;
+    position: relative;
+    top: 7px;
+}
+.add-subtract span{
+    display: inline-block;
+    text-align: center;
+    font-size: 24px;
+    line-height: 46px;
+    height: 46px;
+    width: 83px;
+}
+.add-subtract button{
+    width: 23px;
+    height: 23px;
+}
+.add-subtract .add{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+.add-subtract .subtract{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+/* 第二部分右侧内容 */
+.content-middle .content-right{
+    float: left;
+    width: 176px;
+    height: 410px;
+    /* background: pink; */
+    margin-left: 64px;
+}
+.content-right .projectCase{
+    height: 20px;
+    width: 176px;
+}
+.content-right .projectCase span{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 5px;
+    float: left;
+    color: #333333;
+}
+.content-right .projectCase span:nth-child(2){
+    width: 130px;
+    font-size: 19px;
+}
+.content-right div{
+    width: 176px;
+    height: 177px;
+}   
+.content-right div img{
+    width: 176px;
+    height: 157px;
+}
+.content-right div span{
+    display: block;
+    height: 20px;
+    width: 176px;
+    line-height: 20px;
+    text-align: center;
+    margin-top:8px;
+}
+.content-right div:nth-child(2){
+    margin-top: 30px;
+}
+.content-right div:nth-child(3){
+    margin-top: 30px;
+}
+
+/*以下是第三部分，下方商品介绍，参数，评价选项卡。以及左侧列表 */
+#particulars{
+    width: 1200px;
+    margin-top: 103px;
+    /* height: 1600px; */
+}
+/* 第三部分左侧列表 */
+.particularsLeft{
+    height: 1535px;
+    width: 232px;
+    /* background: red; */
+    float: left;
+}
+.particularsLeft .popularProduct{
+    height: 20px;
+    width: 232px;
+    text-align: center;
+    line-height: 20px;
+    margin-top: 10px;
+}
+.particularsLeft .popularProduct span{
+    font-size: 19px;
+    display: inline-block;
+    width: 66px;
+    height: 20px;
+    color:black;
+}
+.particularsLeft .popularProduct span:nth-child(2){
+    width: 80px;
+    
+}
+.cut-off-rule{
+    height: 1px;
+    width: 215px;
+    background: #E1E1E1;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+.particularsLeft{
+    border: 1px solid #E4E4E4;
+}
+.particularsLeft ul li{
+    width: 232px;
+    height: 240px;
+    font-size: 14px;
+    margin-top: 60px;
+}
+.particularsLeft ul li img{
+    margin-left:29px;
+    margin-bottom: 10px;
+}
+.particularsLeft ul li span{
+    display: block;
+    height: 20px;
+    width: 228px;
+    font-size: 13px;
+    text-indent: 10px;
+    color: black
+}
+.particularsLeft ul li span:nth-child(4){
+    color: red;
+}
+
+/* 第三部分右侧选项卡 */
+.TabControl{
+    width: 952px;
+    height: 1478px;
+    background: pink;
+    float: left;
+    margin-left: 14px;
+}
+.TabControl .toggle-button{
+    width: 952px;
+    height: 40px;
+    background: #F2F2F2;
+}
+.TabControl .toggle-button li{
+    width: 100px;
+    height: 40px;
+    float: left;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    color: black;
+}
+.TabControl .toggle-button li:nth-child(1){
+    background: #005AAA;
+    color:#fff;
+}
+.TabControl .Switch-content li img{
+    width: 952px;
+    height: 1478px;
+}
+.TabControl .Switch-content li{
+    display: none;
+}
+.TabControl .Switch-content li:nth-child(1){
+    display: block;
+}

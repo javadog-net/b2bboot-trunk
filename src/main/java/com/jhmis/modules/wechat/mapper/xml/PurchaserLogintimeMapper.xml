@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.PurchaserLogintimeMapper">
+    
+	<sql id="purchaserLogintimeColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.login_time AS "loginTime",
+		a.purchaser_id AS "purchaserId",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="purchaserLogintimeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserLogintime" >
+		SELECT 
+			<include refid="purchaserLogintimeColumns"/>
+		FROM purchaser_logintime a
+		<include refid="purchaserLogintimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserLogintime" >
+		SELECT 
+			<include refid="purchaserLogintimeColumns"/>
+		FROM purchaser_logintime a
+		<include refid="purchaserLogintimeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="loginTime != null and loginTime != ''">
+				AND a.login_time = #{loginTime}
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+			<if test="num != null and num != ''">
+				AND a.num = #{num}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserLogintime" >
+		SELECT 
+			<include refid="purchaserLogintimeColumns"/>
+		FROM purchaser_logintime a
+		<include refid="purchaserLogintimeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_logintime(
+			id,
+			account_id,
+			login_time,
+			purchaser_id,
+			num
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{loginTime},
+			#{purchaserId},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_logintime SET 	
+			account_id = #{accountId},
+			login_time = #{loginTime},
+			purchaser_id = #{purchaserId},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_logintime
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_logintime SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserLogintime" statementType="STATEMENT">
+		select * FROM purchaser_logintime  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="findNumByAccountId" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select num FROM purchaser_logintime  where account_id = #{accountId} ORDER BY login_time DESC LIMIT 1
+	</select>
+	
+</mapper>

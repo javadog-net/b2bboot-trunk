@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.StoreGoodsPriceMapper">
+    
+	<sql id="storeGoodsPriceColumns">
+		a.id AS "id",
+		a.store_price_group_id AS "storePriceGroupId",
+		a.purchaser_id AS "purchaserId",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="storeGoodsPriceJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="StoreGoodsPrice" >
+		SELECT 
+			<include refid="storeGoodsPriceColumns"/>
+		FROM store_goods_price a
+		<include refid="storeGoodsPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StoreGoodsPrice" >
+		SELECT 
+			<include refid="storeGoodsPriceColumns"/>
+		FROM store_goods_price a
+		<include refid="storeGoodsPriceJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="storePriceGroupId != null and storePriceGroupId != ''">
+				AND a.store_price_group_id = #{storePriceGroupId}
+			</if>
+			<if test="purchaserId != null and purchaserId != ''">
+				AND a.purchaser_id = #{purchaserId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StoreGoodsPrice" >
+		SELECT 
+			<include refid="storeGoodsPriceColumns"/>
+		FROM store_goods_price a
+		<include refid="storeGoodsPriceJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO store_goods_price(
+			id,
+			store_price_group_id,
+			purchaser_id,
+			remarks,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{storePriceGroupId},
+			#{purchaserId},
+			#{remarks},
+			#{createBy},
+			#{createDate},
+			#{updateBy},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE store_goods_price SET 	
+			store_price_group_id = #{storePriceGroupId},
+			purchaser_id = #{purchaserId},
+			remarks = #{remarks},
+			update_by = #{updateBy},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM store_goods_price
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE store_goods_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteBySPGId" parameterType="String">
+		delete  FROM  store_goods_price  where store_price_group_id = #{storePriceGroupId}
+	</delete>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="StoreGoodsPrice" statementType="STATEMENT">
+		select * FROM store_goods_price  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopmsgstatus.ShopMsgStatusMapper">
+    
+	<sql id="shopMsgStatusColumns">
+		a.id AS "id",
+		a.msg_id AS "msgId",
+		a.status_node AS "statusNode",
+		a.status_name AS "statusName",
+		a.create_date AS "createDate",
+		a.operator AS "operator",
+		a.content AS "content",
+		a.operator_type AS "operatorType"
+	</sql>
+	
+	<sql id="shopMsgStatusJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsgStatus" >
+		SELECT 
+			<include refid="shopMsgStatusColumns"/>
+		FROM shop_msg_status a
+		<include refid="shopMsgStatusJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopMsgStatus" >
+		SELECT 
+			<include refid="shopMsgStatusColumns"/>
+		FROM shop_msg_status a
+		<include refid="shopMsgStatusJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="msgId != null and msgId != ''">
+				AND a.msg_id = #{msgId}
+			</if>
+			<if test="statusNode != null and statusNode != ''">
+				AND a.status_node = #{statusNode}
+			</if>
+			<if test="statusName != null and statusName != ''">
+				AND a.status_name = #{statusName}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="operator != null and operator != ''">
+				AND a.operator = #{operator}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="operatorType != null and operatorType != ''">
+				AND a.operator_type = #{operatorType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopMsgStatus" >
+		SELECT 
+			<include refid="shopMsgStatusColumns"/>
+		FROM shop_msg_status a
+		<include refid="shopMsgStatusJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg_status(
+			msg_id,
+			status_node,
+			status_name,
+			create_date,
+			operator,
+			content,
+			operator_type
+		) VALUES (
+			#{msgId},
+			#{statusNode},
+			#{statusName},
+			#{createDate},
+			#{operator},
+			#{content},
+			#{operatorType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg_status SET 	
+			msg_id = #{msgId},
+			status_node = #{statusNode},
+			status_name = #{statusName},
+			operator = #{operator},
+			content = #{content},
+			operator_type = #{operatorType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg_status
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg_status SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsgStatus" statementType="STATEMENT">
+		select * FROM shop_msg_status  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.MdmCustomersPartnerMapper">
+    
+	<sql id="mdmCustomersPartnerColumns">
+		a.id AS "id",
+		a.customer_number AS "customerNumber",
+		a.customer_name1 AS "customerName1",
+		a.cust_partner_type AS "custPartnerType",
+		a.cust_partner_subject_id AS "custPartnerSubjectId",
+		a.sub_customer_name1 AS "subCustomerName1",
+		a.sales_group AS "salesGroup",
+		a.partner_row_id AS "partnerRowId",
+		a.last_upd AS "lastUpd",
+		a.customer_flag AS "customerFlag",
+		a.cust_delete_flag AS "custDeleteFlag",
+		a.sales_delete_flag AS "salesDeleteFlag",
+		a.partner_delete_flag AS "partnerDeleteFlag",
+		a.sub_customer_delete_flag AS "subCustomerDeleteFlag"
+	</sql>
+	
+	<sql id="mdmCustomersPartnerJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="MdmCustomersPartner" >
+		SELECT 
+			<include refid="mdmCustomersPartnerColumns"/>
+		FROM mdm_customers_partner a
+		<include refid="mdmCustomersPartnerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MdmCustomersPartner" >
+		SELECT 
+			<include refid="mdmCustomersPartnerColumns"/>
+		FROM mdm_customers_partner a
+		<include refid="mdmCustomersPartnerJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="customerNumber != null and customerNumber != ''">
+				AND a.customer_number = #{customerNumber}
+			</if>
+			<if test="customerName1 != null and customerName1 != ''">
+				AND a.customer_name1 = #{customerName1}
+			</if>
+			<if test="custPartnerType != null and custPartnerType != ''">
+				AND a.cust_partner_type = #{custPartnerType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MdmCustomersPartner" >
+		SELECT 
+			<include refid="mdmCustomersPartnerColumns"/>
+		FROM mdm_customers_partner a
+		<include refid="mdmCustomersPartnerJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO mdm_customers_partner(
+			id,
+			customer_number,
+			customer_name1,
+			cust_partner_type,
+			cust_partner_subject_id,
+			sub_customer_name1,
+			sales_group,
+			partner_row_id,
+			last_upd,
+			customer_flag,
+			cust_delete_flag,
+			sales_delete_flag,
+			partner_delete_flag,
+			sub_customer_delete_flag
+		) VALUES (
+			#{id},
+			#{customerNumber},
+			#{customerName1},
+			#{custPartnerType},
+			#{custPartnerSubjectId},
+			#{subCustomerName1},
+			#{salesGroup},
+			#{partnerRowId},
+			#{lastUpd},
+			#{customerFlag},
+			#{custDeleteFlag},
+			#{salesDeleteFlag},
+			#{partnerDeleteFlag},
+			#{subCustomerDeleteFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE mdm_customers_partner SET 	
+			customer_number = #{customerNumber},
+			customer_name1 = #{customerName1},
+			cust_partner_type = #{custPartnerType},
+			cust_partner_subject_id = #{custPartnerSubjectId},
+			sub_customer_name1 = #{subCustomerName1},
+			sales_group = #{salesGroup},
+			partner_row_id = #{partnerRowId},
+			last_upd = #{lastUpd},
+			customer_flag = #{customerFlag},
+			cust_delete_flag = #{custDeleteFlag},
+			sales_delete_flag = #{salesDeleteFlag},
+			partner_delete_flag = #{partnerDeleteFlag},
+			sub_customer_delete_flag = #{subCustomerDeleteFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM mdm_customers_partner
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE mdm_customers_partner SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="MdmCustomersPartner" statementType="STATEMENT">
+		select * FROM mdm_customers_partner  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

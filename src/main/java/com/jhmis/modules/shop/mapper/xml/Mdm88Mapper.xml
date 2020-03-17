@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.Mdm88Mapper">
+    
+	<sql id="mdm88Columns">
+		a.code88 AS "code88"
+	</sql>
+	
+	<sql id="mdm88Joins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Mdm88" >
+		SELECT 
+			<include refid="mdm88Columns"/>
+		FROM mdm88 a
+		<include refid="mdm88Joins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Mdm88" >
+		SELECT 
+			<include refid="mdm88Columns"/>
+		FROM mdm88 a
+		<include refid="mdm88Joins"/>
+		<where>
+			
+			${dataScope}
+			<if test="code88 != null and code88 != ''">
+				AND a.code88 = #{code88}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Mdm88" >
+		SELECT 
+			<include refid="mdm88Columns"/>
+		FROM mdm88 a
+		<include refid="mdm88Joins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO mdm88(
+			code88
+		) VALUES (
+			#{code88}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE mdm88 SET 	
+			code88 = #{code88}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM mdm88
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE mdm88 SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Mdm88" statementType="STATEMENT">
+		select * FROM mdm88  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

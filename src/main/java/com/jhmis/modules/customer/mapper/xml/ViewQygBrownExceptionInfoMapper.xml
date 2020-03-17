@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.ViewQygBrownExceptionInfoMapper">
+    
+	<sql id="viewQygBrownExceptionInfoColumns">
+		a.id AS "id",
+		a.brown_code AS "brownCode",
+		a.project_id AS "projectId",
+		a.project_code AS "projectCode",
+		a.project_name AS "projectName",
+		a.project_address AS "projectAddress",
+		a.product_group_code AS "productGroupCode",
+		a.product_group_name AS "productGroupName",
+		a.dealer_code AS "dealerCode",
+		a.dealer_name AS "dealerName",
+		a.dead_time AS "deadTime",
+		a.lfimg2 AS "lfimg2",
+		a.brown_count AS "brownCount",
+		a.quantity_unavailable AS "quantityUnavailable",
+		a.is_check AS "isCheck",
+		a.verify_rate AS "verifyRate",
+		a.verify_num AS "verifyNum",
+		a.last_modified_date AS "lastModifiedDate"
+ 	</sql>
+	
+	<sql id="viewQygBrownExceptionInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ViewQygBrownExceptionInfo" >
+		SELECT 
+			<include refid="viewQygBrownExceptionInfoColumns"/>
+		FROM view_qyg_brownexception_info a
+		<include refid="viewQygBrownExceptionInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ViewQygBrownExceptionInfo" >
+		SELECT 
+			<include refid="viewQygBrownExceptionInfoColumns"/>
+		FROM view_qyg_brownexception_info a
+		<include refid="viewQygBrownExceptionInfoJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="brownCode != null and brownCode != ''">
+				AND a.brown_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{brownCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{brownCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{brownCode},'%')</if>
+			</if>
+			<if test="projectId != null and projectId != ''">
+				AND a.project_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectId},'%')</if>
+			</if>
+			<if test="projectCode != null and projectCode != ''">
+				AND a.project_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectCode},'%')</if>
+			</if>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{projectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{projectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{projectName},'%')</if>
+			</if>
+			<if test="projectAddress != null and projectAddress != ''">
+				AND a.project_address = #{projectAddress}
+			</if>
+			<if test="productGroupCode != null and productGroupCode != ''">
+				AND a.product_group_code = #{productGroupCode}
+			</if>
+			<if test="productGroupName != null and productGroupName != ''">
+				AND a.product_group_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{productGroupName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{productGroupName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{productGroupName},'%')</if>
+			</if>
+			<if test="dealerCode != null and dealerCode != ''">
+				AND a.dealer_code = #{dealerCode}
+			</if>
+			<if test="dealerName != null and dealerName != ''">
+				AND a.dealer_name = #{dealerName}
+			</if>
+
+			<if test="deadTime == 3">
+				<![CDATA[ and a.dead_time <= 3 and a.dead_time >= 0]]>
+			</if>
+			<if test="deadTime == 7">
+				<![CDATA[ and a.dead_time <= 7 and a.dead_time > 3]]>
+			</if>
+			<if test="deadTime == 15">
+				<![CDATA[ and a.dead_time <= 15 and a.dead_time > 7]]>
+			</if>
+			<if test="deadTime == 30">
+				<![CDATA[ and a.dead_time <= 30 and a.dead_time > 15]]>
+			</if>
+			<if test="deadTime == 60">
+				<![CDATA[ and a.dead_time <= 60 and a.dead_time > 30]]>
+			</if>
+			<if test="deadTime == '100'">
+				<![CDATA[ and a.dead_time <= 100 and a.dead_time > 60]]>
+			</if>
+			<if test="deadTime == '145'">
+				<![CDATA[ and a.dead_time <= 145 and a.dead_time > 100]]>
+			</if>
+			<if test="deadTime == '180'">
+				<![CDATA[ and a.dead_time <= 180 and a.dead_time > 145]]>
+			</if>
+
+			<if test="lfimg2 != null and lfimg2 != ''">
+				AND a.lfimg2 = #{lfimg2}
+			</if>
+			<if test="brownCount != null and brownCount != ''">
+				AND a.brown_count = #{brownCount}
+			</if>
+			<if test="quantityUnavailable != null and quantityUnavailable != ''">
+				AND a.quantity_unavailable = #{quantityUnavailable}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+			<if test="verifyRate != null and verifyRate != ''">
+				AND a.verify_rate = #{verifyRate}
+			</if>
+			<if test="verifyNum != null and verifyNum != ''">
+				AND a.verify_num = #{verifyNum}
+			</if>
+			<if test="lastModifiedDate != null and lastModifiedDate != ''">
+				AND a.last_modified_date = #{lastModifiedDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				<![CDATA[ AND a.last_modified_date > #{startTime}]]>
+			</if>
+			<if test="endTime != null and endTime != ''">
+				<![CDATA[ AND a.last_modified_date < #{endTime}]]>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ViewQygBrownExceptionInfo" >
+		SELECT 
+			<include refid="viewQygBrownExceptionInfoColumns"/>
+		FROM view_qyg_brownexception_info a
+		<include refid="viewQygBrownExceptionInfoJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO view_qyg_brownexception_info(
+			id,
+			brown_code,
+			project_id,
+			project_code,
+			project_name,
+			project_address,
+			product_group_code,
+			product_group_name,
+			dealer_code,
+			dealer_name,
+			dead_time,
+			lfimg2,
+			brown_count,
+			quantity_unavailable,
+			is_check,
+			verify_rate,
+			verify_num,
+			last_modified_date
+		) VALUES (
+			#{id},
+			#{brownCode},
+			#{projectId},
+			#{projectCode},
+			#{projectName},
+			#{projectAddress},
+			#{productGroupCode},
+			#{productGroupName},
+			#{dealerCode},
+			#{dealerName},
+			#{deadTime},
+			#{lfimg2},
+			#{brownCount},
+			#{quantityUnavailable},
+			#{isCheck},
+			#{verifyRate},
+			#{verifyNum},
+			#{lastModifiedDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE view_qyg_brownexception_info SET 	
+			brown_code = #{brownCode},
+			project_id = #{projectId},
+			project_code = #{projectCode},
+			project_name = #{projectName},
+			project_address = #{projectAddress},
+			product_group_code = #{productGroupCode},
+			product_group_name = #{productGroupName},
+			dealer_code = #{dealerCode},
+			dealer_name = #{dealerName},
+			dead_time = #{deadTime},
+			lfimg2 = #{lfimg2},
+			brown_count = #{brownCount},
+			quantity_unavailable = #{quantityUnavailable},
+			is_check = #{isCheck},
+			verify_rate = #{verifyRate},
+			verify_num = #{verifyNum},
+			last_modified_date = #{lastModifiedDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM view_qyg_brownexception_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE view_qyg_brownexception_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ViewQygBrownExceptionInfo" statementType="STATEMENT">
+		select * FROM view_qyg_brownexception_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

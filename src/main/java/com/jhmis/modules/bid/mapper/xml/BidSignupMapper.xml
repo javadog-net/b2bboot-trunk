@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.bid.mapper.BidSignupMapper">
+
+	<sql id="bidSignupColumns">
+		a.id AS "id",
+		a.project_name AS "projectName",
+		a.company_name AS "companyName",
+		a.bid_info_id AS "bidInfoId",
+		a.purchaser_account_id AS "purchaserAccountId",
+		a.signup_concat AS
+		"signupConcat",
+		a.signup_concat_job AS "signupConcatJob",
+		a.signup_concat_mobile AS "signupConcatMobile",
+		a.signup_concat_email
+		AS "signupConcatEmail",
+		a.message AS "message",
+		a.add_time AS "addTime",
+		a.update_time AS "updateTime"
+	</sql>
+
+	<sql id="bidSignupJoins">
+
+	</sql>
+
+
+	<select id="get" resultType="BidSignup">
+		SELECT
+		<include refid="bidSignupColumns" />
+		FROM bid_signup a
+		<include refid="bidSignupJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="getSign" resultType="BidSignup">
+		SELECT
+		<include refid="bidSignupColumns" />
+		FROM bid_signup a
+		<include refid="bidSignupJoins" />
+		<where>
+			<if test="bidInfoId != null and bidInfoId != ''">
+				AND a.bid_info_id = #{bidInfoId}
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="BidSignup">
+		SELECT
+		<include refid="bidSignupColumns" />
+		FROM bid_signup a
+		<include refid="bidSignupJoins" />
+		<where>
+			${dataScope}
+			<if test="bidInfoId != null and bidInfoId != ''">
+				AND a.bid_info_id = #{bidInfoId}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name  like '%${companyName}%'  
+			</if>
+			<if test="signupConcat != null and signupConcat != ''">
+				AND a.signup_concat like '%${signupConcat}%'  
+			</if>
+			<if test="purchaserAccountId != null and purchaserAccountId != ''">
+				AND a.purchaser_account_id = #{purchaserAccountId}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="BidSignup">
+		SELECT
+		<include refid="bidSignupColumns" />
+		FROM bid_signup a
+		<include refid="bidSignupJoins" />
+		<where>
+
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO bid_signup(
+		id,
+		company_name,
+		project_Name,
+		bid_info_id,
+		signup_concat,
+		signup_concat_job,
+		signup_concat_mobile,
+		signup_concat_email,
+		message,
+		purchaser_account_id
+		<!-- add_time, -->
+			<!-- update_time-->
+		) VALUES (
+		#{id},
+		#{companyName},
+		#{projectName},
+		#{bidInfoId},
+		#{signupConcat},
+		#{signupConcatJob},
+		#{signupConcatMobile},
+		#{signupConcatEmail},
+		#{message},
+		#{purchaserAccountId}
+		<!-- #{addTime}, -->
+		<!-- #{updateTime} -->
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE bid_signup SET
+		company_name = #{companyName},
+		project_Name =
+		#{projectName},
+		bid_info_id = #{bidInfoId},
+		signup_concat =
+		#{signupConcat},
+		signup_concat_job = #{signupConcatJob},
+		signup_concat_mobile = #{signupConcatMobile},
+		signup_concat_email =
+		#{signupConcatEmail},
+		message = #{message},
+		<!-- add_time = #{addTime}, -->
+		update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除 -->
+	<update id="delete">
+		DELETE FROM bid_signup
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除 -->
+	<update id="deleteByLogic">
+		UPDATE bid_signup SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BidSignup"
+		statementType="STATEMENT">
+		select * FROM bid_signup where ${propertyName} =
+		'${value}'
+	</select>
+
+</mapper>

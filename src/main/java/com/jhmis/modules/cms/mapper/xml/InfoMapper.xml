@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.InfoMapper">
+    
+	<sql id="infoColumnsWithOutBlobContent">
+		a.id AS "id",
+		a.model_id AS "modelId",
+		a.category_id AS "categoryId",
+		a.title AS "title",
+		a.title_color AS "titleColor",
+		a.title_blod AS "titleBlod",
+		a.short_title AS "shortTitle",
+		a.thumb AS "thumb",
+		a.image AS "image",
+		a.images AS "images",
+		a.author AS "author",
+		a.keywords AS "keywords",
+		a.description AS "description",
+		a.source AS "source",
+		a.remarks AS "remarks",
+		a.attchs AS "attchs",
+		a.video AS "video",
+		a.htmlpath AS "htmlpath",
+		a.html_indexnum as "htmlIndexnum",
+		a.posids AS "posids",
+		a.status AS "status",
+		a.is_link AS "isLink",
+		a.is_hot AS "isHot",
+		a.is_top AS "isTop",
+		a.is_recommend AS "isRecommend",
+		a.url AS "url",
+		a.sort AS "sort",
+		a.family AS "family",
+		a.family_level2 AS "familyLevel2",
+		a.family_level3 AS "familyLevel3",
+		a.release_type AS "releaseType",
+		a.content_template AS "contentTemplate",
+		a.page_mark AS "pageMark",
+		a.file_name AS "fileName",
+		a.allow_comment AS "allowComment",
+		a.del_flag AS "delFlag",
+		a.hits AS "hits",
+		a.case_products as "caseProducts",
+		a.industry as "industry",
+		a.tdk_keywords AS "tdkKeywords",
+		a.tdk_title AS "tdkTitle",
+		a.tdk_descp AS "tdkDescp",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		ca.id AS "category.id",
+		ca.name AS "category.name",
+		ca.dir_name AS "category.dirName",
+		ca.category_mark AS "category.categoryMark",
+		ca.tdk_keywords AS "category.tdkKeywords",
+		ca.tdk_title AS "category.tdkTitle",
+		ca.tdk_descp AS "category.tdkDescp"
+	</sql>
+	<sql id = "columnsContentBlob">
+		a.content AS "content"
+	</sql>
+	
+	<sql id="infoJoins">
+		LEFT JOIN cms_category ca on ca.id=a.category_id
+    </sql>
+	
+    <resultMap type="Info" id="InfoResult" autoMapping="true">
+    	<result column="content" property="content"   typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="InfoResult" >
+		SELECT 
+			<include refid="infoColumnsWithOutBlobContent"/>
+			,
+			<include refid="columnsContentBlob"/>
+		FROM cms_info a
+		<include refid="infoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList"  resultMap="InfoResult">
+		SELECT
+			<include refid="infoColumnsWithOutBlobContent"/>
+		FROM cms_info a
+		<include refid="infoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="categoryIds != null and categoryIds != ''">
+				AND a.category_id in
+				<foreach collection="categoryIds" item="categoryId" index="index"
+						 open="(" close=")" separator=",">
+					#{categoryId}
+				</foreach>
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="category != null and category.id != null and category.id !=''">
+				AND a.category_id = #{category.id}
+			</if>
+			<if test="category != null and category.parentIds != null and category.parentIds !=''">
+				AND ca.parent_ids like
+				<if test="dbName == 'oracle'">'%'||#{category.parentIds}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{category.parentIds}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{category.parentIds},'%')</if>
+			</if>
+			<if test="isHot != null and isHot !=''">
+				AND a.is_hot = #{isHot}
+			</if>
+			<if test="isTop != null and isTop !=''">
+				AND a.is_top = #{isTop}
+			</if>
+			<if test="isRecommend != null and isRecommend !=''">
+				AND a.is_recommend = #{isRecommend}
+			</if>
+            <if test="releaseType != null and releaseType !=''">
+                AND a.release_type = #{releaseType}
+            </if>
+			<if test="family != null and family !=''">
+				AND a.family = #{family}
+			</if>
+			<if test="familyLevel3 != null and familyLevel3 !=''">
+				AND a.family_level3 = #{familyLevel3}
+			</if>
+			<if test="familyLevel2 != null and familyLevel2 !=''">
+				AND a.family_level2 = #{familyLevel2}
+			</if>
+			<if test="industry != null and industry !=''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="caseProducts != null and caseProducts !=''">
+				AND a.case_products = #{caseProducts}
+			</if>
+			<if test="startDate != null and startDate!=''">
+				AND a.create_date <![CDATA[ >= ]]> #{startDate}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="endDate != null and startDate!=''">
+				AND a.create_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+
+			<!--freemarker标签中用到 -->
+			<if test="infostarttimeNoeq != null">
+				AND a.create_date <![CDATA[ > ]]> #{infostarttimeNoeq}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoendtimeNoeq != null">
+				AND a.create_date <![CDATA[ < ]]> #{infoendtimeNoeq}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoStartHits != null">
+				AND a.hits <![CDATA[ > ]]> #{infoStartHits}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoEndHits != null">
+				AND a.hits <![CDATA[ < ]]> #{infoEndHits}
+			</if>
+			<if test="categoryIdList != null ">
+				AND a.category_id in
+				<foreach collection="categoryIdList" index="index" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="newDays != null and newDays !=0">
+				AND DATE_SUB(CURDATE(), INTERVAL #{newDays} DAY) <![CDATA[ <= ]]> date(a.create_date)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBySql != null and orderBySql !=''">
+				ORDER BY ${orderBySql}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC , a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Info" >
+		SELECT 
+			<include refid="infoColumnsWithOutBlobContent"/>
+		FROM cms_info a
+		<include refid="infoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findListWithBlob" resultMap="InfoResult">
+		SELECT
+		<include refid="infoColumnsWithOutBlobContent"/>
+		,<include refid="columnsContentBlob"/>
+		FROM cms_info a
+		<include refid="infoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="category != null and category.id != null and category.id !=''">
+				AND a.category_id = #{category.id}
+			</if>
+			<if test="isHot != null and isHot !=''">
+				AND a.is_hot = #{isHot}
+			</if>
+			<if test="isTop != null and isTop !=''">
+				AND a.is_top = #{isTop}
+			</if>
+			<if test="isRecommend != null and isRecommend !=''">
+				AND a.is_recommend = #{isRecommend}
+			</if>
+			<if test="releaseType != null and releaseType !=''">
+				AND a.release_type = #{releaseType}
+			</if>
+			<if test="family != null and family !=''">
+				AND a.family = #{family}
+			</if>
+			<if test="familyLevel3 != null and familyLevel3 !=''">
+				AND a.family_level3 = #{familyLevel3}
+			</if>
+			<if test="familyLevel2 != null and familyLevel2 !=''">
+				AND a.family_level2 = #{familyLevel2}
+			</if>
+			<if test="industry != null and industry !=''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="caseProducts != null and caseProducts !=''">
+				AND a.case_products = #{caseProducts}
+			</if>
+			<if test="startDate != null and startDate!=''">
+				AND a.create_date <![CDATA[ >= ]]> #{startDate}
+			</if>
+
+			<if test="endDate != null and endDate !=''">
+				AND a.create_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infostarttimeNoeq != null">
+				AND a.create_date <![CDATA[ > ]]> #{infostarttimeNoeq}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoendtimeNoeq != null">
+				AND a.create_date <![CDATA[ < ]]> #{infoendtimeNoeq}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoStartHits != null">
+				AND a.hits <![CDATA[ > ]]> #{infoStartHits}
+			</if>
+			<!--freemarker标签中用到 -->
+			<if test="infoEndHits != null">
+				AND a.hits <![CDATA[ < ]]> #{infoEndHits}
+			</if>
+			<if test="categoryIdList != null ">
+				AND a.category_id in
+				<foreach collection="categoryIdList" index="index" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="newDays != null and newDays !=0">
+				AND DATE_SUB(CURDATE(), INTERVAL #{newDays} DAY) <![CDATA[ <= ]]> date(a.create_date)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBySql != null and orderBySql !=''">
+				ORDER BY ${orderBySql}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC , a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert">
+		INSERT INTO cms_info(
+			id,
+			model_id,
+			category_id,
+			title,
+			title_color,
+			title_blod,
+			short_title,
+			thumb,
+			image,
+			author,
+			keywords,
+			description,
+			content,
+			source,
+			remarks,
+			attchs,
+			images,
+			video,
+			htmlpath,
+			posids,
+			status,
+			is_link,
+			is_hot,
+			is_top,
+			is_recommend,
+			url,
+			sort,
+			release_type,
+			content_template,
+			page_mark,
+			file_name,
+			allow_comment,
+			del_flag,
+			hits,
+			tdk_keywords,
+			tdk_title,
+			tdk_descp,
+			case_products,
+		    industry,
+			family,
+		    family_level2,
+		    family_level3,
+		    html_indexnum,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{modelId},
+			#{categoryId},
+			#{title},
+			#{titleColor},
+			#{titleBlod},
+			#{shortTitle},
+			#{thumb},
+			#{image},
+			#{author},
+			#{keywords},
+			#{description},
+			#{content},
+			#{source},
+			#{remarks},
+			#{attchs},
+			#{images},
+			#{video},
+			#{htmlpath},
+			#{posids},
+			#{status},
+			#{isLink},
+			#{isHot},
+			#{isTop},
+			#{isRecommend},
+			#{url},
+			#{sort},
+			#{releaseType},
+			#{contentTemplate},
+			#{pageMark},
+			#{fileName},
+			#{allowComment},
+			#{delFlag},
+			#{hits},
+			#{tdkKeywords},
+			#{tdkTitle},
+			#{tdkDescp},
+			#{caseProducts},
+			#{industry},
+			#{family},
+		    #{familyLevel2},
+			#{familyLevel3},
+			#{htmlIndexnum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_info SET 	
+			model_id = #{modelId},
+			category_id = #{categoryId},
+			title = #{title},
+			title_color = #{titleColor},
+			title_blod = #{titleBlod},
+			short_title = #{shortTitle},
+			thumb = #{thumb},
+			image = #{image},
+			author = #{author},
+			keywords = #{keywords},
+			content = #{content},
+			source = #{source},
+			description = #{description},
+			remarks = #{remarks},
+			attchs = #{attchs},
+			images = #{images},
+			video = #{video},
+			htmlpath = #{htmlpath},
+			posids = #{posids},
+			status = #{status},
+			is_link = #{isLink},
+			is_hot = #{isHot},
+			is_top = #{isTop},
+			is_recommend = #{isRecommend},
+			url = #{url},
+			sort = #{sort},
+			case_products = #{caseProducts},
+			industry = #{industry},
+			family = #{family},
+			family_level2 = #{familyLevel2},
+			family_level3 = #{familyLevel3},
+			release_type = #{releaseType},
+			content_template = #{contentTemplate},
+			page_mark = #{pageMark},
+			file_name = #{fileName},
+			allow_comment = #{allowComment},
+			hits = #{hits},
+			tdk_keywords = #{tdkKeywords},
+			tdk_title = #{tdkTitle},
+			tdk_descp = #{tdkDescp},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Info" statementType="STATEMENT">
+		select * FROM cms_info  where ${propertyName} = '${value}'
+	</select>
+	<!--根据信息ID 查询信息点击数量 freemarker 标签使用-->
+    <select id="findHitsById" resultType="Info">
+        SELECT hits FROM cms_info where id = #{id}
+    </select>
+    <!--根据信息ID 更新点击数 freemarker 标签使用-->
+    <update id="updateHitsById" parameterType="Info">
+        update cms_info set
+		hits = #{hits}
+        <if test="isHot != null">
+            ,is_hot = #{isHot}
+        </if>
+		<if test="htmlpath != null">
+			,htmlpath = #{htmlpath}
+		</if>
+		<if test="images != null">
+			,images = #{images}
+		</if>
+        where id = #{id}
+    </update>
+
+
+	<update id="updateHitsByIdTwo">
+		update cms_info
+		set hits = #{hits}
+		where id = #{id}
+	</update>
+	<select id="getMaxHtmlIndexNum"  resultType="java.lang.Integer">
+		select  max(html_indexnum) from cms_info
+	</select>
+	<!--迁移数据使用-->
+	<update id="updateImages" parameterType="Info">
+		update cms_info
+		set
+		<if test="images != null">
+			images = #{images}
+		</if>
+		where id = #{id}
+	</update>
+
+</mapper>

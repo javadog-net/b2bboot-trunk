@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CmsConfigMapper">
+    
+	<sql id="cmsConfigColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.templet_style AS "templetStyle",
+		a.index_path AS "indexPath",
+		a.cms_category_path AS "cmsCategoryPath",
+		a.info_path AS "infoPath",
+		a.html_path AS "htmlPath",
+		a.mobile_path AS "mobilePath",
+		a.category_path AS "categoryPath",
+		a.product_path AS "productPath",
+		a.allow_comment AS "allowComment",
+		a.is_anonymous AS "isAnonymous",
+		a.logo AS "logo",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="cmsConfigJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsConfig" >
+		SELECT 
+			<include refid="cmsConfigColumns"/>
+		FROM cms_config a
+		<include refid="cmsConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsConfig" >
+		SELECT 
+			<include refid="cmsConfigColumns"/>
+		FROM cms_config a
+		<include refid="cmsConfigJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsConfig" >
+		SELECT 
+			<include refid="cmsConfigColumns"/>
+		FROM cms_config a
+		<include refid="cmsConfigJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_config(
+			id,
+			name,
+			templet_style,
+			index_path,
+			cms_category_path,
+			info_path,
+			html_path,
+			mobile_path,
+			category_path,
+			product_path,
+			allow_comment,
+			is_anonymous,
+			logo,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{templetStyle},
+			#{indexPath},
+			#{cmsCategoryPath},
+			#{infoPath},
+			#{htmlPath},
+			#{mobilePath},
+			#{categoryPath},
+			#{productPath},
+			#{allowComment},
+			#{isAnonymous},
+			#{logo},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_config SET 	
+			name = #{name},
+			templet_style = #{templetStyle},
+			index_path = #{indexPath},
+			cms_category_path = #{cmsCategoryPath},
+			info_path = #{infoPath},
+			html_path = #{htmlPath},
+			mobile_path = #{mobilePath},
+			category_path = #{categoryPath},
+			product_path = #{productPath},
+			allow_comment = #{allowComment},
+			is_anonymous = #{isAnonymous},
+			logo = #{logo},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_config
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_config SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsConfig" statementType="STATEMENT">
+		select * FROM cms_config  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

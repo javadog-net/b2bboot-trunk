@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.customer.mapper.CustomerTemporaryEngineerMapper">
+    
+	<sql id="customerTemporaryEngineerColumns">
+		a.id AS "id",
+		a.cus_name AS "cusName",
+		a.tax AS "tax",
+		a.cus_head_person AS "cusHeadPerson",
+		a.cus_number AS "cusNumber",
+		a.cus_pass AS "cusPass",
+		a.wg_provice_id AS "wgProviceId",
+		a.wg_provice_name AS "wgProviceName",
+		a.wg_city_id AS "wgCityId",
+		a.wg_city_name AS "wgCityName",
+		a.org_name AS "orgName",
+		a.org_id AS "orgId",
+		a.responsible_business AS "responsibleBusiness",
+		a.cus_tel AS "cusTel",
+		a.cus_mobile AS "cusMobile",
+		a.wg_classify AS "wgClassify",
+		a.address_details AS "addressDetails",
+		a.add_time AS "addTime",
+		a.status AS "status",
+		a.refuse_reason AS "refuseReason",
+		a.check_time AS "checkTime",
+		a.area_id AS "areaId",
+		a.area_name AS "areaName"
+	</sql>
+	
+	<sql id="customerTemporaryEngineerJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CustomerTemporaryEngineer" >
+		SELECT 
+			<include refid="customerTemporaryEngineerColumns"/>
+		FROM customer_temporary_engineer a
+		<include refid="customerTemporaryEngineerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CustomerTemporaryEngineer" >
+		SELECT 
+			<include refid="customerTemporaryEngineerColumns"/>
+		FROM customer_temporary_engineer a
+		<include refid="customerTemporaryEngineerJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="cusName != null and cusName != ''">
+				AND a.cus_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cusName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cusName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cusName},'%')</if>
+			</if>
+			<if test="tax != null and tax != ''">
+				AND a.tax LIKE 
+					<if test="dbName == 'oracle'">'%'||#{tax}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tax}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tax},'%')</if>
+			</if>
+			<if test="cusHeadPerson != null and cusHeadPerson != ''">
+				AND a.cus_head_person LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cusHeadPerson}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cusHeadPerson}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cusHeadPerson},'%')</if>
+			</if>
+			<if test="cusNumber != null and cusNumber != ''">
+				AND a.cus_number LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cusNumber}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cusNumber}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cusNumber},'%')</if>
+			</if>
+			<if test="cusPass != null and cusPass != ''">
+				AND a.cus_pass LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cusPass}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cusPass}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cusPass},'%')</if>
+			</if>
+			<if test="wgProviceId != null and wgProviceId != ''">
+				AND a.wg_provice_id = #{wgProviceId}
+			</if>
+			<if test="wgProviceName != null and wgProviceName != ''">
+				AND a.wg_provice_name = #{wgProviceName}
+			</if>
+			<if test="wgCityId != null and wgCityId != ''">
+				AND a.wg_city_id = #{wgCityId}
+			</if>
+			<if test="wgCityName != null and wgCityName != ''">
+				AND a.wg_city_name = #{wgCityName}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND a.org_name = #{orgName}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="responsibleBusiness != null and responsibleBusiness != ''">
+				AND a.responsible_business = #{responsibleBusiness}
+			</if>
+			<if test="cusTel != null and cusTel != ''">
+				AND a.cus_tel = #{cusTel}
+			</if>
+			<if test="cusMobile != null and cusMobile != ''">
+				AND a.cus_mobile LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cusMobile}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cusMobile}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cusMobile},'%')</if>
+			</if>
+			<if test="wgClassify != null and wgClassify != ''">
+				AND a.wg_classify = #{wgClassify}
+			</if>
+			<if test="addressDetails != null and addressDetails != ''">
+				AND a.address_details = #{addressDetails}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				AND a.add_time = #{addTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="refuseReason != null and refuseReason != ''">
+				AND a.refuse_reason = #{refuseReason}
+			</if>
+			<if test="checkTime != null and checkTime != ''">
+				AND a.check_time = #{checkTime}
+			</if>
+			<if test="areaId != null and areaId != ''">
+				AND a.area_id = #{areaId}
+			</if>
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CustomerTemporaryEngineer" >
+		SELECT 
+			<include refid="customerTemporaryEngineerColumns"/>
+		FROM customer_temporary_engineer a
+		<include refid="customerTemporaryEngineerJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO customer_temporary_engineer(
+			id,
+			cus_name,
+			tax,
+			cus_head_person,
+			cus_number,
+			cus_pass,
+			wg_provice_id,
+			wg_provice_name,
+			wg_city_id,
+			wg_city_name,
+			org_name,
+			org_id,
+			responsible_business,
+			cus_tel,
+			cus_mobile,
+			wg_classify,
+			address_details,
+			add_time,
+			status,
+			refuse_reason,
+			check_time,
+			area_id,
+			area_name
+		) VALUES (
+			#{id},
+			#{cusName},
+			#{tax},
+			#{cusHeadPerson},
+			#{cusNumber},
+			#{cusPass},
+			#{wgProviceId},
+			#{wgProviceName},
+			#{wgCityId},
+			#{wgCityName},
+			#{orgName},
+			#{orgId},
+			#{responsibleBusiness},
+			#{cusTel},
+			#{cusMobile},
+			#{wgClassify},
+			#{addressDetails},
+			#{addTime},
+			#{status},
+			#{refuseReason},
+			#{checkTime},
+			#{areaId},
+			#{areaName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE customer_temporary_engineer SET 	
+			cus_name = #{cusName},
+			tax = #{tax},
+			cus_head_person = #{cusHeadPerson},
+			cus_number = #{cusNumber},
+			cus_pass = #{cusPass},
+			wg_provice_id = #{wgProviceId},
+			wg_provice_name = #{wgProviceName},
+			wg_city_id = #{wgCityId},
+			wg_city_name = #{wgCityName},
+			org_name = #{orgName},
+			org_id = #{orgId},
+			responsible_business = #{responsibleBusiness},
+			cus_tel = #{cusTel},
+			cus_mobile = #{cusMobile},
+			wg_classify = #{wgClassify},
+			address_details = #{addressDetails},
+			add_time = #{addTime},
+			status = #{status},
+			refuse_reason = #{refuseReason},
+			check_time = #{checkTime},
+			area_id = #{areaId},
+			area_name = #{areaName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM customer_temporary_engineer
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE customer_temporary_engineer SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CustomerTemporaryEngineer" statementType="STATEMENT">
+		select * FROM customer_temporary_engineer  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

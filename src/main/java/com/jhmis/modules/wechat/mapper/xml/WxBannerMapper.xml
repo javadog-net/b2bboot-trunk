@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.WxBannerMapper">
+    
+	<sql id="wxBannerColumns">
+		a.id AS "id",
+		a.classify AS "classify",
+		a.url AS "url",
+		a.type AS "type",
+		a.link AS "link",
+		a.create_person AS "createPerson",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="wxBannerJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxBanner" >
+		SELECT 
+			<include refid="wxBannerColumns"/>
+		FROM wx_banner a
+		<include refid="wxBannerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxBanner" >
+		SELECT 
+			<include refid="wxBannerColumns"/>
+		FROM wx_banner a
+		<include refid="wxBannerJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="classify != null and classify != ''">
+				AND a.classify = #{classify}
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="link != null and link != ''">
+				AND a.link LIKE 
+					<if test="dbName == 'oracle'">'%'||#{link}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{link}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{link},'%')</if>
+			</if>
+			<if test="createPerson != null and createPerson != ''">
+				AND a.create_person = #{createPerson}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+		</where>
+		ORDER BY a.create_time desc
+		
+	</select>
+	
+	<select id="findAllList" resultType="WxBanner" >
+		SELECT 
+			<include refid="wxBannerColumns"/>
+		FROM wx_banner a
+		<include refid="wxBannerJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_banner(
+			id,
+			classify,
+			url,
+			type,
+			link,
+			create_person,
+			create_time
+		) VALUES (
+			#{id},
+			#{classify},
+			#{url},
+			#{type},
+			#{link},
+			#{createPerson},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_banner SET 	
+			classify = #{classify},
+			url = #{url},
+			type = #{type},
+			link = #{link},
+			create_person = #{createPerson},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_banner
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_banner SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxBanner" statementType="STATEMENT">
+		select * FROM wx_banner  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

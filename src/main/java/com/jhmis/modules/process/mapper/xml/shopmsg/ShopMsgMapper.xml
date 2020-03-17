@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.process.mapper.shopmsg.ShopMsgMapper">
+    
+	<sql id="shopMsgColumns">
+		a.id AS "id",
+		a.company_name AS "companyName",
+		a.company_size AS "companySize",
+		a.province_id AS "provinceId",
+		a.province_name AS "provinceName",
+		a.city_id AS "cityId",
+		a.city_name AS "cityName",
+		a.distric_id AS "districId",
+		a.distric_name AS "districName",
+		a.address AS "address",
+		a.address_detail AS "addressDetail",
+		a.org_id AS "orgId",
+		a.org_name AS "orgName",
+		a.channel AS "channel",
+		a.connect_name AS "connectName",
+		a.mobile AS "mobile",
+		a.reserve_mobile AS "reserveMobile",
+		a.email AS "email",
+		a.qq AS "qq",
+		a.depart AS "depart",
+		a.money AS "money",
+		a.create_date AS "createDate",
+		a.company_org_code AS "companyOrgCode",
+		a.company_org_name AS "companyOrgName",
+		a.brand_name AS "brandName",
+		a.category AS "category",
+		a.msg_type AS "msgType",
+		a.quota_info AS "quotaInfo",
+		a.project_code AS "projectCode",
+		a.descp AS "descp",
+		a.area_details AS "areaDetails",
+		a.is_read AS "isRead",
+		a.have_undertake AS "haveUndertake",
+		a.is_dispatch AS "isDispatch",
+		a.franchise_id AS "franchiseId",
+		a.msg_flag AS "msgFlag",
+		a.old_code AS "oldCode",
+		a.pt_ispass AS "ptIspass",
+		a.pt_checker AS "ptChecker",
+		a.pt_check_date AS "ptCheckDate",
+		a.pt_descp AS "ptDescp",
+		a.app_ispass AS "appIspass",
+		a.app_checker AS "appChecker",
+		a.app_check_date AS "appCheckDate",
+		a.app_cancle_reason AS "appCancleReason",
+		a.app_descp AS "appDescp",
+		a.grab_date AS "grabDate",
+		a.cust_code AS "custCode",
+		a.is_back AS "isBack",
+		a.oper_exchange AS "operExchange",
+		a.manager_no AS "managerNo",
+		a.manager_name AS "managerName",
+		a.con_franchise_type AS "conFranchiseType",
+		a.remarks AS "remarks",
+		a.remarks_date AS "remarksDate",
+		a.remarks_person AS "remarksPerson",
+		a.sendmsg AS "sendmsg",
+		a.unread_msg AS "unreadMsg",
+		a.pro_group AS "proGroup",
+		a.pro_group_code AS "proGroupCode",
+		a.memo AS "memo",
+		a.msg_no AS "msgNo",
+		a.nodetag AS "nodetag",
+		a.infcode AS "infcode"
+	</sql>
+	
+	<sql id="shopMsgJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ShopMsg" >
+		SELECT 
+			<include refid="shopMsgColumns"/>
+		FROM shop_msg a
+		<include refid="shopMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findReturnList" resultType="ShopMsg" >
+		SELECT
+		<include refid="shopMsgColumns"/>,is_backpass as isBackpass
+		FROM shop_msg a
+		 inner join shop_msg_custcode_order smco on a.id = smco.msg_id
+		<where>
+			${dataScope}
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="isBackpass != null and isBackpass != ''">
+				AND smco.is_backpass = #{isBackpass}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="provinceName != null and provinceName != ''">
+				AND a.province_name = #{provinceName}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="cityName != null and cityName != ''">
+				AND a.city_name = #{cityName}
+			</if>
+			<if test="districId != null and districId != ''">
+				AND a.distric_id = #{districId}
+			</if>
+			<if test="districName != null and districName != ''">
+				AND a.distric_name = #{districName}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="addressDetail != null and addressDetail != ''">
+				AND a.address_detail = #{addressDetail}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="msgFlag != null and msgFlag != ''">
+				AND a.msg_flag = #{msgFlag}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND a.org_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{orgName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orgName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orgName},'%')</if>
+			</if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+			<if test="connectName != null and connectName != ''">
+				AND a.connect_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{connectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{connectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{connectName},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+
+			<if test="email != null and email != ''">
+				AND a.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{email},'%')</if>
+			</if>
+			<if test="depart != null and depart != ''">
+				AND a.depart = #{depart}
+			</if>
+			<if test="isRead != null and isRead != ''">
+				AND a.is_read = #{isRead}
+			</if>
+			<if test="msgNo != null and msgNo != ''">
+				AND a.msg_no = #{msgNo}
+			</if>
+			<if test="appIspass != null and appIspass != ''">
+				AND a.app_ispass = #{appIspass}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="nodetag != null and nodetag != ''">
+				AND a.nodetag = #{nodetag}
+			</if>
+			<if test="infcode != null and infcode != ''">
+				AND a.infcode = #{infcode}
+			</if>
+			<if test="proGroup != null and proGroup != ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (a.pro_group = "中央空调;商用空调" || a.pro_group = "中央空调" || a.pro_group = "商用空调" || a.pro_group = "商用空调;中央空调")
+				</if>
+				<if test="isSkAdmin == null or isSkAdmin == ''">
+					AND a.pro_group = #{proGroup}
+				</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findList" resultType="ShopMsg" >
+		SELECT 
+			<include refid="shopMsgColumns"/>
+		FROM shop_msg a
+		<include refid="shopMsgJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="provinceName != null and provinceName != ''">
+				AND a.province_name = #{provinceName}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="cityName != null and cityName != ''">
+				AND a.city_name = #{cityName}
+			</if>
+			<if test="districId != null and districId != ''">
+				AND a.distric_id = #{districId}
+			</if>
+			<if test="districName != null and districName != ''">
+				AND a.distric_name = #{districName}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="addressDetail != null and addressDetail != ''">
+				AND a.address_detail = #{addressDetail}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="msgFlag != null and msgFlag != ''">
+				AND a.msg_flag = #{msgFlag}
+			</if>
+            <if test="orgName != null and orgName != ''">
+                AND a.org_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{orgName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{orgName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{orgName},'%')</if>
+            </if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+            <if test="connectName != null and connectName != ''">
+                AND a.connect_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{connectName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{connectName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{connectName},'%')</if>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND a.mobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+            </if>
+
+			<if test="email != null and email != ''">
+				AND a.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{email},'%')</if>
+			</if>
+            <if test="depart != null and depart != ''">
+                AND a.depart = #{depart}
+            </if>
+			<if test="isRead != null and isRead != ''">
+				AND a.is_read = #{isRead}
+			</if>
+			<if test="msgNo != null and msgNo != ''">
+				AND a.msg_no = #{msgNo}
+			</if>
+			<if test="appIspass != null and appIspass != ''">
+				AND a.app_ispass = #{appIspass}
+			</if>
+
+			<if test="beginCreateDate != null and beginCreateDate != ''">
+				AND a.create_date <![CDATA[ > #{beginCreateDate} ]]>
+			</if>
+
+			<if test="endCreateDate != null and endCreateDate != ''">
+				AND a.create_date <![CDATA[ < #{endCreateDate} ]]>
+			</if>
+
+
+			<if test="nodetag != null and nodetag != ''">
+				<if test="nodetag == 1">
+					AND (a.nodetag = #{nodetag} or a.nodetag = '2')
+				</if>
+				<if test="nodetag != 1">
+					AND a.nodetag = #{nodetag}
+				</if>
+			</if>
+			<if test="proGroup != null and proGroup != ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (a.pro_group = "中央空调;商用空调" || a.pro_group = "中央空调" || a.pro_group = "商用空调" || a.pro_group = "商用空调;中央空调")
+				</if>
+				<if test="isSkAdmin == null or isSkAdmin == ''">
+					AND a.pro_group LIKE
+					<if test="dbName == 'oracle'">'%'||#{proGroup}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{proGroup}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{proGroup},'%')</if>
+				</if>
+			</if>
+			<if test="proGroup == null or proGroup == ''">
+				<if test="isSkAdmin != null and isSkAdmin != ''">
+					AND (a.pro_group = "中央空调;商用空调" || a.pro_group = "中央空调" || a.pro_group = "商用空调" || a.pro_group = "商用空调;中央空调")
+				</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListOver" resultType="ShopMsg" >
+		SELECT
+		<include refid="shopMsgColumns"/>
+		FROM shop_msg a
+		<include refid="shopMsgJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="provinceName != null and provinceName != ''">
+				AND a.province_name = #{provinceName}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id = #{cityId}
+			</if>
+			<if test="cityName != null and cityName != ''">
+				AND a.city_name = #{cityName}
+			</if>
+			<if test="districId != null and districId != ''">
+				AND a.distric_id = #{districId}
+			</if>
+			<if test="districName != null and districName != ''">
+				AND a.distric_name = #{districName}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="addressDetail != null and addressDetail != ''">
+				AND a.address_detail = #{addressDetail}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="msgFlag != null and msgFlag != ''">
+				AND a.msg_flag = #{msgFlag}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND a.org_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{orgName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orgName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orgName},'%')</if>
+			</if>
+			<if test="channel != null and channel != ''">
+				AND a.channel = #{channel}
+			</if>
+			<if test="connectName != null and connectName != ''">
+				AND a.connect_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{connectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{connectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{connectName},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{mobile}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mobile}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+
+			<if test="email != null and email != ''">
+				AND a.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{email},'%')</if>
+			</if>
+			<if test="depart != null and depart != ''">
+				AND a.depart = #{depart}
+			</if>
+			<if test="isRead != null and isRead != ''">
+				AND a.is_read = #{isRead}
+			</if>
+			<if test="msgNo != null and msgNo != ''">
+				AND a.msg_no = #{msgNo}
+			</if>
+			<if test="appIspass != null and appIspass != ''">
+				AND a.app_ispass = #{appIspass}
+			</if>
+			<if test="nodetag != null and nodetag != ''">
+				AND a.nodetag = #{nodetag}
+			</if>
+			<if test="infcode != null and infcode != ''">
+				AND a.infcode = #{infcode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--经销商查看可抢单信息-->
+	<select id="dealerPreempInfo" resultType="ShopMsg" >
+		SELECT
+		<include refid="shopMsgColumns"/>
+		FROM shop_msg a
+		<include refid="shopMsgJoins"/>
+		<where>
+
+			${dataScope}
+			<if test="cityName != null and cityName != ''">
+				AND a.city_name in
+				<foreach item="item" index="index" collection="cityName.split(',')"  open="(" separator="," close=")">
+					'${item}'
+				</foreach>
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND a.org_id = #{orgId}
+			</if>
+			<if test="msgFlag != null and msgFlag != ''">
+				AND a.msg_flag = #{msgFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+
+
+
+	<select id="findAllList" resultType="ShopMsg" >
+		SELECT 
+			<include refid="shopMsgColumns"/>
+		FROM shop_msg a
+		<include refid="shopMsgJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_msg(
+			id,
+			company_name,
+			company_size,
+			province_id,
+			province_name,
+			city_id,
+			city_name,
+			distric_id,
+			distric_name,
+			address,
+			address_detail,
+			org_id,
+			org_name,
+			channel,
+			connect_name,
+			mobile,
+			reserve_mobile,
+			email,
+			qq,
+			depart,
+			money,
+			create_date,
+			company_org_code,
+			company_org_name,
+			brand_name,
+			category,
+			msg_type,
+			quota_info,
+			project_code,
+			descp,
+			area_details,
+			is_read,
+			have_undertake,
+			is_dispatch,
+			franchise_id,
+			msg_flag,
+			old_code,
+			pt_ispass,
+			pt_checker,
+			pt_check_date,
+			pt_descp,
+			app_ispass,
+			app_checker,
+			app_check_date,
+			app_cancle_reason,
+			app_descp,
+			grab_date,
+			cust_code,
+			is_back,
+			oper_exchange,
+			manager_no,
+			manager_name,
+			con_franchise_type,
+			remarks,
+			remarks_date,
+			remarks_person,
+			sendmsg,
+			unread_msg,
+			pro_group,
+			pro_group_code,
+			memo,
+			msg_no,
+			nodetag,
+			infcode
+		) VALUES (
+			#{id},
+			#{companyName},
+			#{companySize},
+			#{provinceId},
+			#{provinceName},
+			#{cityId},
+			#{cityName},
+			#{districId},
+			#{districName},
+			#{address},
+			#{addressDetail},
+			#{orgId},
+			#{orgName},
+			#{channel},
+			#{connectName},
+			#{mobile},
+			#{reserveMobile},
+			#{email},
+			#{qq},
+			#{depart},
+			#{money},
+			#{createDate},
+			#{companyOrgCode},
+			#{companyOrgName},
+			#{brandName},
+			#{category},
+			#{msgType},
+			#{quotaInfo},
+			#{projectCode},
+			#{descp},
+			#{areaDetails},
+			#{isRead},
+			#{haveUndertake},
+			#{isDispatch},
+			#{franchiseId},
+			#{msgFlag},
+			#{oldCode},
+			#{ptIspass},
+			#{ptChecker},
+			#{ptCheckDate},
+			#{ptDescp},
+			#{appIspass},
+			#{appChecker},
+			#{appCheckDate},
+			#{appCancleReason},
+			#{appDescp},
+			#{grabDate},
+			#{custCode},
+			#{isBack},
+			#{operExchange},
+			#{managerNo},
+			#{managerName},
+			#{conFranchiseType},
+			#{remarks},
+			#{remarksDate},
+			#{remarksPerson},
+			#{sendmsg},
+			#{unreadMsg},
+			#{proGroup},
+			#{proGroupCode},
+			#{memo},
+			#{msgNo},
+			#{nodetag},
+			#{infcode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_msg SET 	
+			company_name = #{companyName},
+			company_size = #{companySize},
+			province_id = #{provinceId},
+			province_name = #{provinceName},
+			city_id = #{cityId},
+			city_name = #{cityName},
+			distric_id = #{districId},
+			distric_name = #{districName},
+			address = #{address},
+			address_detail = #{addressDetail},
+			org_id = #{orgId},
+			org_name = #{orgName},
+			channel = #{channel},
+			connect_name = #{connectName},
+			mobile = #{mobile},
+			reserve_mobile = #{reserveMobile},
+			email = #{email},
+			qq = #{qq},
+			depart = #{depart},
+			money = #{money},
+			company_org_code = #{companyOrgCode},
+			company_org_name = #{companyOrgName},
+			brand_name = #{brandName},
+			category = #{category},
+			msg_type = #{msgType},
+			quota_info = #{quotaInfo},
+			project_code = #{projectCode},
+			descp = #{descp},
+			area_details = #{areaDetails},
+			is_read = #{isRead},
+			have_undertake = #{haveUndertake},
+			is_dispatch = #{isDispatch},
+			franchise_id = #{franchiseId},
+			msg_flag = #{msgFlag},
+			old_code = #{oldCode},
+			pt_ispass = #{ptIspass},
+			pt_checker = #{ptChecker},
+			pt_check_date = #{ptCheckDate},
+			pt_descp = #{ptDescp},
+			app_ispass = #{appIspass},
+			app_checker = #{appChecker},
+			app_check_date = #{appCheckDate},
+			app_cancle_reason = #{appCancleReason},
+			app_descp = #{appDescp},
+			grab_date = #{grabDate},
+			cust_code = #{custCode},
+			is_back = #{isBack},
+			oper_exchange = #{operExchange},
+			manager_no = #{managerNo},
+			manager_name = #{managerName},
+			con_franchise_type = #{conFranchiseType},
+			remarks = #{remarks},
+			remarks_date = #{remarksDate},
+			remarks_person = #{remarksPerson},
+			sendmsg = #{sendmsg},
+			unread_msg = #{unreadMsg},
+			pro_group = #{proGroup},
+			pro_group_code = #{proGroupCode},
+			memo = #{memo},
+			msg_no = #{msgNo},
+			nodetag = #{nodetag},
+			infcode = #{infcode}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM shop_msg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE shop_msg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ShopMsg" statementType="STATEMENT">
+		select * FROM shop_msg  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

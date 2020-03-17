@@ -1,0 +1,28 @@
+# Tomcat
+server:
+    tomcat:
+        uri-encoding: UTF-8
+        max-threads: 1000
+        min-spare-threads: 30
+    port: 8080
+    connection-timeout: 5000
+    context-path: /
+spring:
+    #出现错误时, 直接抛出异常
+    mvc:
+      throw-exception-if-no-handler-found: true
+     #不要为我们工程中的资源文件建立映射
+    resources:
+      add-mappings: false
+    aop:
+        proxy-target-class: true
+    http:
+      multipart:
+        maxFileSize: 200Mb
+        maxRequestSize: 200Mb
+    # 环境default|dev|test|prod
+    profiles:
+        active: test
+
+
+       

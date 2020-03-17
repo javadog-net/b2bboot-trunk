@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.StoreGoodsMapper">
+    
+	<sql id="storeGoodsColumns">
+		a.id AS "id",
+		a.store_id AS "storeId",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.code AS "code",
+		a.market_price AS "marketPrice",
+		a.price AS "price",
+		a.stock AS "stock",
+		a.stock_warning AS "stockWarning",
+		a.is_recommend AS "isRecommend",
+		a.is_promotion AS "isPromotion",
+		a.is_hot_sale AS "isHotSale",
+		a.is_new AS "isNew",
+		a.is_top AS "isTop",
+		a.is_shelf AS "isShelf",
+		a.shelf_time AS "shelfTime",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_state AS "auditState",
+		a.audit_desc AS "auditDesc",
+		a.goods_click AS "goodsClick",
+		a.goods_salenum AS "goodsSalenum",
+		a.goods_collect AS "goodsCollect",
+		a.goods_comment_num AS "goodsCommentNum",
+		a.remarks AS "remarks",
+		a.create_by AS "createById",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateById",
+		a.htmlpath AS "htmlpath",
+		a.html_index_num AS "htmlIndexNum",
+		a.old_html_path AS "oldHtmlPath",
+		a.is_to_index_yanxuan AS "isToIndexYanxuan",
+		a.is_to_index_brand AS "isToIndexBrand",
+		a.is_to_index_zhengcai AS "isToIndexZhengcai",
+a.is_to_index_yiqing AS "isToIndexYiqing"
+	</sql>
+
+	<sql id="storeGoodsColumnsVo">
+		a.id AS "id",
+		a.store_id AS "storeId",
+		a.category_pid AS "categoryPid",
+		a.category_id AS "categoryId",
+		a.code AS "code",
+		a.market_price AS "marketPrice",
+		a.price AS "price",
+		a.stock AS "stock",
+		a.stock_warning AS "stockWarning",
+		a.is_recommend AS "isRecommend",
+		a.is_promotion AS "isPromotion",
+		a.is_hot_sale AS "isHotSale",
+		a.is_new AS "isNew",
+		a.is_top AS "isTop",
+		a.is_shelf AS "isShelf",
+		a.is_to_index_yanxuan AS "isToIndexYanxuan",
+		a.is_to_index_brand AS "isToIndexBrand",
+		a.is_to_index_zhengcai AS "isToIndexZhengcai",
+a.is_to_index_yiqing AS "isToIndexYiqing",
+		a.shelf_time AS "shelfTime",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.audit_state AS "auditState",
+		a.audit_desc AS "auditDesc",
+		a.goods_click AS "goodsClick",
+		a.goods_salenum AS "goodsSalenum",
+		a.goods_collect AS "goodsCollect",
+		a.goods_comment_num AS "goodsCommentNum",
+		a.remarks AS "remarks",
+		a.create_by AS "createById",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateById",
+		a.htmlpath AS "htmlpath",
+		a.html_index_num AS "htmlIndexNum",
+		a.old_html_path AS "oldHtmlPath",
+		g.name as goodsName,
+		gc.name as  categoryPname,
+		s.store_name as storeName,
+		g.main_pic_url as mainPicUrl,
+		g.keyword as keyword,
+		g.title as title,
+		g.des as des,
+		s.is_self_support as isSelfSupport,
+		d.kjt_account AS "kjtAccount",
+		d.company_name AS "dealerName",
+		d.id AS "dealerId"
+	</sql>
+	
+	<sql id="storeGoodsJoins">
+		left JOIN goods g on a.code = g.code
+		left JOIN goods_category gc on a.category_pid = gc.id
+		left JOIN store s on a.store_id = s.id
+		LEFT JOIN dealer d on s.dealer_id = d.id
+	</sql>
+	
+    
+	<select id="get" resultType="StoreGoods" >
+		SELECT 
+			<include refid="storeGoodsColumnsVo"/>
+		FROM store_goods a
+		<include refid="storeGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StoreGoods" >
+		SELECT 
+			<include refid="storeGoodsColumns"/>,g.name as goodsName,
+		       gc.name as  categoryPname, s.store_name as storeName,
+		       g.main_pic_url as mainPicUrl,g.remarks as "salePoint",
+		       g.title as "title",g.keyword as keyword,g.des as des,
+		       s.is_self_support as isSelfSupport,d.kjt_account AS "kjtAccount",d.company_name AS "dealerName",d.id AS "dealerId"
+		FROM store_goods a
+		<include refid="storeGoodsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="storeId != null and storeId != ''">
+				AND a.store_id = #{storeId}
+			</if>
+			<if test="categoryPid != null and categoryPid != ''">
+				AND a.category_pid = #{categoryPid}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="isRecommend != null and isRecommend != ''">
+				AND a.is_recommend = #{isRecommend}
+			</if>
+			<if test="isPromotion != null and isPromotion != ''">
+				AND a.is_promotion = #{isPromotion}
+			</if>
+			<if test="isTop != null and isTop != ''">
+				AND a.is_top = #{isTop}
+			</if>
+			<if test="isNew != null and isNew != ''">
+				AND a.is_new = #{isNew}
+			</if>
+			<if test="isToIndexYanxuan != null and isToIndexYanxuan != ''">
+				AND a.is_to_index_yanxuan = #{isToIndexYanxuan}
+			</if>
+			<if test="isToIndexBrand != null and isToIndexBrand != ''">
+				AND a.is_to_index_brand = #{isToIndexBrand}
+			</if>
+			<if test="isToIndexZhengcai != null and isToIndexZhengcai != ''">
+				AND a.is_to_index_zhengcai = #{isToIndexZhengcai}
+			</if>
+
+			<if test="isToIndexYiqing != null and isToIndexYiqing != ''">
+				AND a.is_to_index_yiqing = #{isToIndexYiqing}
+			</if>
+
+			<if test="isHotSale != null and isHotSale != ''">
+				AND a.is_hot_sale = #{isHotSale}
+			</if>
+			<if test="isShelf != null and isShelf != ''">
+				AND a.is_shelf = #{isShelf}
+			</if>
+			<if test="beginShelfTime != null and endShelfTime != null and beginShelfTime != '' and endShelfTime != ''">
+				AND a.shelf_time BETWEEN #{beginShelfTime} AND #{endShelfTime}
+			</if>
+			<if test="beginAuditTime != null and endAuditTime != null and beginAuditTime != '' and endAuditTime != ''">
+				AND a.audit_time BETWEEN #{beginAuditTime} AND #{endAuditTime}
+			</if>
+			<if test="auditState != null and auditState != ''">
+				AND a.audit_state = #{auditState}
+			</if>
+			<if test="beginGoodsSalenum != null and endGoodsSalenum != null and beginGoodsSalenum != '' and endGoodsSalenum != ''">
+				AND a.goods_salenum BETWEEN #{beginGoodsSalenum} AND #{endGoodsSalenum}
+			</if>
+			<if test="beginGoodsCollect != null and endGoodsCollect != null and beginGoodsCollect != '' and endGoodsCollect != ''">
+				AND a.goods_collect BETWEEN #{beginGoodsCollect} AND #{endGoodsCollect}
+			</if>
+			<if test="beginGoodsCommentNum != null and endGoodsCommentNum != null and beginGoodsCommentNum != '' and endGoodsCommentNum != ''">
+				AND a.goods_comment_num BETWEEN #{beginGoodsCommentNum} AND #{endGoodsCommentNum}
+			</if>
+			<if test="cityid != null and cityid != ''">
+				and d.gm_id = (select orgid FROM cms_gm_city where cityid = #{cityid} )
+			</if>
+			<if test="brand != null and brand != ''">
+				and g.brand = #{brand}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND g.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id= #{id}
+			</if>
+            <if test="newDays != null and newDays !=0">
+				AND DATE_SUB(CURDATE(), INTERVAL #{newDays} DAY) <![CDATA[ <= ]]> date(a.shelf_time)
+			</if>
+
+			<if test="strs != null and strs !=''">
+				AND a.category_pid in
+		     <foreach item="item" index="index" collection="strs.split(',')"  open="(" separator="," close=")">
+					#{item}
+			 </foreach>
+		    </if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBySql != null and orderBySql !=''">
+				ORDER BY ${orderBySql}
+			</when>
+			<otherwise>
+				ORDER BY a.store_id , a.shelf_time ,a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StoreGoods" >
+		SELECT 
+			<include refid="storeGoodsColumns"/>
+		FROM store_goods a
+		<include refid="storeGoodsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO store_goods(
+			id,
+			store_id,
+			category_pid,
+			category_id,
+			code,
+			market_price,
+			price,
+			stock,
+			stock_warning,
+			is_recommend,
+			is_promotion,
+			is_hot_sale,
+			is_new,
+			is_top,
+			is_shelf,
+			shelf_time,
+			audit_time,
+			auditor,
+			audit_state,
+			audit_desc,
+			goods_click,
+			goods_salenum,
+			goods_collect,
+			goods_comment_num,
+			remarks,
+			create_by,
+			create_date,
+			update_date,
+			update_by,
+			htmlpath,
+			html_index_num,
+			old_html_path,
+			is_to_index_yanxuan,
+			is_to_index_brand,
+			is_to_index_zhengcai,
+		    is_to_index_yiqing
+		) VALUES (
+			#{id},
+			#{storeId},
+			#{categoryPid},
+			#{categoryId},
+			#{code},
+			#{marketPrice},
+			#{price},
+			#{stock},
+			#{stockWarning},
+			#{isRecommend},
+			#{isPromotion},
+			#{isHotSale},
+			#{isNew},
+			#{isTop},
+			#{isShelf},
+			#{shelfTime},
+			#{auditTime},
+			#{auditor},
+			#{auditState},
+			#{auditDesc},
+			#{goodsClick},
+			#{goodsSalenum},
+			#{goodsCollect},
+			#{goodsCommentNum},
+			#{remarks},
+			#{createById},
+			#{createDate},
+			#{updateDate},
+			#{updateById},
+			#{htmlpath},
+			#{htmlIndexNum},
+			#{oldHtmlPath},
+			#{isToIndexYanxuan},
+			#{isToIndexBrand},
+			#{isToIndexZhengcai},
+		          #{isToIndexYiqing}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE store_goods SET 	
+			store_id = #{storeId},
+			category_pid = #{categoryPid},
+			category_id = #{categoryId},
+			code = #{code},
+			market_price = #{marketPrice},
+			price = #{price},
+			stock = #{stock},
+			stock_warning = #{stockWarning},
+			is_recommend = #{isRecommend},
+			is_promotion = #{isPromotion},
+			is_hot_sale =#{isHotSale},
+			is_new = #{isNew},
+			is_top =#{isTop},
+			is_shelf = #{isShelf},
+			shelf_time = #{shelfTime},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			audit_state = #{auditState},
+			audit_desc = #{auditDesc},
+			goods_click = #{goodsClick},
+			goods_salenum = #{goodsSalenum},
+			goods_collect = #{goodsCollect},
+			goods_comment_num = #{goodsCommentNum},
+			remarks = #{remarks},
+			update_date = #{updateDate},
+			update_by = #{updateById},
+			htmlpath =#{htmlpath},
+			html_index_num =#{htmlIndexNum},
+			old_html_path =#{oldHtmlPath},
+			is_to_index_yanxuan = #{isToIndexYanxuan},
+			is_to_index_brand = #{isToIndexBrand},
+			is_to_index_zhengcai = #{isToIndexZhengcai},
+			is_to_index_yiqing =#{isToIndexYiqing}
+
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM store_goods
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE store_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectByCodeOrStoreId" resultType="StoreGoods" parameterType="java.lang.String">
+		SELECT
+		<include refid="storeGoodsColumns"/>,g.name as goodsName,g.main_pic_url as mainPicUrl
+		FROM store_goods a left join goods g on a.code = g.code
+		where a.store_id = #{arg0} and a.code = #{arg1}
+
+	</select>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="StoreGoods" statementType="STATEMENT">
+		select * FROM store_goods  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!--物理删除-->
+	<!--20181112改为逻辑删除lyz-->
+	<update id="deleteByStoreIdOrCode" parameterType="String">
+		UPDATE store_goods
+		SET is_shelf = '0'
+		<where>
+			<if test="arg0 != null and arg0 != ''">
+				and store_id = #{arg0}
+			</if>
+			<if test="arg1 != null and arg1 != ''">
+				and code = #{arg1}
+			</if>
+		</where>
+	</update>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="selectPriceGroup" resultType="StoreGoods" parameterType="String">
+		SELECT
+		sg.id AS "id",
+		sg.store_id AS "storeId",
+		sg.category_pid AS "categoryPid",
+		sg.category_id AS "categoryId",
+		sg.code AS "code",
+		sg.market_price AS "marketPrice",
+		sg.price AS "price",
+		sg.stock AS "stock",
+		sg.stock_warning AS "stockWarning",
+		sg.is_recommend AS "isRecommend",
+		sg.is_promotion AS "isPromotion",
+		sg.is_hot_sale AS "isHotSale",
+		sg.is_new AS "isNew",
+		sg.is_top AS "isTop",
+		sg.is_to_index_yanxuan AS "isToIndexYanxuan",
+		sg.is_to_index_brand AS "isToIndexBrand",
+		sg.is_to_index_zhengcai AS "isToIndexZhengcai",
+		sg.is_to_index_yiqing AS "isToIndexYiqing",
+		sg.is_shelf AS "isShelf",
+		sg.shelf_time AS "shelfTime",
+		sg.audit_time AS "auditTime",
+		sg.auditor AS "auditor",
+		sg.audit_state AS "auditState",
+		sg.audit_desc AS "auditDesc",
+		sg.goods_click AS "goodsClick",
+		sg.goods_salenum AS "goodsSalenum",
+		sg.goods_collect AS "goodsCollect",
+		sg.goods_comment_num AS "goodsCommentNum",
+		sg.remarks AS "remarks",
+		sg.create_by AS "createById",
+		sg.create_date AS "createDate",
+		sg.update_date AS "updateDate",
+		sg.update_by AS "updateById",spg.price as priceGroup
+		FROM
+			store_goods sg
+		LEFT JOIN store_price_group spg ON sg.store_id = spg.store_id and sg.code = spg.`code`
+		LEFT JOIN store_goods_price sgp ON spg.id = sgp.store_price_group_id
+		where sg.store_id = #{arg0} and sgp.purchaser_id = #{arg1} and sg.code = #{arg2}
+	</select>
+
+	<select id="selectForSearchTag" resultType="StoreGoods">
+	SELECT
+		sg.id as id,sg.price,sg.market_price,sg.is_recommend,sg.goods_click,sg.goods_salenum,sg.goods_collect,sg.goods_comment_num,ga.code as code, ga.storeId as storeId,gs.main_pic_url,gs.brand,gs.create_date,gs.update_date , gs. NAME AS goodsName,
+		s.store_name as storeName,
+		s.is_self_support
+	FROM
+	(
+	SELECT DISTINCT
+	g.`code` as code,
+	g.title as "title",g.keyword as keyword,g.des as des,
+	sg.store_id as storeId,
+	sg.id
+	FROM
+	store_goods sg
+		left JOIN goods g ON sg. CODE = g. CODE
+		left JOIN goods_properties gp ON sg.`code` = gp.goods_code
+		left JOIN brand b on g.brand = b.id
+		left join goods_ext gext on sg.`code` = gext.`code`
+	<where>
+		<if test="goodsClassPropertiesList!=null and goodsClassPropertiesList.size()>0">
+		<foreach collection="goodsClassPropertiesList" item="goodsClassProperties" index="index" open="("  close=")"
+				 separator="or">
+			gp. NAME = '${goodsClassProperties.name}' AND gp.VALUE = '${goodsClassProperties.value}'
+		</foreach>
+		</if>
+		<if test="brand != null and brand != ''">
+			and b.id = #{brand}
+		</if>
+		<if test="categoryId != null and categoryId != ''">
+			and sg.category_id = #{categoryId}
+		</if>
+		<if test="categoryPid != null and categoryPid != ''">
+			and sg.category_pid = #{categoryPid}
+		</if>
+		<if test="isShelf != null and isShelf != ''">
+			and sg.is_shelf = #{isShelf}
+		</if>
+		<if test="goodsName != null and goodsName != ''">
+			AND g.name LIKE
+			<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+			<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+		</if>
+	</where>
+	GROUP BY
+	g.`code`,
+	sg.store_id,
+	sg.id
+	) ga
+		inner JOIN goods gs ON ga. CODE = gs. CODE
+		inner JOIN store s on ga.storeId = s.id
+		inner JOIN dealer d on s.dealer_id = d.id
+		inner JOIN store_goods sg ON ga.id = sg.id
+		<where>
+			<if test="cityid != null and cityid != ''">
+			d.gm_id = (select orgid FROM cms_gm_city where cityid = #{cityid})
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY sg.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="selectByCategoryPid"  resultType="StoreGoods">
+		SELECT
+		*,g.`name` as goodsName,g.main_pic_url as mainPicUrl,
+		g.title as "title",g.keyword as keyword,g.des as des
+		FROM
+		store_goods sg
+		LEFT JOIN goods g ON sg. CODE = g. CODE
+		LEFT JOIN goods_ext ge ON sg. CODE = ge. CODE
+		left join store s on sg.store_id = s.id
+		LEFT JOIN dealer d on s.dealer_id = d.id
+		<where>
+			<if test="categoryPid != null and categoryPid != ''">
+				and sg.category_pid = #{categoryPid}
+			</if>
+			<if test="cityid != null and cityid != ''">
+				and d.gm_id = (select orgid FROM cms_gm_city where cityid = #{cityid} )
+			</if>
+		</where>
+	</select>
+
+	<!--查询购物车中的产品信息-->
+	<select id="findCartStoreGoods" resultType="StoreGoods">
+		SELECT
+		<include refid="storeGoodsColumns"/>,gc.name AS categoryPname,g.name as goodsName,g.main_pic_url AS "mainPicUrl",da.price AS "promotionPrice",m.choose_num AS "chooseNum",m.id AS "cartId"
+		 FROM
+		(SELECT c.id,c.store_goods_id ,c.choose_num,c.purchaser_account_id from cart c where c.store_id=#{storeId}) as m
+		LEFT JOIN store_goods  a  on  a.id=m.store_goods_id
+		<include refid="storeGoodsJoins"/>
+		LEFT JOIN (
+		select pg.price,pg.code,pt.purchaser_id,pt.id from store_price_group pg
+		LEFT JOIN store_goods_price p  on pg.id=p.store_price_group_id
+		LEFT JOIN purchaser_account pt on pt.purchaser_id = p.purchaser_id
+		where pg.store_id=#{storeId} and p.purchaser_id=#{purchaserId}
+		and pt.id=#{purchaserAccountId}
+		) AS da on g.code =da.code
+
+		WHERE
+		1=1
+		<if test="storeId != null and storeId!=''">
+		 	and	a.store_id=#{storeId}
+		</if>
+		<if test="purchaserAccountId != null and purchaserAccountId != ''">
+			and m.purchaser_account_id=#{purchaserAccountId}
+		</if>
+		<if test="idList != null">
+			AND m.id IN
+			<foreach collection="idList" item="id" index="index"
+					 open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+    <select id="findStoreGoodsAndProPrice" resultType="StoreGoods">
+        select
+        <include refid="storeGoodsColumns"/> ,da.price as " promotionPrice",g.name as goodsName,g.main_pic_url AS "mainPicUrl",d.id AS "dealerId",d.kjt_account AS kjtAccount,
+        d.company_name AS "dealerName",s.store_name AS "storeName" from store_goods a
+        <include refid="storeGoodsJoins"/>
+        LEFT JOIN
+            (
+                select pg.price,pg.code,pt.purchaser_id,pt.id,pg.store_id from store_price_group pg
+                    LEFT JOIN store_goods_price p  on pg.id=p.store_price_group_id
+                    LEFT JOIN purchaser_account pt on pt.purchaser_id = p.purchaser_id
+                where p.purchaser_id=#{purchaserId}
+                <if test="purchaserAccountId != null and purchaserAccountId != ''">
+                    and pt.id=#{purchaserAccountId}
+                </if>
+            ) da on a.store_id= da.store_id and a.code=da.code
+        where a.is_shelf='1'
+        <if test="id!= null and id!=''">
+            and  a.id=#{id}
+        </if>
+
+    </select>
+	<select id="getStoreGoodsAndProPriceByStoreGoodIds" resultType="StoreGoods">
+		select
+		<include refid="storeGoodsColumns"/> ,da.price as " promotionPrice",g.name as goodsName,g.main_pic_url AS "mainPicUrl",d.id AS "dealerId",d.kjt_account AS kjtAccount,
+		d.company_name AS "dealerName",s.store_name AS "storeName" from store_goods a
+		<include refid="storeGoodsJoins"/>
+		LEFT JOIN
+		(
+		select pg.price,pg.code,pt.purchaser_id,pt.id,pg.store_id from store_price_group pg
+		LEFT JOIN store_goods_price p  on pg.id=p.store_price_group_id
+		LEFT JOIN purchaser_account pt on pt.purchaser_id = p.purchaser_id
+		where p.purchaser_id=#{purchaserId}
+		) da on a.store_id = da.store_id and a.code=da.code
+		where a.is_shelf='1'
+		<if test="idList != null">
+			and  a.id IN
+			<foreach collection="idList" item="id" index="index"
+					 open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+
+	</select>
+    <update id="updateStock">
+        UPDATE  store_goods
+        <set>
+			<if test="stock != null">
+				stock=#{stock},
+			</if>
+			<if test="isShelf != null and isShelf != ''">
+				is_shelf=#{isShelf},
+			</if>
+		</set>
+        WHERE  id=#{id}
+    </update>
+
+
+	<select id="getStoreGoodsByCodes" resultType="StoreGoods">
+		select * from store_goods a where a.is_shelf='1' and a.store_id = '0'
+		<if test="idList != null">
+			and  a.code IN
+			<foreach collection="idList" item="id" index="index"
+					 open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+
+	</select>
+	
+	<select id="selectMaxNum" resultType="java.lang.Integer">
+	  select max(html_index_num) FROM store_goods
+	</select>
+	
+	
+	 <!-- 通过筛选获取猜你想要 -->
+  <select id="guess"  resultType="StoreGoods">
+  		select *  from store_goods a 
+  		    right join 
+  		((select  *
+  		 from goods where 
+  		  <if test="_parameter == 'jx'">
+        	name like "%投币洗衣机%" limit 0,2) union all (select * from goods where  name like "%智慧洗衣机%" limit 0,2)
+      	  </if> 
+      	  <if test="_parameter == 'gdbx'">
+        	name like "%卡萨帝冰箱%"  limit 0,4)
+      	  </if> 
+      	  <if test="_parameter == 'gdkt'">
+        	name like "%卡萨帝空调%" )
+      	  </if>
+      	   <if test="_parameter == 'gdxyj'">
+        	name like "%卡萨帝%" and name like "%滚筒%" limit 0,2) union all (select * from goods where name like "%卡萨帝%" and name like "%波轮%" limit 0,2)
+      	  </if> 
+      	  <if test="_parameter == 'gdds'">
+        	name like "%卡萨帝彩电%" )
+      	  </if>
+      	  <if test="_parameter == 'gdcd'">
+        	name like "%卡萨帝%" and name like "%吸油烟机%" ) union all  (select * from goods where name like "%卡萨帝%" and name like "%燃气灶%")
+      	  </if>
+     	  <if test="_parameter == 'gdrsq'">
+        	name like "%卡萨帝热水器%" )
+      	  </if>
+      	   <if test="_parameter == 'bx'">
+        	name like "%冰箱%" limit 0,4)
+      	  </if>
+      	  <if test="_parameter == 'kt'">
+        	name like "%壁挂式空调%" limit 0,2) union all  (select * from goods where name like "%柜式空调%"  limit 0,2)
+      	  </if>
+      	  <if test="_parameter == 'xyj'">
+        	name like "%滚筒%" limit 0,2) union all  (select * from goods where name like "%波轮%"limit 0,2)
+      	  </if>
+      	  <if test="_parameter == 'ds'">
+        	name like "%智能电视%" limit 0,2) union all  (select * from goods where name like "%蓝光电视%" limit 0,2)
+      	  </if>
+      	  <if test="_parameter == 'cd'">
+        	name like "%吸油烟机%" limit 0,2) union all  (select * from goods where name like "%燃气灶%" limit 0,2)
+      	  </if>
+      	  <if test="_parameter == 'rsq'">
+        	name like "%电热水器%" limit 0,2) union all  (select * from goods where name like "%燃气热水器%" limit 0,2)
+      	  </if>
+      	  )g on g.code=a.code where a.is_shelf='1' order by store_id desc limit 0,4
+  </select>
+
+</mapper>

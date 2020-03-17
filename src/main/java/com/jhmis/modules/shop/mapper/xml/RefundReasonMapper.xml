@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.RefundReasonMapper">
+    
+	<sql id="refundReasonColumns">
+		a.id AS "id",
+		a.refund_type AS "refundType",
+		a.reason_info AS "reasonInfo",
+		a.sort AS "sort",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="refundReasonJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="RefundReason" >
+		SELECT 
+			<include refid="refundReasonColumns"/>
+		FROM refund_reason a
+		<include refid="refundReasonJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RefundReason" >
+		SELECT 
+			<include refid="refundReasonColumns"/>
+		FROM refund_reason a
+		<include refid="refundReasonJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="refundType != null and refundType != ''">
+				AND a.refund_type = #{refundType}
+			</if>
+			<if test="reasonInfo != null and reasonInfo != ''">
+				AND a.reason_info = #{reasonInfo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RefundReason" >
+		SELECT 
+			<include refid="refundReasonColumns"/>
+		FROM refund_reason a
+		<include refid="refundReasonJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO refund_reason(
+			id,
+			refund_type,
+			reason_info,
+			sort,
+			update_time
+		) VALUES (
+			#{id},
+			#{refundType},
+			#{reasonInfo},
+			#{sort},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE refund_reason SET 	
+			refund_type = #{refundType},
+			reason_info = #{reasonInfo},
+			sort = #{sort},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM refund_reason
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE refund_reason SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RefundReason" statementType="STATEMENT">
+		select * FROM refund_reason  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

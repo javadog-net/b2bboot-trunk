@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.CmsActivityMapper">
+    
+	<sql id="cmsActivityColumns">
+		a.id AS "id",
+		a.meeting_id AS "meetingId",
+		a.meeting_name AS "meetingName",
+		a.actv_name AS "actvName",
+		a.actv_banner AS "actvBanner",
+		a.creat_user AS "creatUser",
+		a.creat_time AS "creatTime",
+		a.start_time AS "startTime",
+		a.actv_tab AS "actvTab",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="cmsActivityJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsActivity" >
+		SELECT 
+			<include refid="cmsActivityColumns"/>
+		FROM cms_activity a
+		<include refid="cmsActivityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsActivity" >
+		SELECT 
+			<include refid="cmsActivityColumns"/>
+		FROM cms_activity a
+		<include refid="cmsActivityJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="meetingId != null and meetingId != ''">
+				AND a.meeting_id = #{meetingId}
+			</if>
+			<if test="meetingName != null and meetingName != ''">
+				AND a.meeting_name = #{meetingName}
+			</if>
+			<if test="actvName != null and actvName != ''">
+				AND a.actv_name = #{actvName}
+			</if>
+			<if test="actvBanner != null and actvBanner != ''">
+				AND a.actv_banner = #{actvBanner}
+			</if>
+			<if test="creatUser != null and creatUser != ''">
+				AND a.creat_user = #{creatUser}
+			</if>
+			<if test="creatTime != null and creatTime != ''">
+				AND a.creat_time = #{creatTime}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND a.start_time = #{startTime}
+			</if>
+			<if test="actvTab != null and actvTab != ''">
+				AND a.actv_tab = #{actvTab}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsActivity" >
+		SELECT 
+			<include refid="cmsActivityColumns"/>
+		FROM cms_activity a
+		<include refid="cmsActivityJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_activity(
+			id,
+			meeting_id,
+			meeting_name,
+			actv_name,
+			actv_banner,
+			creat_user,
+			creat_time,
+			start_time,
+			actv_tab,
+			remark
+		) VALUES (
+			#{id},
+			#{meetingId},
+			#{meetingName},
+			#{actvName},
+			#{actvBanner},
+			#{creatUser},
+			#{creatTime},
+			#{startTime},
+			#{actvTab},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_activity SET 	
+			meeting_id = #{meetingId},
+			meeting_name = #{meetingName},
+			actv_name = #{actvName},
+			actv_banner = #{actvBanner},
+			creat_user = #{creatUser},
+			creat_time = #{creatTime},
+			start_time = #{startTime},
+			actv_tab = #{actvTab},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_activity
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_activity SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsActivity" statementType="STATEMENT">
+		select * FROM cms_activity  where ${propertyName} = '${value}'
+	</select>
+	<!-- 修改活动状态 -->
+	<update id="updateActivityStatus">
+	UPDATE cms_activity SET 
+			actv_tab = #{tab}
+		WHERE id = #{actvid}
+	
+	</update>
+	
+	
+</mapper>

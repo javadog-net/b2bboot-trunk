@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.StoreMapper">
+    
+	<sql id="storeColumns">
+		a.id AS "id",
+		a.dealer_id AS "dealerId",
+		a.store_name AS "storeName",
+		a.grade AS "grade",
+		a.state AS "state",
+		a.close_time AS "closeTime",
+		a.close_info AS "closeInfo",
+		a.expiry_time AS "expiryTime",
+		a.dynamic_score AS "dynamicScore",
+		a.apply_year AS "applyYear",
+		a.is_self_support AS "isSelfSupport",
+		a.collect_num AS "collectNum",
+		a.slide_pic_url AS "slidePicUrl",
+		a.slide_link_url AS "slideLinkUrl",
+		a.score_product_quality AS "scoreProductQuality",
+		a.score_demand_response AS "scoreDemandResponse",
+		a.score_delivery_credit AS "scoreDeliveryCredit",
+		a.score_supply_speed AS "scoreSupplySpeed",
+		a.score_customer_servic AS "scoreCustomerServic",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks",
+		a.sort AS "sort",
+		a.contractid AS "contractid",
+		dealer.logo_url AS "dealer.logoUrl",
+		dealer.company_name AS "dealer.dealerName",
+		dealer.kjt_account AS "dealer.kjtAccount"
+	</sql>
+	
+	<sql id="storeJoins">
+		LEFT JOIN dealer dealer on a.dealer_id=dealer.id
+	</sql>
+	
+    
+	<select id="get" resultType="Store" >
+		SELECT 
+			<include refid="storeColumns"/>
+		FROM store a
+		<include refid="storeJoins"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="dealerId != null and dealerId != ''">
+                AND a.dealer_id = #{dealerId}
+            </if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+        </where>
+	</select>
+	
+	<select id="findList" resultType="Store" >
+		SELECT 
+			<include refid="storeColumns"/>
+		FROM store a
+		<include refid="storeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="dealerId != null and dealerId != ''">
+				AND a.dealer_id = #{dealerId}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="grade != null and grade != ''">
+				AND a.grade = #{grade}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+			<if test="beginCloseTime != null and endCloseTime != null and beginCloseTime != '' and endCloseTime != ''">
+				AND a.close_time BETWEEN #{beginCloseTime} AND #{endCloseTime}
+			</if>
+			<if test="beginExpiryTime != null and endExpiryTime != null and beginExpiryTime != '' and endExpiryTime != ''">
+				AND a.expiry_time BETWEEN #{beginExpiryTime} AND #{endExpiryTime}
+			</if>
+			<if test="isSelfSupport != null and isSelfSupport != ''">
+				AND a.is_self_support = #{isSelfSupport}
+			</if>
+			<if test="beginCollectNum != null and endCollectNum != null and beginCollectNum != '' and endCollectNum != ''">
+				AND a.collect_num BETWEEN #{beginCollectNum} AND #{endCollectNum}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Store" >
+		SELECT 
+			<include refid="storeColumns"/>
+		FROM store a
+		<include refid="storeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO store(
+			id,
+			dealer_id,
+			store_name,
+			grade,
+			state,
+			close_time,
+			close_info,
+			expiry_time,
+			dynamic_score,
+			apply_year,
+			is_self_support,
+			collect_num,
+			slide_pic_url,
+			slide_link_url,
+			score_product_quality,
+			score_demand_response,
+			score_delivery_credit,
+			score_supply_speed,
+			score_customer_servic,
+			create_by,
+			create_date,
+			update_date,
+			update_by,
+			remarks,
+			sort,
+			contractid
+		) VALUES (
+			#{id},
+			#{dealerId},
+			#{storeName},
+			#{grade},
+			#{state},
+			#{closeTime},
+			#{closeInfo},
+			#{expiryTime},
+			#{dynamicScore},
+			#{applyYear},
+			#{isSelfSupport},
+			#{collectNum},
+			#{slidePicUrl},
+			#{slideLinkUrl},
+			#{scoreProductQuality},
+			#{scoreDemandResponse},
+			#{scoreDeliveryCredit},
+			#{scoreSupplySpeed},
+			#{scoreCustomerServic},
+			#{createBy.id},
+			#{createDate},
+			#{updateDate},
+			#{updateBy.id},
+			#{remarks},
+			#{sort},
+			#{contractid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE store SET 	
+			dealer_id = #{dealerId},
+			store_name = #{storeName},
+			grade = #{grade},
+			state = #{state},
+			close_time = #{closeTime},
+			close_info = #{closeInfo},
+			expiry_time = #{expiryTime},
+			dynamic_score = #{dynamicScore},
+			apply_year = #{applyYear},
+			is_self_support = #{isSelfSupport},
+			collect_num = #{collectNum},
+			slide_pic_url = #{slidePicUrl},
+			slide_link_url = #{slideLinkUrl},
+			score_product_quality = #{scoreProductQuality},
+			score_demand_response = #{scoreDemandResponse},
+			score_delivery_credit = #{scoreDeliveryCredit},
+			score_supply_speed = #{scoreSupplySpeed},
+			score_customer_servic = #{scoreCustomerServic},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			remarks = #{remarks},
+			sort = #{sort},
+			contractid = #{contractid}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM store
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE store SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Store" statementType="STATEMENT">
+		select * FROM store  where ${propertyName} = '${value}'
+	</select>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="selectByDealerId" resultType="Store" parameterType="java.lang.String">
+		select * FROM store  where dealer_id = #{dealerId}
+	</select>
+	
+	<select id="selectByIds" resultType="Store" >
+		select * FROM store  where del_flag = '0'
+		<if test="idList != null">
+			AND id IN
+			<foreach collection="idList" item="id" index="index"
+					 open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	<select id="findDistinctStore" resultType="Store" >
+		SELECT
+		DISTINCT  a.store_id AS "id",a.store_name,s.dealer_id AS "dealerId"
+		FROM cart a
+		LEFT JOIN store s on a.store_id=s.id
+		WHERE
+		a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="purchaserAccountId != null and purchaserAccountId !=''">
+			AND 	purchaser_account_id = #{purchaserAccountId}
+		</if>
+		<if test="idList != null">
+			AND a.id IN
+			<foreach collection="idList" item="id" index="index"
+					 open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+		ORDER BY a.create_date DESC
+	</select>
+</mapper>

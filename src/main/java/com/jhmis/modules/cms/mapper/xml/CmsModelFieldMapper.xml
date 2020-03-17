@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CmsModelFieldMapper">
+    
+	<sql id="cmsModelFieldColumns">
+		a.id AS "id",
+		a.model_id AS "modelId",
+		a.field AS "field",
+		a.name AS "name",
+		a.tips AS "tips",
+		a.css AS "css",
+		a.min_length AS "minLength",
+		a.max_length AS "maxLength",
+		a.pattern AS "pattern",
+		a.error_tips AS "errorTips",
+		a.form_type AS "formType",
+		a.default_value AS "defaultValue",
+		a.data_source AS "dataSource",
+		a.value_options AS "valueOptions",
+		a.dictionary_id AS "dictionaryId",
+		a.setting AS "setting",
+		a.form_attribute AS "formAttribute",
+		a.unset_roleids AS "unsetRoleids",
+		a.group_type AS "groupType",
+		a.is_require AS "isRequire",
+		a.is_unique AS "isUnique",
+		a.is_search AS "isSearch",
+		a.is_full_text AS "isFullText",
+		a.is_position AS "isPosition",
+		a.disabled AS "disabled",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="cmsModelFieldJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsModelField" >
+		SELECT 
+			<include refid="cmsModelFieldColumns"/>
+		FROM cms_model_field a
+		<include refid="cmsModelFieldJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsModelField" >
+		SELECT 
+			<include refid="cmsModelFieldColumns"/>
+		FROM cms_model_field a
+		<include refid="cmsModelFieldJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsModelField" >
+		SELECT 
+			<include refid="cmsModelFieldColumns"/>
+		FROM cms_model_field a
+		<include refid="cmsModelFieldJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_model_field(
+			id,
+			model_id,
+			field,
+			name,
+			tips,
+			css,
+			min_length,
+			max_length,
+			pattern,
+			error_tips,
+			form_type,
+			default_value,
+			data_source,
+			value_options,
+			dictionary_id,
+			setting,
+			form_attribute,
+			unset_roleids,
+			group_type,
+			is_require,
+			is_unique,
+			is_search,
+			is_full_text,
+			is_position,
+			disabled,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{modelId},
+			#{field},
+			#{name},
+			#{tips},
+			#{css},
+			#{minLength},
+			#{maxLength},
+			#{pattern},
+			#{errorTips},
+			#{formType},
+			#{defaultValue},
+			#{dataSource},
+			#{valueOptions},
+			#{dictionaryId},
+			#{setting},
+			#{formAttribute},
+			#{unsetRoleids},
+			#{groupType},
+			#{isRequire},
+			#{isUnique},
+			#{isSearch},
+			#{isFullText},
+			#{isPosition},
+			#{disabled},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_model_field SET 	
+			model_id = #{modelId},
+			field = #{field},
+			name = #{name},
+			tips = #{tips},
+			css = #{css},
+			min_length = #{minLength},
+			max_length = #{maxLength},
+			pattern = #{pattern},
+			error_tips = #{errorTips},
+			form_type = #{formType},
+			default_value = #{defaultValue},
+			data_source = #{dataSource},
+			value_options = #{valueOptions},
+			dictionary_id = #{dictionaryId},
+			setting = #{setting},
+			form_attribute = #{formAttribute},
+			unset_roleids = #{unsetRoleids},
+			group_type = #{groupType},
+			is_require = #{isRequire},
+			is_unique = #{isUnique},
+			is_search = #{isSearch},
+			is_full_text = #{isFullText},
+			is_position = #{isPosition},
+			disabled = #{disabled},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_model_field
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_model_field SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsModelField" statementType="STATEMENT">
+		select * FROM cms_model_field  where ${propertyName} = '${value}'
+	</select>
+	<select id="findByModelId" resultType="CmsModelField" statementType="STATEMENT">
+		select * FROM cms_model_field WHERE model_id=#{modelId}
+	</select>
+</mapper>

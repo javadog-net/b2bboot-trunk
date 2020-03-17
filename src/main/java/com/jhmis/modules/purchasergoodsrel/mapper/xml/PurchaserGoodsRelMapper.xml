@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.purchasergoodsrel.mapper.PurchaserGoodsRelMapper">
+    
+	<sql id="purchaserGoodsRelColumns">
+		a.id AS "id",
+		a.purchaser_id AS "purchaserId",
+		a.goods_sku AS "goodsSku",
+		a.exclusive_price AS "exclusivePrice",
+		a.ope_date AS "opeDate"
+	</sql>
+	
+	<sql id="purchaserGoodsRelJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="PurchaserGoodsRel" >
+		SELECT 
+			<include refid="purchaserGoodsRelColumns"/>
+		FROM purchaser_goods_rel a
+		<include refid="purchaserGoodsRelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PurchaserGoodsRel" >
+		SELECT 
+			<include refid="purchaserGoodsRelColumns"/>
+		FROM purchaser_goods_rel a
+		<include refid="purchaserGoodsRelJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PurchaserGoodsRel" >
+		SELECT 
+			<include refid="purchaserGoodsRelColumns"/>
+		FROM purchaser_goods_rel a
+		<include refid="purchaserGoodsRelJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO purchaser_goods_rel(
+			id,
+			purchaser_id,
+			goods_sku,
+			exclusive_price,
+			ope_date
+		) VALUES (
+			#{id},
+			#{purchaserId},
+			#{goodsSku},
+			#{exclusivePrice},
+			#{opeDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE purchaser_goods_rel SET 	
+			purchaser_id = #{purchaserId},
+			goods_sku = #{goodsSku},
+			exclusive_price = #{exclusivePrice},
+			ope_date = #{opeDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updatePrice">
+		UPDATE purchaser_goods_rel SET 	
+			exclusive_price = #{exclusivePrice},state=#{state} ,
+			ope_date = #{opeDate}
+		WHERE purchaser_id = #{purchaserId} and goods_sku = #{goodsSku}
+	</update>
+	
+	
+	
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM purchaser_goods_rel
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除可采商品关联数据 -->
+	<delete id="deletePurchaserGoodsRel">
+		DELETE FROM purchaser_goods_rel
+		WHERE purchaser_id = #{purchaserId}  and 
+			goods_sku = #{goodsSku}
+	</delete>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE purchaser_goods_rel SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PurchaserGoodsRel" statementType="STATEMENT">
+		select * FROM purchaser_goods_rel  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

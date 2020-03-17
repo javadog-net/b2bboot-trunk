@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.cms.mapper.CmsIslikeMapper">
+    
+	<sql id="cmsIslikeColumns">
+		a.id AS "id",
+		a.info_id AS "infoId",
+		a.info_title AS "infoTitle",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.info_islike AS "infoIslike",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="cmsIslikeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="CmsIslike" >
+		SELECT 
+			<include refid="cmsIslikeColumns"/>
+		FROM cms_islike a
+		<include refid="cmsIslikeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsIslike" >
+		SELECT 
+			<include refid="cmsIslikeColumns"/>
+		FROM cms_islike a
+		<include refid="cmsIslikeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="infoId != null and infoId != ''">
+				AND a.info_id = #{infoId}
+			</if>
+			<if test="infoTitle != null and infoTitle != ''">
+				AND a.info_title = #{infoTitle}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="infoIslike != null and infoIslike != ''">
+				AND a.info_islike = #{infoIslike}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsIslike" >
+		SELECT 
+			<include refid="cmsIslikeColumns"/>
+		FROM cms_islike a
+		<include refid="cmsIslikeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_islike(
+			id,
+			info_id,
+			info_title,
+			user_id,
+			user_name,
+			info_islike,
+			create_time
+		) VALUES (
+			#{id},
+			#{infoId},
+			#{infoTitle},
+			#{userId},
+			#{userName},
+			#{infoIslike},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_islike SET 	
+			info_id = #{infoId},
+			info_title = #{infoTitle},
+			user_id = #{userId},
+			user_name = #{userName},
+			info_islike = #{infoIslike},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_islike
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_islike SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsIslike" statementType="STATEMENT">
+		select * FROM cms_islike  where ${propertyName} = '${value}'
+	</select>
+	<select id="selectCountById" resultType="integer">
+   select count(*)	from cms_islike where info_id = #{id}
+
+
+	</select>
+
+</mapper>

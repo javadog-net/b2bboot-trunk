@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.shop.mapper.AdvertMapper">
+    
+	<sql id="advertColumns">
+		a.id AS "id",
+		a.relevant_type AS "relevantType",
+		a.relevant_id AS "relevantId",
+		a.advert_imgs AS "advertImgs",
+		a.advert_type AS "advertType",
+		a.advert_url AS "advertUrl",
+		a.advert_title AS "advertTitle",
+		a.advert_info AS "advertInfo",
+		a.sort AS "sort",
+		a.remark AS "remark",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="advertJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Advert" >
+		SELECT 
+			<include refid="advertColumns"/>
+		FROM advert a
+		<include refid="advertJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Advert" >
+		SELECT 
+			<include refid="advertColumns"/>
+		FROM advert a
+		<include refid="advertJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="relevantType != null and relevantType != ''">
+				AND a.relevant_type = #{relevantType}
+			</if>
+			<if test="advertImgs != null and advertImgs != ''">
+				AND a.advert_imgs = #{advertImgs}
+			</if>
+			<if test="advertType != null and advertType != ''">
+				AND a.advert_type = #{advertType}
+			</if>
+			<if test="advertUrl != null and advertUrl != ''">
+				AND a.advert_url = #{advertUrl}
+			</if>
+			<if test="advertTitle != null and advertTitle != ''">
+				AND a.advert_title = #{advertTitle}
+			</if>
+			<if test="advertInfo != null and advertInfo != ''">
+				AND a.advert_info = #{advertInfo}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Advert" >
+		SELECT 
+			<include refid="advertColumns"/>
+		FROM advert a
+		<include refid="advertJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO advert(
+			id,
+			relevant_type,
+			relevant_id,
+			advert_imgs,
+			advert_type,
+			advert_url,
+			advert_title,
+			advert_info,
+			sort,
+			remark,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{relevantType},
+			#{relevantId},
+			#{advertImgs},
+			#{advertType},
+			#{advertUrl},
+			#{advertTitle},
+			#{advertInfo},
+			#{sort},
+			#{remark},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE advert SET 	
+			relevant_type = #{relevantType},
+			relevant_id = #{relevantId},
+			advert_imgs = #{advertImgs},
+			advert_type = #{advertType},
+			advert_url = #{advertUrl},
+			advert_title = #{advertTitle},
+			advert_info = #{advertInfo},
+			sort = #{sort},
+			remark = #{remark},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM advert
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE advert SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Advert" statementType="STATEMENT">
+		select * FROM advert  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

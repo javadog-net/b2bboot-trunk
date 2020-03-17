@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.tools.mapper.CmsEmailInfoMapper">
+    
+	<sql id="cmsEmailInfoColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.emailtype AS "emailtype",
+		a.createtime AS "createtime",
+		a.rectype AS "rectype",
+		a.provinceid AS "provinceid",
+		a.provincename AS "provincename",
+		a.cityid AS "cityid",
+		a.cityname AS "cityname",
+		a.membertag AS "membertag",
+		a.content AS "content",
+		a.issendemail AS "issendemail",
+		a.sendtime AS "sendtime",
+		a.sender AS "sender",
+		a.sendtype AS "sendtype",
+		a.email AS "email"
+	</sql>
+	
+	<sql id="cmsEmailInfoJoins">
+		
+	</sql>
+	
+    <resultMap type="CmsEmailInfo" id="CmsEmailInfoResult" autoMapping="true">
+    	<result column="content" property="content"   typeHandler="com.jhmis.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="CmsEmailInfoResult" >
+		SELECT 
+			<include refid="cmsEmailInfoColumns"/>
+		FROM cms_email_info a
+		<include refid="cmsEmailInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="CmsEmailInfoResult" >
+		SELECT 
+			<include refid="cmsEmailInfoColumns"/>
+		FROM cms_email_info a
+		<include refid="cmsEmailInfoJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="emailtype != null and emailtype != ''">
+				AND a.emailtype = #{emailtype}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="rectype != null and rectype != ''">
+				AND a.rectype = #{rectype}
+			</if>
+			<if test="provincename != null and provincename != ''">
+				AND a.provincename = #{provincename}
+			</if>
+			<if test="cityname != null and cityname != ''">
+				AND a.cityname = #{cityname}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="issendemail != null and issendemail != ''">
+				AND a.issendemail = #{issendemail}
+			</if>
+			<if test="sendtime != null and sendtime != ''">
+				AND a.sendtime = #{sendtime}
+			</if>
+			<if test="sender != null and sender != ''">
+				AND a.sender = #{sender}
+			</if>
+			<if test="sendtype != null and sendtype != ''">
+				AND a.sendtype = #{sendtype}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="CmsEmailInfoResult" >
+		SELECT 
+			<include refid="cmsEmailInfoColumns"/>
+		FROM cms_email_info a
+		<include refid="cmsEmailInfoJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_email_info(
+			id,
+			title,
+			emailtype,
+			createtime,
+			rectype,
+			provinceid,
+			provincename,
+			cityid,
+			cityname,
+			membertag,
+			content,
+			issendemail,
+			sendtime,
+			sender,
+			sendtype,
+			email
+		) VALUES (
+			#{id},
+			#{title},
+			#{emailtype},
+			#{createtime},
+			#{rectype},
+			#{provinceid},
+			#{provincename},
+			#{cityid},
+			#{cityname},
+			#{membertag},
+			#{content},
+			#{issendemail},
+			#{sendtime},
+			#{sender},
+			#{sendtype},
+			#{email}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_email_info SET 	
+			title = #{title},
+			emailtype = #{emailtype},
+			createtime = #{createtime},
+			rectype = #{rectype},
+			provinceid = #{provinceid},
+			provincename = #{provincename},
+			cityid = #{cityid},
+			cityname = #{cityname},
+			membertag = #{membertag},
+			content = #{content},
+			issendemail = #{issendemail},
+			sendtime = #{sendtime},
+			sender = #{sender},
+			sendtype = #{sendtype},
+			email = #{email}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateIsSend">
+		UPDATE cms_email_info SET 	
+			issendemail = #{issendemail},
+			sendtime = #{sendtime},
+			sender = #{sender}
+		WHERE id = #{id}
+	</update>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_email_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_email_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CmsEmailInfo" statementType="STATEMENT">
+		select * FROM cms_email_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

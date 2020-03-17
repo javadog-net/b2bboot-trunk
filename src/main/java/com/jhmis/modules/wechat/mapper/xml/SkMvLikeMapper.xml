@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhmis.modules.wechat.mapper.SkMvLikeMapper">
+    
+	<sql id="skMvLikeColumns">
+		a.id AS "id",
+		a.sk_mv_id AS "skMvId",
+		a.sk_mv_name AS "skMvName",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.sk_mv_islike AS "skMvIslike",
+		a.sk_mv_like_time AS "skMvLikeTime"
+	</sql>
+	
+	<sql id="skMvLikeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="SkMvLike" >
+		SELECT 
+			<include refid="skMvLikeColumns"/>
+		FROM sk_mv_like a
+		<include refid="skMvLikeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SkMvLike" >
+		SELECT 
+			<include refid="skMvLikeColumns"/>
+		FROM sk_mv_like a
+		<include refid="skMvLikeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="skMvId != null and skMvId != ''">
+				AND a.sk_mv_id = #{skMvId}
+			</if>
+			<if test="skMvName != null and skMvName != ''">
+				AND a.sk_mv_name = #{skMvName}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="skMvIslike != null and skMvIslike != ''">
+				AND a.sk_mv_islike = #{skMvIslike}
+			</if>
+			<if test="skMvLikeTime != null and skMvLikeTime != ''">
+				AND a.sk_mv_like_time = #{skMvLikeTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SkMvLike" >
+		SELECT 
+			<include refid="skMvLikeColumns"/>
+		FROM sk_mv_like a
+		<include refid="skMvLikeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sk_mv_like(
+			id,
+			sk_mv_id,
+			sk_mv_name,
+			user_id,
+			user_name,
+			sk_mv_islike,
+			sk_mv_like_time
+		) VALUES (
+			#{id},
+			#{skMvId},
+			#{skMvName},
+			#{userId},
+			#{userName},
+			#{skMvIslike},
+			#{skMvLikeTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sk_mv_like SET 	
+			sk_mv_id = #{skMvId},
+			sk_mv_name = #{skMvName},
+			user_id = #{userId},
+			user_name = #{userName},
+			sk_mv_islike = #{skMvIslike},
+			sk_mv_like_time = #{skMvLikeTime}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sk_mv_like
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sk_mv_like SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="SkMvLike" statementType="STATEMENT">
+		select * FROM sk_mv_like  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="getByMidAndUid" resultType="SkMvLike">
+	   select *from sk_mv_like where sk_mv_id=#{id} and user_id=#{userid}
+	
+	</select>
+	<delete id="deleteByMidAndUid">
+	DELETE FROM sk_mv_like
+		where sk_mv_id=#{id} and user_id=#{userid}
+	</delete>
+	
+</mapper>
